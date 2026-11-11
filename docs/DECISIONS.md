@@ -27,3 +27,7 @@
 | T2 | 2026-11-11 | Ollama exécuté sur l'hôte Windows, accédé depuis Docker via `host.docker.internal:11434` ; modèle par défaut `llama3.2:3b` | Déjà installé ; plus simple sans GPU |
 | T3 | 2026-11-11 | Unités canoniques du référentiel adaptées aux laboratoires marocains francophones (CRP mg/L, créatinine mg/L, Hb g/dL, cellules en G/L, gaz du sang en mmHg) | Correspond aux comptes rendus rencontrés au Maroc |
 | T4 | 2026-11-11 | Conception UI guidée par la skill `frontend-design` | Demande du binôme |
+| T5 | 2026-11-11 | Documents synthétiques rendus en PDF par Chromium (Playwright) ; scans simulés avec PyMuPDF + Pillow (rotation ±1,5°, flou, bruit, JPEG) | Rendu CSS fidèle, gabarits variés ; une rotation de ±3° décalait les lignes des gabarits à points de conduite |
+| T6 | 2026-11-11 | Tous les documents synthétiques datés au plus tard du 05/11/2026 ; patient de démo A01 (Karim Alaoui) suivi du 20/11/2025 au 05/11/2026 | Dossiers « passés » au moment de la démonstration |
+| T7 | 2026-11-11 | Parcours A : visite programmée reportée à J28 si elle tombe dans les 4 semaines suivant une exacerbation | Pas d'EFR pendant une exacerbation ; cohérence CRP/EFR |
+| T8 | 2026-11-11 | Parcours B : demi-vie de la CRP 1,6 à 2,4 jours ; parcours C : patients stables à moins de 2,5 points de CVF/an | Séparer nettement les cas qui doivent déclencher une alerte de ceux qui ne le doivent pas |

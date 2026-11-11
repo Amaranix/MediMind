@@ -1,0 +1,3047 @@
+{
+ "patient": {
+  "id": "A09",
+  "parcours": "A",
+  "first_name": "Saida",
+  "last_name": "Lahlou",
+  "sex": "F",
+  "birth_date": "1980-01-15",
+  "height_cm": 158,
+  "pack_years": 53,
+  "city": "Mohammedia",
+  "nih_patient_id": 16785
+ },
+ "events": [
+  {
+   "type": "exacerbation",
+   "date": "2025-12-12",
+   "end": null,
+   "note": "Majoration de la dyspnée et expectoration purulente"
+  },
+  {
+   "type": "hospitalisation",
+   "date": "2025-12-13",
+   "end": "2025-12-17",
+   "note": "Hospitalisation pour exacerbation"
+  },
+  {
+   "type": "treatment_change",
+   "date": "2026-01-05",
+   "end": null,
+   "note": "Ajout salmétérol/fluticasone"
+  },
+  {
+   "type": "exacerbation",
+   "date": "2026-01-20",
+   "end": null,
+   "note": "Majoration de la dyspnée et expectoration purulente"
+  },
+  {
+   "type": "hospitalisation",
+   "date": "2026-01-21",
+   "end": "2026-01-27",
+   "note": "Hospitalisation pour exacerbation"
+  },
+  {
+   "type": "exacerbation",
+   "date": "2026-03-04",
+   "end": null,
+   "note": "Majoration de la dyspnée et expectoration purulente"
+  },
+  {
+   "type": "hospitalisation",
+   "date": "2026-03-05",
+   "end": "2026-03-10",
+   "note": "Hospitalisation pour exacerbation"
+  }
+ ],
+ "treatments": [
+  {
+   "molecule": "tiotropium",
+   "class": "lama",
+   "dosage": "2,5 µg, 2 inhalations le matin",
+   "duration_days": null,
+   "start": "2025-11-01",
+   "end": null,
+   "source_doc": "A09-D001"
+  },
+  {
+   "molecule": "salbutamol",
+   "class": "saba",
+   "dosage": "100 µg, 2 bouffées si besoin",
+   "duration_days": null,
+   "start": "2025-11-01",
+   "end": null,
+   "source_doc": "A09-D001"
+  },
+  {
+   "molecule": "amoxicilline-acide clavulanique",
+   "class": "antibiotic",
+   "dosage": "1 g/125 mg, 3 fois par jour",
+   "duration_days": 7,
+   "start": "2025-12-12",
+   "end": "2025-12-19",
+   "source_doc": "A09-D004"
+  },
+  {
+   "molecule": "prednisolone",
+   "class": "systemic_steroid",
+   "dosage": "40 mg, 1 fois par jour le matin",
+   "duration_days": 5,
+   "start": "2025-12-12",
+   "end": "2025-12-17",
+   "source_doc": "A09-D004"
+  },
+  {
+   "molecule": "tiotropium",
+   "class": "lama",
+   "dosage": "2,5 µg, 2 inhalations le matin",
+   "duration_days": null,
+   "start": "2026-01-05",
+   "end": null,
+   "source_doc": "A09-D007"
+  },
+  {
+   "molecule": "salmétérol/fluticasone",
+   "class": "laba+ics",
+   "dosage": "50/500 µg, 1 inhalation matin et soir",
+   "duration_days": null,
+   "start": "2026-01-05",
+   "end": null,
+   "source_doc": "A09-D007"
+  },
+  {
+   "molecule": "salbutamol",
+   "class": "saba",
+   "dosage": "100 µg, 2 bouffées si besoin",
+   "duration_days": null,
+   "start": "2026-01-05",
+   "end": null,
+   "source_doc": "A09-D007"
+  },
+  {
+   "molecule": "amoxicilline-acide clavulanique",
+   "class": "antibiotic",
+   "dosage": "1 g/125 mg, 3 fois par jour",
+   "duration_days": 7,
+   "start": "2026-01-20",
+   "end": "2026-01-27",
+   "source_doc": "A09-D010"
+  },
+  {
+   "molecule": "prednisolone",
+   "class": "systemic_steroid",
+   "dosage": "40 mg, 1 fois par jour le matin",
+   "duration_days": 5,
+   "start": "2026-01-20",
+   "end": "2026-01-25",
+   "source_doc": "A09-D010"
+  },
+  {
+   "molecule": "amoxicilline-acide clavulanique",
+   "class": "antibiotic",
+   "dosage": "1 g/125 mg, 3 fois par jour",
+   "duration_days": 7,
+   "start": "2026-03-04",
+   "end": "2026-03-11",
+   "source_doc": "A09-D015"
+  },
+  {
+   "molecule": "prednisolone",
+   "class": "systemic_steroid",
+   "dosage": "40 mg, 1 fois par jour le matin",
+   "duration_days": 5,
+   "start": "2026-03-04",
+   "end": "2026-03-09",
+   "source_doc": "A09-D015"
+  }
+ ],
+ "documents": [
+  {
+   "doc_id": "A09-D001",
+   "type": "ordonnance",
+   "date": "2025-11-01",
+   "values": [],
+   "treatments": [
+    {
+     "molecule": "tiotropium",
+     "class": "lama",
+     "dosage": "2,5 µg, 2 inhalations le matin",
+     "duration_days": null
+    },
+    {
+     "molecule": "salbutamol",
+     "class": "saba",
+     "dosage": "100 µg, 2 bouffées si besoin",
+     "duration_days": null
+    }
+   ],
+   "text_hints": {
+    "reason": "Traitement de fond"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "ORD",
+   "format": "photo_jpg",
+   "file": "A09\\documents\\2025-11-01_D001_ordonnance.jpg",
+   "printed": []
+  },
+  {
+   "doc_id": "A09-D018",
+   "type": "efr",
+   "date": "2025-11-01",
+   "values": [
+    {
+     "param": "FEV1",
+     "value": 1.3240838344974575,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "value": 2.3364151212583084,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "value": 0.5667160011292659,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1",
+     "value": 1.420492810904469,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "value": 2.4765219198237998,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "value": 0.5735837827777169,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_PRED",
+     "value": 56.458378811783334,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC_PRED",
+     "value": 84.25263386486358,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "DLCO_PRED",
+     "value": 60.3425220813327,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "bd": true,
+    "pred_fev1": 2.5160000000000005,
+    "pred_fvc": 2.9393999999999996
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "EFR",
+   "format": "pdf",
+   "file": "A09\\documents\\2025-11-01_D018_efr.pdf",
+   "printed": [
+    {
+     "param": "FEV1",
+     "label": "VEMS",
+     "printed": "1,32",
+     "unit": "L",
+     "canonical_value": 1.32,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1",
+     "label": "VEMS",
+     "printed": "1,42",
+     "unit": "L",
+     "canonical_value": 1.42,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_PRED",
+     "label": "VEMS % théorique",
+     "printed": "56",
+     "unit": "%",
+     "canonical_value": 56.0,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "label": "CVF",
+     "printed": "2,34",
+     "unit": "L",
+     "canonical_value": 2.34,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "label": "CVF",
+     "printed": "2,48",
+     "unit": "L",
+     "canonical_value": 2.48,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC_PRED",
+     "label": "CVF % théorique",
+     "printed": "84",
+     "unit": "%",
+     "canonical_value": 84.0,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "label": "VEMS/CVF",
+     "printed": "57",
+     "unit": "%",
+     "canonical_value": 0.57,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "label": "VEMS/CVF",
+     "printed": "57",
+     "unit": "%",
+     "canonical_value": 0.57,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "DLCO_PRED",
+     "label": "DLCO % théorique",
+     "printed": "60",
+     "unit": "%",
+     "canonical_value": 60.0,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D019",
+   "type": "bilan_bio",
+   "date": "2025-11-01",
+   "values": [
+    {
+     "param": "WBC",
+     "value": 9.21822853737379,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "value": 5.247714228504835,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "value": 1.999378042091133,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "value": 0.1351811804251956,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "value": 13.211284275349081,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "value": 271.2772411730961,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "value": 3.3810809651165314,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "value": 6.5949245654782755,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "T2",
+   "format": "pdf",
+   "file": "A09\\documents\\2025-11-01_D019_bilan_bio.pdf",
+   "printed": [
+    {
+     "param": "WBC",
+     "label": "GB",
+     "printed": "9,2",
+     "unit": "G/L",
+     "canonical_value": 9.2,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "label": "PNN",
+     "printed": "5,2",
+     "unit": "G/L",
+     "canonical_value": 5.2,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "label": "Lymphocytes",
+     "printed": "2,0",
+     "unit": "G/L",
+     "canonical_value": 2.0,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "label": "PNE",
+     "printed": "0,14",
+     "unit": "G/L",
+     "canonical_value": 0.14,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "label": "Hb",
+     "printed": "132",
+     "unit": "g/L",
+     "canonical_value": 13.2,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "label": "Plaquettes",
+     "printed": "271",
+     "unit": "G/L",
+     "canonical_value": 271.0,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "label": "CRP",
+     "printed": "3,4",
+     "unit": "mg/L",
+     "canonical_value": 3.4,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "label": "Créatininémie",
+     "printed": "58",
+     "unit": "µmol/L",
+     "canonical_value": 6.5598,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D020",
+   "type": "compte_rendu",
+   "date": "2025-11-01",
+   "values": [
+    {
+     "param": "SPO2",
+     "value": 93.9511843063277,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "kind": "suivi"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "CR",
+   "format": "pdf",
+   "file": "A09\\documents\\2025-11-01_D020_compte_rendu.pdf",
+   "printed": [
+    {
+     "param": "SPO2",
+     "label": "SpO2",
+     "printed": "94",
+     "unit": "%",
+     "canonical_value": 94.0,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D033",
+   "type": "radiographie",
+   "date": "2025-11-01",
+   "values": [],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": "00016785_000.png",
+   "nih_labels": "No Finding",
+   "template": null,
+   "format": "png",
+   "file": "A09\\radiographies\\2025-11-01_D033.png",
+   "printed": []
+  },
+  {
+   "doc_id": "A09-D002",
+   "type": "bilan_bio",
+   "date": "2025-12-12",
+   "values": [
+    {
+     "param": "WBC",
+     "value": 14.755686157194637,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "value": 11.509435202611817,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "value": 2.6926294642639075,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "value": 0.10626616711489452,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "value": 13.327952575356527,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "value": 253.74018997338536,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "value": 53.06675542825865,
+     "context": []
+    },
+    {
+     "param": "PCT",
+     "value": 0.3021007083837558,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "value": 8.300426087236797,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "T2",
+   "format": "pdf",
+   "file": "A09\\documents\\2025-12-12_D002_bilan_bio.pdf",
+   "printed": [
+    {
+     "param": "WBC",
+     "label": "GB",
+     "printed": "14,8",
+     "unit": "G/L",
+     "canonical_value": 14.8,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "label": "PNN",
+     "printed": "11,5",
+     "unit": "G/L",
+     "canonical_value": 11.5,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "label": "Lymphocytes",
+     "printed": "2,7",
+     "unit": "G/L",
+     "canonical_value": 2.7,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "label": "PNE",
+     "printed": "0,11",
+     "unit": "G/L",
+     "canonical_value": 0.11,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "label": "Hb",
+     "printed": "133",
+     "unit": "g/L",
+     "canonical_value": 13.3,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "label": "Plaquettes",
+     "printed": "254",
+     "unit": "G/L",
+     "canonical_value": 254.0,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "label": "CRP",
+     "printed": "53,1",
+     "unit": "mg/L",
+     "canonical_value": 53.1,
+     "context": []
+    },
+    {
+     "param": "PCT",
+     "label": "PCT",
+     "printed": "0,30",
+     "unit": "µg/L",
+     "canonical_value": 0.3,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "label": "Créatininémie",
+     "printed": "73",
+     "unit": "µmol/L",
+     "canonical_value": 8.2563,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D003",
+   "type": "compte_rendu",
+   "date": "2025-12-12",
+   "values": [
+    {
+     "param": "SPO2",
+     "value": 87.83711265368336,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "kind": "exacerbation",
+    "severe": true
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "CR",
+   "format": "pdf",
+   "file": "A09\\documents\\2025-12-12_D003_compte_rendu.pdf",
+   "printed": [
+    {
+     "param": "SPO2",
+     "label": "SpO2",
+     "printed": "88",
+     "unit": "%",
+     "canonical_value": 88.0,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D004",
+   "type": "ordonnance",
+   "date": "2025-12-12",
+   "values": [],
+   "treatments": [
+    {
+     "molecule": "amoxicilline-acide clavulanique",
+     "class": "antibiotic",
+     "dosage": "1 g/125 mg, 3 fois par jour",
+     "duration_days": 7
+    },
+    {
+     "molecule": "prednisolone",
+     "class": "systemic_steroid",
+     "dosage": "40 mg, 1 fois par jour le matin",
+     "duration_days": 5
+    }
+   ],
+   "text_hints": {
+    "reason": "Exacerbation de BPCO"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "ORD",
+   "format": "pdf",
+   "file": "A09\\documents\\2025-12-12_D004_ordonnance.pdf",
+   "printed": []
+  },
+  {
+   "doc_id": "A09-D034",
+   "type": "radiographie",
+   "date": "2025-12-13",
+   "values": [],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": "00016785_001.png",
+   "nih_labels": "No Finding",
+   "template": null,
+   "format": "png",
+   "file": "A09\\radiographies\\2025-12-13_D034.png",
+   "printed": []
+  },
+  {
+   "doc_id": "A09-D005",
+   "type": "compte_rendu",
+   "date": "2025-12-17",
+   "values": [
+    {
+     "param": "PH",
+     "value": 7.396322848328115,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PAO2",
+     "value": 57.14210749643573,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PACO2",
+     "value": 45.802579730294205,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "HCO3",
+     "value": 27.072932727880836,
+     "context": [
+      "room_air"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "kind": "hospitalisation",
+    "start": "2025-12-13",
+    "end": "2025-12-17"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "CR",
+   "format": "pdf",
+   "file": "A09\\documents\\2025-12-17_D005_compte_rendu.pdf",
+   "printed": [
+    {
+     "param": "PH",
+     "label": "pH",
+     "printed": "7,40",
+     "unit": "pH",
+     "canonical_value": 7.4,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PAO2",
+     "label": "PaO2",
+     "printed": "57",
+     "unit": "mmHg",
+     "canonical_value": 57.0,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PACO2",
+     "label": "PaCO2",
+     "printed": "46",
+     "unit": "mmHg",
+     "canonical_value": 46.0,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "HCO3",
+     "label": "HCO3-",
+     "printed": "27",
+     "unit": "mmol/L",
+     "canonical_value": 27.0,
+     "context": [
+      "room_air"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D006",
+   "type": "bilan_bio",
+   "date": "2025-12-24",
+   "values": [
+    {
+     "param": "WBC",
+     "value": 9.354717555177656,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "value": 5.7861855704054035,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "value": 1.9315468025839682,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "value": 0.1474570967464549,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "value": 13.335968299268044,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "value": 276.755250055703,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "value": 8.633336432642814,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "T2",
+   "format": "pdf",
+   "file": "A09\\documents\\2025-12-24_D006_bilan_bio.pdf",
+   "printed": [
+    {
+     "param": "WBC",
+     "label": "GB",
+     "printed": "9,4",
+     "unit": "G/L",
+     "canonical_value": 9.4,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "label": "PNN",
+     "printed": "5,8",
+     "unit": "G/L",
+     "canonical_value": 5.8,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "label": "Lymphocytes",
+     "printed": "1,9",
+     "unit": "G/L",
+     "canonical_value": 1.9,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "label": "PNE",
+     "printed": "0,15",
+     "unit": "G/L",
+     "canonical_value": 0.15,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "label": "Hb",
+     "printed": "133",
+     "unit": "g/L",
+     "canonical_value": 13.3,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "label": "Plaquettes",
+     "printed": "277",
+     "unit": "G/L",
+     "canonical_value": 277.0,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "label": "CRP",
+     "printed": "8,6",
+     "unit": "mg/L",
+     "canonical_value": 8.6,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D007",
+   "type": "ordonnance",
+   "date": "2026-01-05",
+   "values": [],
+   "treatments": [
+    {
+     "molecule": "tiotropium",
+     "class": "lama",
+     "dosage": "2,5 µg, 2 inhalations le matin",
+     "duration_days": null
+    },
+    {
+     "molecule": "salmétérol/fluticasone",
+     "class": "laba+ics",
+     "dosage": "50/500 µg, 1 inhalation matin et soir",
+     "duration_days": null
+    },
+    {
+     "molecule": "salbutamol",
+     "class": "saba",
+     "dosage": "100 µg, 2 bouffées si besoin",
+     "duration_days": null
+    }
+   ],
+   "text_hints": {
+    "reason": "Renforcement du traitement de fond après exacerbation"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "ORD",
+   "format": "photo_jpg",
+   "file": "A09\\documents\\2026-01-05_D007_ordonnance.jpg",
+   "printed": []
+  },
+  {
+   "doc_id": "A09-D008",
+   "type": "bilan_bio",
+   "date": "2026-01-20",
+   "values": [
+    {
+     "param": "WBC",
+     "value": 11.314116591259253,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "value": 8.825010941182217,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "value": 2.829524231071013,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "value": 0.0979854389654404,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "value": 13.633500864456527,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "value": 310.09156978661514,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "value": 92.8446096274774,
+     "context": []
+    },
+    {
+     "param": "PCT",
+     "value": 0.35363902442110773,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "value": 7.372884817263522,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "T1",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-01-20_D008_bilan_bio.pdf",
+   "printed": [
+    {
+     "param": "WBC",
+     "label": "Leucocytes",
+     "printed": "11 300",
+     "unit": "/mm³",
+     "canonical_value": 11.3,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "label": "Poly. neutrophiles",
+     "printed": "8 830",
+     "unit": "/mm³",
+     "canonical_value": 8.83,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "label": "Lymphocytes",
+     "printed": "2 830",
+     "unit": "/mm³",
+     "canonical_value": 2.83,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "label": "Poly. éosinophiles",
+     "printed": "100",
+     "unit": "/mm³",
+     "canonical_value": 0.1,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "label": "Hémoglobine",
+     "printed": "13,6",
+     "unit": "g/dL",
+     "canonical_value": 13.6,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "label": "Plaquettes",
+     "printed": "310 000",
+     "unit": "/mm³",
+     "canonical_value": 310.0,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "label": "Protéine C réactive",
+     "printed": "92,8",
+     "unit": "mg/L",
+     "canonical_value": 92.8,
+     "context": []
+    },
+    {
+     "param": "PCT",
+     "label": "Procalcitonine",
+     "printed": "0,35",
+     "unit": "ng/mL",
+     "canonical_value": 0.35,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "label": "Créatinine",
+     "printed": "7,4",
+     "unit": "mg/L",
+     "canonical_value": 7.4,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D009",
+   "type": "compte_rendu",
+   "date": "2026-01-20",
+   "values": [
+    {
+     "param": "SPO2",
+     "value": 89.3113361108061,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "kind": "exacerbation",
+    "severe": true
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "CR",
+   "format": "scan_pdf",
+   "file": "A09\\documents\\2026-01-20_D009_compte_rendu.pdf",
+   "printed": [
+    {
+     "param": "SPO2",
+     "label": "SpO2",
+     "printed": "89",
+     "unit": "%",
+     "canonical_value": 89.0,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D010",
+   "type": "ordonnance",
+   "date": "2026-01-20",
+   "values": [],
+   "treatments": [
+    {
+     "molecule": "amoxicilline-acide clavulanique",
+     "class": "antibiotic",
+     "dosage": "1 g/125 mg, 3 fois par jour",
+     "duration_days": 7
+    },
+    {
+     "molecule": "prednisolone",
+     "class": "systemic_steroid",
+     "dosage": "40 mg, 1 fois par jour le matin",
+     "duration_days": 5
+    }
+   ],
+   "text_hints": {
+    "reason": "Exacerbation de BPCO"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "ORD",
+   "format": "photo_jpg",
+   "file": "A09\\documents\\2026-01-20_D010_ordonnance.jpg",
+   "printed": []
+  },
+  {
+   "doc_id": "A09-D035",
+   "type": "radiographie",
+   "date": "2026-01-21",
+   "values": [],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": "00016785_005.png",
+   "nih_labels": "Effusion|Emphysema",
+   "template": null,
+   "format": "png",
+   "file": "A09\\radiographies\\2026-01-21_D035.png",
+   "printed": []
+  },
+  {
+   "doc_id": "A09-D011",
+   "type": "compte_rendu",
+   "date": "2026-01-27",
+   "values": [
+    {
+     "param": "PH",
+     "value": 7.3656604127366485,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PAO2",
+     "value": 59.70653679680991,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PACO2",
+     "value": 46.917547544958154,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "HCO3",
+     "value": 30.83198720321172,
+     "context": [
+      "room_air"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "kind": "hospitalisation",
+    "start": "2026-01-21",
+    "end": "2026-01-27"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "CR",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-01-27_D011_compte_rendu.pdf",
+   "printed": [
+    {
+     "param": "PH",
+     "label": "pH",
+     "printed": "7,37",
+     "unit": "pH",
+     "canonical_value": 7.37,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PAO2",
+     "label": "PaO2",
+     "printed": "60",
+     "unit": "mmHg",
+     "canonical_value": 60.0,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PACO2",
+     "label": "PaCO2",
+     "printed": "47",
+     "unit": "mmHg",
+     "canonical_value": 47.0,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "HCO3",
+     "label": "HCO3-",
+     "printed": "31",
+     "unit": "mmol/L",
+     "canonical_value": 31.0,
+     "context": [
+      "room_air"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D012",
+   "type": "bilan_bio",
+   "date": "2026-02-01",
+   "values": [
+    {
+     "param": "WBC",
+     "value": 9.712480802460554,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "value": 5.566738831732054,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "value": 2.6119323872372604,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "value": 0.1474570967464549,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "value": 13.904080263818273,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "value": 229.13748520687216,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "value": 11.891924857915582,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "T2",
+   "format": "photo_jpg",
+   "file": "A09\\documents\\2026-02-01_D012_bilan_bio.jpg",
+   "printed": [
+    {
+     "param": "WBC",
+     "label": "GB",
+     "printed": "9,7",
+     "unit": "G/L",
+     "canonical_value": 9.7,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "label": "PNN",
+     "printed": "5,6",
+     "unit": "G/L",
+     "canonical_value": 5.6,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "label": "Lymphocytes",
+     "printed": "2,6",
+     "unit": "G/L",
+     "canonical_value": 2.6,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "label": "PNE",
+     "printed": "0,15",
+     "unit": "G/L",
+     "canonical_value": 0.15,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "label": "Hb",
+     "printed": "139",
+     "unit": "g/L",
+     "canonical_value": 13.9,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "label": "Plaquettes",
+     "printed": "229",
+     "unit": "G/L",
+     "canonical_value": 229.0,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "label": "CRP",
+     "printed": "11,9",
+     "unit": "mg/L",
+     "canonical_value": 11.9,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D021",
+   "type": "efr",
+   "date": "2026-02-17",
+   "values": [
+    {
+     "param": "FEV1",
+     "value": 1.1971848079764238,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "value": 2.196333622571849,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "value": 0.545083313242071,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1",
+     "value": 1.3142387132828537,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "value": 2.2509196633440633,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "value": 0.583867445242521,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_PRED",
+     "value": 52.235242976266036,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC_PRED",
+     "value": 76.57752137660964,
+     "context": [
+      "post_bd"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "bd": true,
+    "pred_fev1": 2.5160000000000005,
+    "pred_fvc": 2.9393999999999996
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "EFR",
+   "format": "scan_pdf",
+   "file": "A09\\documents\\2026-02-17_D021_efr.pdf",
+   "printed": [
+    {
+     "param": "FEV1",
+     "label": "VEMS",
+     "printed": "1,20",
+     "unit": "L",
+     "canonical_value": 1.2,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1",
+     "label": "VEMS",
+     "printed": "1,31",
+     "unit": "L",
+     "canonical_value": 1.31,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_PRED",
+     "label": "VEMS % théorique",
+     "printed": "52",
+     "unit": "%",
+     "canonical_value": 52.0,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "label": "CVF",
+     "printed": "2,20",
+     "unit": "L",
+     "canonical_value": 2.2,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "label": "CVF",
+     "printed": "2,25",
+     "unit": "L",
+     "canonical_value": 2.25,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC_PRED",
+     "label": "CVF % théorique",
+     "printed": "77",
+     "unit": "%",
+     "canonical_value": 77.0,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "label": "VEMS/CVF",
+     "printed": "55",
+     "unit": "%",
+     "canonical_value": 0.55,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "label": "VEMS/CVF",
+     "printed": "58",
+     "unit": "%",
+     "canonical_value": 0.58,
+     "context": [
+      "post_bd"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D022",
+   "type": "bilan_bio",
+   "date": "2026-02-17",
+   "values": [
+    {
+     "param": "WBC",
+     "value": 8.072556573617572,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "value": 5.458488815855188,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "value": 2.0464363728960375,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "value": 0.14437827443055432,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "value": 12.974539174062878,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "value": 284.9581182827368,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "value": 4.827884283239585,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "T2",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-02-17_D022_bilan_bio.pdf",
+   "printed": [
+    {
+     "param": "WBC",
+     "label": "GB",
+     "printed": "8,1",
+     "unit": "G/L",
+     "canonical_value": 8.1,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "label": "PNN",
+     "printed": "5,5",
+     "unit": "G/L",
+     "canonical_value": 5.5,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "label": "Lymphocytes",
+     "printed": "2,0",
+     "unit": "G/L",
+     "canonical_value": 2.0,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "label": "PNE",
+     "printed": "0,14",
+     "unit": "G/L",
+     "canonical_value": 0.14,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "label": "Hb",
+     "printed": "130",
+     "unit": "g/L",
+     "canonical_value": 13.0,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "label": "Plaquettes",
+     "printed": "285",
+     "unit": "G/L",
+     "canonical_value": 285.0,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "label": "CRP",
+     "printed": "4,8",
+     "unit": "mg/L",
+     "canonical_value": 4.8,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D023",
+   "type": "compte_rendu",
+   "date": "2026-02-17",
+   "values": [
+    {
+     "param": "SPO2",
+     "value": 94.75320572062832,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "kind": "suivi"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "CR",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-02-17_D023_compte_rendu.pdf",
+   "printed": [
+    {
+     "param": "SPO2",
+     "label": "SpO2",
+     "printed": "95",
+     "unit": "%",
+     "canonical_value": 95.0,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D013",
+   "type": "bilan_bio",
+   "date": "2026-03-04",
+   "values": [
+    {
+     "param": "WBC",
+     "value": 14.69489438658469,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "value": 11.462017621536058,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "value": 3.79439883458762,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "value": 0.1061675590913152,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "value": 11.947606322081079,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "value": 304.3931021542141,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "value": 87.04566913035517,
+     "context": []
+    },
+    {
+     "param": "PCT",
+     "value": 0.671303556547293,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "value": 8.013540062376975,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "T2",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-03-04_D013_bilan_bio.pdf",
+   "printed": [
+    {
+     "param": "WBC",
+     "label": "GB",
+     "printed": "14,7",
+     "unit": "G/L",
+     "canonical_value": 14.7,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "label": "PNN",
+     "printed": "11,5",
+     "unit": "G/L",
+     "canonical_value": 11.5,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "label": "Lymphocytes",
+     "printed": "3,8",
+     "unit": "G/L",
+     "canonical_value": 3.8,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "label": "PNE",
+     "printed": "0,11",
+     "unit": "G/L",
+     "canonical_value": 0.11,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "label": "Hb",
+     "printed": "119",
+     "unit": "g/L",
+     "canonical_value": 11.9,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "label": "Plaquettes",
+     "printed": "304",
+     "unit": "G/L",
+     "canonical_value": 304.0,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "label": "CRP",
+     "printed": "87,0",
+     "unit": "mg/L",
+     "canonical_value": 87.0,
+     "context": []
+    },
+    {
+     "param": "PCT",
+     "label": "PCT",
+     "printed": "0,67",
+     "unit": "µg/L",
+     "canonical_value": 0.67,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "label": "Créatininémie",
+     "printed": "71",
+     "unit": "µmol/L",
+     "canonical_value": 8.0301,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D014",
+   "type": "compte_rendu",
+   "date": "2026-03-04",
+   "values": [
+    {
+     "param": "SPO2",
+     "value": 87.66753120769988,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "kind": "exacerbation",
+    "severe": true
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "CR",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-03-04_D014_compte_rendu.pdf",
+   "printed": [
+    {
+     "param": "SPO2",
+     "label": "SpO2",
+     "printed": "88",
+     "unit": "%",
+     "canonical_value": 88.0,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D015",
+   "type": "ordonnance",
+   "date": "2026-03-04",
+   "values": [],
+   "treatments": [
+    {
+     "molecule": "amoxicilline-acide clavulanique",
+     "class": "antibiotic",
+     "dosage": "1 g/125 mg, 3 fois par jour",
+     "duration_days": 7
+    },
+    {
+     "molecule": "prednisolone",
+     "class": "systemic_steroid",
+     "dosage": "40 mg, 1 fois par jour le matin",
+     "duration_days": 5
+    }
+   ],
+   "text_hints": {
+    "reason": "Exacerbation de BPCO"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "ORD",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-03-04_D015_ordonnance.pdf",
+   "printed": []
+  },
+  {
+   "doc_id": "A09-D036",
+   "type": "radiographie",
+   "date": "2026-03-05",
+   "values": [],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": "00016785_006.png",
+   "nih_labels": "Effusion|Emphysema",
+   "template": null,
+   "format": "png",
+   "file": "A09\\radiographies\\2026-03-05_D036.png",
+   "printed": []
+  },
+  {
+   "doc_id": "A09-D016",
+   "type": "compte_rendu",
+   "date": "2026-03-10",
+   "values": [
+    {
+     "param": "PH",
+     "value": 7.362141871952398,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PAO2",
+     "value": 63.354196233250946,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PACO2",
+     "value": 48.58383612610692,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "HCO3",
+     "value": 27.381482220084145,
+     "context": [
+      "room_air"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "kind": "hospitalisation",
+    "start": "2026-03-05",
+    "end": "2026-03-10"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "CR",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-03-10_D016_compte_rendu.pdf",
+   "printed": [
+    {
+     "param": "PH",
+     "label": "pH",
+     "printed": "7,36",
+     "unit": "pH",
+     "canonical_value": 7.36,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PAO2",
+     "label": "PaO2",
+     "printed": "63",
+     "unit": "mmHg",
+     "canonical_value": 63.0,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "PACO2",
+     "label": "PaCO2",
+     "printed": "49",
+     "unit": "mmHg",
+     "canonical_value": 49.0,
+     "context": [
+      "room_air"
+     ]
+    },
+    {
+     "param": "HCO3",
+     "label": "HCO3-",
+     "printed": "27",
+     "unit": "mmol/L",
+     "canonical_value": 27.0,
+     "context": [
+      "room_air"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D017",
+   "type": "bilan_bio",
+   "date": "2026-03-16",
+   "values": [
+    {
+     "param": "WBC",
+     "value": 8.902813588499221,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "value": 5.765384808595623,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "value": 1.625017491433594,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "value": 0.1474570967464549,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "value": 12.705957237855502,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "value": 239.2387825336941,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "value": 13.281002519322955,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "T2",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-03-16_D017_bilan_bio.pdf",
+   "printed": [
+    {
+     "param": "WBC",
+     "label": "GB",
+     "printed": "8,9",
+     "unit": "G/L",
+     "canonical_value": 8.9,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "label": "PNN",
+     "printed": "5,8",
+     "unit": "G/L",
+     "canonical_value": 5.8,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "label": "Lymphocytes",
+     "printed": "1,6",
+     "unit": "G/L",
+     "canonical_value": 1.6,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "label": "PNE",
+     "printed": "0,15",
+     "unit": "G/L",
+     "canonical_value": 0.15,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "label": "Hb",
+     "printed": "127",
+     "unit": "g/L",
+     "canonical_value": 12.7,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "label": "Plaquettes",
+     "printed": "239",
+     "unit": "G/L",
+     "canonical_value": 239.0,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "label": "CRP",
+     "printed": "13,3",
+     "unit": "mg/L",
+     "canonical_value": 13.3,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D024",
+   "type": "efr",
+   "date": "2026-04-29",
+   "values": [
+    {
+     "param": "FEV1",
+     "value": 1.2293069909448426,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "value": 2.2501427481038516,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "value": 0.5463240018797714,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1",
+     "value": 1.3201938104460802,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "value": 2.3128389221112844,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "value": 0.5708109621576828,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_PRED",
+     "value": 52.47193205270588,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC_PRED",
+     "value": 78.684048517088,
+     "context": [
+      "post_bd"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "bd": true,
+    "pred_fev1": 2.5160000000000005,
+    "pred_fvc": 2.9393999999999996
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "EFR",
+   "format": "scan_pdf",
+   "file": "A09\\documents\\2026-04-29_D024_efr.pdf",
+   "printed": [
+    {
+     "param": "FEV1",
+     "label": "VEMS",
+     "printed": "1,23",
+     "unit": "L",
+     "canonical_value": 1.23,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1",
+     "label": "VEMS",
+     "printed": "1,32",
+     "unit": "L",
+     "canonical_value": 1.32,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_PRED",
+     "label": "VEMS % théorique",
+     "printed": "52",
+     "unit": "%",
+     "canonical_value": 52.0,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "label": "CVF",
+     "printed": "2,25",
+     "unit": "L",
+     "canonical_value": 2.25,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "label": "CVF",
+     "printed": "2,31",
+     "unit": "L",
+     "canonical_value": 2.31,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC_PRED",
+     "label": "CVF % théorique",
+     "printed": "79",
+     "unit": "%",
+     "canonical_value": 79.0,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "label": "VEMS/CVF",
+     "printed": "55",
+     "unit": "%",
+     "canonical_value": 0.55,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "label": "VEMS/CVF",
+     "printed": "57",
+     "unit": "%",
+     "canonical_value": 0.57,
+     "context": [
+      "post_bd"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D025",
+   "type": "bilan_bio",
+   "date": "2026-04-29",
+   "values": [
+    {
+     "param": "WBC",
+     "value": 8.850272157669275,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "value": 5.205108034072383,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "value": 1.7805366662424378,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "value": 0.12404591373172635,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "value": 14.382941531271166,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "value": 202.8991200361233,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "value": 2.026862118681926,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "value": 6.9165598054475055,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "T2",
+   "format": "photo_jpg",
+   "file": "A09\\documents\\2026-04-29_D025_bilan_bio.jpg",
+   "printed": [
+    {
+     "param": "WBC",
+     "label": "GB",
+     "printed": "8,9",
+     "unit": "G/L",
+     "canonical_value": 8.9,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "label": "PNN",
+     "printed": "5,2",
+     "unit": "G/L",
+     "canonical_value": 5.2,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "label": "Lymphocytes",
+     "printed": "1,8",
+     "unit": "G/L",
+     "canonical_value": 1.8,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "label": "PNE",
+     "printed": "0,12",
+     "unit": "G/L",
+     "canonical_value": 0.12,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "label": "Hb",
+     "printed": "144",
+     "unit": "g/L",
+     "canonical_value": 14.4,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "label": "Plaquettes",
+     "printed": "203",
+     "unit": "G/L",
+     "canonical_value": 203.0,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "label": "CRP",
+     "printed": "2,0",
+     "unit": "mg/L",
+     "canonical_value": 2.0,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "label": "Créatininémie",
+     "printed": "61",
+     "unit": "µmol/L",
+     "canonical_value": 6.8991,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D026",
+   "type": "compte_rendu",
+   "date": "2026-04-29",
+   "values": [
+    {
+     "param": "SPO2",
+     "value": 94.26668330060583,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "kind": "suivi"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "CR",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-04-29_D026_compte_rendu.pdf",
+   "printed": [
+    {
+     "param": "SPO2",
+     "label": "SpO2",
+     "printed": "94",
+     "unit": "%",
+     "canonical_value": 94.0,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D037",
+   "type": "radiographie",
+   "date": "2026-04-29",
+   "values": [],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": "00016785_008.png",
+   "nih_labels": "No Finding",
+   "template": null,
+   "format": "png",
+   "file": "A09\\radiographies\\2026-04-29_D037.png",
+   "printed": []
+  },
+  {
+   "doc_id": "A09-D027",
+   "type": "efr",
+   "date": "2026-07-25",
+   "values": [
+    {
+     "param": "FEV1",
+     "value": 1.3008968979586897,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "value": 2.2955544670013626,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "value": 0.5667026928174027,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1",
+     "value": 1.379967741829465,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "value": 2.400376168930112,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "value": 0.5748964515193214,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_PRED",
+     "value": 54.84768449242706,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC_PRED",
+     "value": 81.66211366027463,
+     "context": [
+      "post_bd"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "bd": true,
+    "pred_fev1": 2.5160000000000005,
+    "pred_fvc": 2.9393999999999996
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "EFR",
+   "format": "scan_pdf",
+   "file": "A09\\documents\\2026-07-25_D027_efr.pdf",
+   "printed": [
+    {
+     "param": "FEV1",
+     "label": "VEMS",
+     "printed": "1,30",
+     "unit": "L",
+     "canonical_value": 1.3,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1",
+     "label": "VEMS",
+     "printed": "1,38",
+     "unit": "L",
+     "canonical_value": 1.38,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_PRED",
+     "label": "VEMS % théorique",
+     "printed": "55",
+     "unit": "%",
+     "canonical_value": 55.0,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "label": "CVF",
+     "printed": "2,30",
+     "unit": "L",
+     "canonical_value": 2.3,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "label": "CVF",
+     "printed": "2,40",
+     "unit": "L",
+     "canonical_value": 2.4,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC_PRED",
+     "label": "CVF % théorique",
+     "printed": "82",
+     "unit": "%",
+     "canonical_value": 82.0,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "label": "VEMS/CVF",
+     "printed": "57",
+     "unit": "%",
+     "canonical_value": 0.57,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "label": "VEMS/CVF",
+     "printed": "57",
+     "unit": "%",
+     "canonical_value": 0.57,
+     "context": [
+      "post_bd"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D028",
+   "type": "bilan_bio",
+   "date": "2026-07-25",
+   "values": [
+    {
+     "param": "WBC",
+     "value": 7.5772077109588,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "value": 4.442333324106511,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "value": 1.600776658025851,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "value": 0.16780757892940726,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "value": 12.800572712895367,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "value": 207.77396642856186,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "value": 3.8571521457240134,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "T2",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-07-25_D028_bilan_bio.pdf",
+   "printed": [
+    {
+     "param": "WBC",
+     "label": "GB",
+     "printed": "7,6",
+     "unit": "G/L",
+     "canonical_value": 7.6,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "label": "PNN",
+     "printed": "4,4",
+     "unit": "G/L",
+     "canonical_value": 4.4,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "label": "Lymphocytes",
+     "printed": "1,6",
+     "unit": "G/L",
+     "canonical_value": 1.6,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "label": "PNE",
+     "printed": "0,17",
+     "unit": "G/L",
+     "canonical_value": 0.17,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "label": "Hb",
+     "printed": "128",
+     "unit": "g/L",
+     "canonical_value": 12.8,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "label": "Plaquettes",
+     "printed": "208",
+     "unit": "G/L",
+     "canonical_value": 208.0,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "label": "CRP",
+     "printed": "3,9",
+     "unit": "mg/L",
+     "canonical_value": 3.9,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D029",
+   "type": "compte_rendu",
+   "date": "2026-07-25",
+   "values": [
+    {
+     "param": "SPO2",
+     "value": 95.1509915103814,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "kind": "suivi"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "CR",
+   "format": "photo_jpg",
+   "file": "A09\\documents\\2026-07-25_D029_compte_rendu.jpg",
+   "printed": [
+    {
+     "param": "SPO2",
+     "label": "SpO2",
+     "printed": "95",
+     "unit": "%",
+     "canonical_value": 95.0,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D030",
+   "type": "efr",
+   "date": "2026-10-23",
+   "values": [
+    {
+     "param": "FEV1",
+     "value": 1.2619510168669874,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "value": 2.2949128228617655,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "value": 0.5498906120945063,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1",
+     "value": 1.3679902996438622,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "value": 2.3854436061924216,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "value": 0.5734741731444283,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_PRED",
+     "value": 54.371633531155084,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC_PRED",
+     "value": 81.15409968675314,
+     "context": [
+      "post_bd"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "bd": true,
+    "pred_fev1": 2.5160000000000005,
+    "pred_fvc": 2.9393999999999996
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "EFR",
+   "format": "scan_pdf",
+   "file": "A09\\documents\\2026-10-23_D030_efr.pdf",
+   "printed": [
+    {
+     "param": "FEV1",
+     "label": "VEMS",
+     "printed": "1,26",
+     "unit": "L",
+     "canonical_value": 1.26,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1",
+     "label": "VEMS",
+     "printed": "1,37",
+     "unit": "L",
+     "canonical_value": 1.37,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_PRED",
+     "label": "VEMS % théorique",
+     "printed": "54",
+     "unit": "%",
+     "canonical_value": 54.0,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "label": "CVF",
+     "printed": "2,29",
+     "unit": "L",
+     "canonical_value": 2.29,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FVC",
+     "label": "CVF",
+     "printed": "2,39",
+     "unit": "L",
+     "canonical_value": 2.39,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FVC_PRED",
+     "label": "CVF % théorique",
+     "printed": "81",
+     "unit": "%",
+     "canonical_value": 81.0,
+     "context": [
+      "post_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "label": "VEMS/CVF",
+     "printed": "55",
+     "unit": "%",
+     "canonical_value": 0.55,
+     "context": [
+      "pre_bd"
+     ]
+    },
+    {
+     "param": "FEV1_FVC",
+     "label": "VEMS/CVF",
+     "printed": "57",
+     "unit": "%",
+     "canonical_value": 0.57,
+     "context": [
+      "post_bd"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D031",
+   "type": "bilan_bio",
+   "date": "2026-10-23",
+   "values": [
+    {
+     "param": "WBC",
+     "value": 7.253406169468786,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "value": 4.769340270165574,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "value": 1.3853064072824683,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "value": 0.12283918806254733,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "value": 13.655855284406696,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "value": 281.73334733963026,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "value": 2.848182869114975,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "value": 8.089265642011425,
+     "context": []
+    }
+   ],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "T2",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-10-23_D031_bilan_bio.pdf",
+   "printed": [
+    {
+     "param": "WBC",
+     "label": "GB",
+     "printed": "7,3",
+     "unit": "G/L",
+     "canonical_value": 7.3,
+     "context": []
+    },
+    {
+     "param": "NEUT",
+     "label": "PNN",
+     "printed": "4,8",
+     "unit": "G/L",
+     "canonical_value": 4.8,
+     "context": []
+    },
+    {
+     "param": "LYMPH",
+     "label": "Lymphocytes",
+     "printed": "1,4",
+     "unit": "G/L",
+     "canonical_value": 1.4,
+     "context": []
+    },
+    {
+     "param": "EOS",
+     "label": "PNE",
+     "printed": "0,12",
+     "unit": "G/L",
+     "canonical_value": 0.12,
+     "context": []
+    },
+    {
+     "param": "HB",
+     "label": "Hb",
+     "printed": "137",
+     "unit": "g/L",
+     "canonical_value": 13.7,
+     "context": []
+    },
+    {
+     "param": "PLT",
+     "label": "Plaquettes",
+     "printed": "282",
+     "unit": "G/L",
+     "canonical_value": 282.0,
+     "context": []
+    },
+    {
+     "param": "CRP",
+     "label": "CRP",
+     "printed": "2,8",
+     "unit": "mg/L",
+     "canonical_value": 2.8,
+     "context": []
+    },
+    {
+     "param": "CREAT",
+     "label": "Créatininémie",
+     "printed": "72",
+     "unit": "µmol/L",
+     "canonical_value": 8.1432,
+     "context": []
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D032",
+   "type": "compte_rendu",
+   "date": "2026-10-23",
+   "values": [
+    {
+     "param": "SPO2",
+     "value": 93.47020663182954,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ],
+   "treatments": [],
+   "text_hints": {
+    "kind": "suivi"
+   },
+   "nih_image": null,
+   "nih_labels": null,
+   "template": "CR",
+   "format": "pdf",
+   "file": "A09\\documents\\2026-10-23_D032_compte_rendu.pdf",
+   "printed": [
+    {
+     "param": "SPO2",
+     "label": "SpO2",
+     "printed": "93",
+     "unit": "%",
+     "canonical_value": 93.0,
+     "context": [
+      "rest",
+      "room_air"
+     ]
+    }
+   ]
+  },
+  {
+   "doc_id": "A09-D038",
+   "type": "radiographie",
+   "date": "2026-10-23",
+   "values": [],
+   "treatments": [],
+   "text_hints": {},
+   "nih_image": "00016785_009.png",
+   "nih_labels": "Effusion",
+   "template": null,
+   "format": "png",
+   "file": "A09\\radiographies\\2026-10-23_D038.png",
+   "printed": []
+  }
+ ],
+ "split": "dev"
+}

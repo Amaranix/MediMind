@@ -1,0 +1,10 @@
+# Outils de préparation des données (phase 1) - hors application
+kaggle>=1.7
+pandas>=2.2
+numpy>=1.26
+pillow>=10.4
+pydicom>=2.4
+pymupdf>=1.24
+pyyaml>=6.0
+six>=1.16
+playwright>=1.47
