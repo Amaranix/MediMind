@@ -53,7 +53,7 @@ export function UsersPage() {
   }
 
   return (
-    <>
+    <div className="mx-auto max-w-6xl pb-10">
       <h1 className="mt-6 mb-4 text-[26px] font-bold">Comptes et service</h1>
       <HealthPanel />
       <form onSubmit={submit} className="panel mb-6 p-5" aria-label="Nouveau compte médecin">
@@ -108,6 +108,6 @@ export function UsersPage() {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }

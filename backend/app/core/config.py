@@ -41,6 +41,9 @@ class Settings(BaseSettings):
     referential_path: Path = Field(default_factory=_default_referential)
 
     max_upload_mb: int = 25
+    tesseract_cmd: str = "tesseract"
+    llm_timeout_s: float = 60.0
+    llm_enabled: bool = True
 
 
 @lru_cache

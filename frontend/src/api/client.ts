@@ -102,3 +102,75 @@ export async function logout(): Promise<void> {
   await api<void>("/auth/logout", { method: "POST" }, false).catch(() => undefined);
   accessToken = null;
 }
+
+// ---------------------------------------------------------------- documents et mesures
+export type DocType = "bilan_bio" | "efr" | "compte_rendu" | "ordonnance" | "radiographie" | "inconnu";
+export type DocStatus = "uploaded" | "processing" | "extracted" | "validated" | "failed";
+export type MedDocument = {
+  id: string;
+  patient_id: string;
+  type: DocType;
+  type_confidence: number | null;
+  type_source: string | null;
+  exam_date: string | null;
+  date_source: string | null;
+  original_name: string;
+  mime_type: string;
+  status: DocStatus;
+  confidence: number | null;
+  page_count: number | null;
+  warnings: string[] | null;
+  processing_seconds: number | null;
+  created_at: string;
+  pending_count: number;
+  validated_count: number;
+};
+export type Bbox = { page: number; x0: number; y0: number; x1: number; y1: number };
+export type ValidationStatus = "pending" | "validated" | "corrected" | "rejected" | "suspect";
+export type Measurement = {
+  id: string;
+  parameter_code: string;
+  value: number;
+  unit: string;
+  date: string;
+  context: string[];
+  source_document_id: string | null;
+  source_text: string | null;
+  printed_value: number | null;
+  printed_unit: string | null;
+  flags: string[];
+  bbox: Bbox | null;
+  confidence: number | null;
+  validation_status: ValidationStatus;
+  validated_at: string | null;
+};
+export type UploadResult = {
+  filename: string;
+  status: "queued" | "duplicate" | "rejected";
+  message: string | null;
+  document_id: string | null;
+  job_id: string | null;
+};
+export type ParameterDef = { code: string; name: string; unit: string; category: string };
+export type Referential = { version: string; contexts: Record<string, string>; parameters: ParameterDef[] };
+
+export function uploadDocuments(patientId: string, files: File[], examDate?: string, docType?: string) {
+  const fd = new FormData();
+  files.forEach((f) => fd.append("files", f));
+  if (examDate) fd.append("exam_date", examDate);
+  if (docType) fd.append("doc_type", docType);
+  return api<UploadResult[]>(`/patients/${patientId}/documents`, { method: "POST", body: fd });
+}
+
+/** Image d'aperçu d'une page : récupérée avec le jeton puis convertie en URL locale. */
+export async function fetchPageUrl(documentId: string, page: number, width = 1000): Promise<string> {
+  const headers = new Headers();
+  if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
+  let r = await fetch(`/api/documents/${documentId}/pages/${page}?width=${width}`, { headers });
+  if (r.status === 401 && (await refreshSession())) {
+    headers.set("Authorization", `Bearer ${accessToken}`);
+    r = await fetch(`/api/documents/${documentId}/pages/${page}?width=${width}`, { headers });
+  }
+  if (!r.ok) throw new ApiError(r.status, "Aperçu indisponible");
+  return URL.createObjectURL(await r.blob());
+}

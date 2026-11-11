@@ -36,3 +36,8 @@
 | T11 | 2026-11-11 | Session : jeton d'accès 15 min en mémoire, jeton de rafraîchissement 7 j en cookie httpOnly/Secure/SameSite=Strict limité à `/api/auth` | Jeton non lisible par le JavaScript ; session restaurée au rechargement |
 | T12 | 2026-11-11 | HTTPS local par Caddy (`tls internal`) sur le port 8443 | Pas de droits administrateur ni de conflit avec 443 ; certificat local à accepter une fois |
 | T13 | 2026-11-11 | RSNA : archive complète téléchargée en une requête puis lecture dans le zip | Le téléchargement image par image déclenche la limitation de débit de Kaggle ; 572 images disponibles en attendant |
+| T14 | 2026-11-11 | OCR : redressement automatique (profil de projection), filtre médian 3×3, seuil d'Otsu, Tesseract `fra` en `--psm 6` | Mesuré sur un scan de gabarit T3 : 9/9 valeurs lues contre 1/9 sans prétraitement, OCR 3 fois plus rapide |
+| T15 | 2026-11-11 | Confiance d'une valeur lue par OCR plafonnée à 0,9 ; validation groupée réservée aux valeurs de confiance ≥ 0,95 sans signalement | Les valeurs scannées sont toujours validées une par une par le médecin |
+| T16 | 2026-11-11 | Nombres situés dans une plage de référence (entre parenthèses, autour d'un « - » ou « à ») jamais pris pour une valeur ; fusion des milliers seulement si une unité suit | Évite qu'une valeur illisible soit remplacée par une borne de référence (erreur dangereuse détectée en évaluation) |
+| T17 | 2026-11-11 | Date d'examen : saisie du médecin > date lue dans le document > date de dépôt (avec avertissement) ; la date de naissance est exclue | Fiabilité de l'axe temporel des courbes |
+| T18 | 2026-11-11 | Évaluation de l'extraction sans repli LLM par défaut (`--llm` pour l'activer) | Mesurer d'abord la chaîne déterministe ; le LLM n'est qu'un secours |

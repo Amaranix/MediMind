@@ -7,7 +7,11 @@ import { AuthProvider, useAuth } from "./auth/AuthContext";
 import { Layout } from "./components/Layout";
 import "./index.css";
 import { homeFor, LoginPage } from "./pages/LoginPage";
+import { DocumentsTab } from "./pages/DocumentsTab";
+import { PatientPage } from "./pages/PatientPage";
 import { PatientsPage } from "./pages/PatientsPage";
+import { PendingTab } from "./pages/PendingTab";
+import { ValidationPage } from "./pages/ValidationPage";
 import { UsersPage } from "./pages/UsersPage";
 
 const queryClient = new QueryClient({ defaultOptions: { queries: { retry: 1, staleTime: 15_000 } } });
@@ -47,6 +51,11 @@ createRoot(document.getElementById("root")!).render(
             <Route path="/" element={<Home />} />
             <Route element={<Layout />}>
               <Route path="/patients" element={<RequireRole role="doctor"><PatientsPage /></RequireRole>} />
+              <Route path="/patients/:patientId" element={<RequireRole role="doctor"><PatientPage /></RequireRole>}>
+                <Route index element={<DocumentsTab />} />
+                <Route path="a-valider" element={<PendingTab />} />
+                <Route path="documents/:docId" element={<ValidationPage />} />
+              </Route>
               <Route path="/admin/comptes" element={<RequireRole role="admin"><UsersPage /></RequireRole>} />
               <Route path="*" element={<NotFound />} />
             </Route>

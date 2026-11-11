@@ -16,7 +16,7 @@ export function Logo({ className = "" }: { className?: string }) {
 /** Bandeau permanent exigé par les garde-fous (docs/PLAN.md §4). */
 export function DecisionSupportBanner() {
   return (
-    <div role="note" className="flex flex-wrap gap-x-3 gap-y-1 bg-ink px-4 py-1.5 text-[13px] text-[#f1f5f4] sm:px-5">
+    <div role="note" className="sticky top-0 z-30 flex flex-wrap gap-x-3 gap-y-1 bg-ink px-4 py-1.5 text-[13px] text-[#f1f5f4] sm:px-5">
       <strong>Aide à la décision.</strong>
       <span>Les résultats de l'IA ne constituent pas un diagnostic. Démonstrateur de recherche, données fictives.</span>
     </div>
@@ -44,7 +44,7 @@ export function Layout() {
           </button>
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-4 pb-10 sm:px-6">
+      <main className="px-4 sm:px-6">
         <Outlet />
       </main>
     </div>

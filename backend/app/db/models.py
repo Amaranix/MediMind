@@ -119,6 +119,12 @@ class Document(Base):
     status: Mapped[DocumentStatus] = mapped_column(_enum(DocumentStatus, "document_status"),
                                                   default=DocumentStatus.uploaded)
     confidence: Mapped[float | None] = mapped_column(Float)
+    type_confidence: Mapped[float | None] = mapped_column(Float)
+    type_source: Mapped[str | None] = mapped_column(String(16))   # user | rules | llm | image
+    date_source: Mapped[str | None] = mapped_column(String(16))   # user | detected | upload
+    page_count: Mapped[int | None] = mapped_column(Integer)
+    warnings: Mapped[list | None] = mapped_column(JsonType)
+    processing_seconds: Mapped[float | None] = mapped_column(Float)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
     patient: Mapped[Patient] = relationship(back_populates="documents")
@@ -151,6 +157,9 @@ class Measurement(Base):
     context: Mapped[list] = mapped_column(JsonType, default=list)
     source_document_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("documents.id", ondelete="CASCADE"))
     source_text: Mapped[str | None] = mapped_column(Text)
+    printed_value: Mapped[float | None] = mapped_column(Float)
+    printed_unit: Mapped[str | None] = mapped_column(String(32))
+    flags: Mapped[list] = mapped_column(JsonType, default=list)
     bbox: Mapped[dict | None] = mapped_column(JsonType)
     confidence: Mapped[float | None] = mapped_column(Float)
     validation_status: Mapped[ValidationStatus] = mapped_column(_enum(ValidationStatus, "validation_status"),

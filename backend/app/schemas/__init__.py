@@ -143,3 +143,61 @@ class HealthOut(BaseModel):
     ollama_model: str
     imaging_model: str
     referential_version: str
+
+
+# ---------------------------------------------------------------- documents et mesures
+class UploadResult(BaseModel):
+    filename: str
+    status: str  # queued | duplicate | rejected
+    message: str | None = None
+    document_id: uuid.UUID | None = None
+    job_id: uuid.UUID | None = None
+
+
+class DocumentOut(ORM):
+    id: uuid.UUID
+    patient_id: uuid.UUID
+    type: str
+    type_confidence: float | None
+    type_source: str | None
+    exam_date: dt.date | None
+    date_source: str | None
+    original_name: str
+    mime_type: str
+    status: str
+    confidence: float | None
+    page_count: int | None
+    warnings: list[str] | None
+    processing_seconds: float | None
+    created_at: dt.datetime
+    pending_count: int = 0
+    validated_count: int = 0
+
+
+class DocumentUpdate(BaseModel):
+    type: str | None = None
+    exam_date: dt.date | None = None
+
+
+class MeasurementOut(ORM):
+    id: uuid.UUID
+    parameter_code: str
+    value: float
+    unit: str
+    date: dt.date
+    context: list[str]
+    source_document_id: uuid.UUID | None
+    source_text: str | None
+    printed_value: float | None
+    printed_unit: str | None
+    flags: list[str]
+    bbox: dict | None
+    confidence: float | None
+    validation_status: str
+    validated_at: dt.datetime | None
+
+
+class MeasurementAction(BaseModel):
+    action: str = Field(pattern="^(validate|correct|reject|reset)$")
+    value: float | None = None
+    context: list[str] | None = None

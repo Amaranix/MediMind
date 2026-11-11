@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import { api, ApiError, post, type Patient } from "../api/client";
 
 const EMPTY = {
@@ -97,10 +98,11 @@ function PatientForm({ onDone }: { onDone: () => void }) {
 
 export function PatientsPage() {
   const [adding, setAdding] = useState(false);
+  const navigate = useNavigate();
   const { data, isLoading, error } = useQuery({ queryKey: ["patients"], queryFn: () => api<Patient[]>("/patients") });
 
   return (
-    <>
+    <div className="mx-auto max-w-6xl pb-10">
       <div className="mt-6 mb-4 flex flex-wrap items-end justify-between gap-4">
         <h1 className="text-[26px] font-bold">Mes patients</h1>
         {!adding && (
@@ -132,9 +134,13 @@ export function PatientsPage() {
             </thead>
             <tbody>
               {data.map((p) => (
-                <tr key={p.id} className="border-t border-grid">
+                <tr key={p.id} className="cursor-pointer border-t border-grid hover:bg-teal-soft"
+                  onClick={() => navigate(`/patients/${p.id}`)}>
                   <td className="px-4 py-3">
-                    <b>{p.last_name.toUpperCase()} {p.first_name}</b>
+                    <a href={`/patients/${p.id}`} className="font-bold hover:underline"
+                      onClick={(e) => { e.preventDefault(); navigate(`/patients/${p.id}`); }}>
+                      {p.last_name.toUpperCase()} {p.first_name}
+                    </a>
                     <div className="text-sm text-ink-3">{p.age} ans, {p.sex === "M" ? "homme" : "femme"}</div>
                   </td>
                   <td className="px-4 py-3">{fmtDate(p.birth_date)}</td>
@@ -146,6 +152,6 @@ export function PatientsPage() {
           </table>
         </div>
       )}
-    </>
+    </div>
   );
 }
