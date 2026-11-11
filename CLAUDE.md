@@ -33,11 +33,13 @@ Windows 11, pas de GPU, 16 Go de RAM. Ollama : `llama3.2:3b` par défaut.
 - Frontend : `cd frontend && npm run lint && npm run build` ; dev : `npm run dev` (proxy /api -> :8000)
 - Données : `.venv/Scripts/python -m synthetic.generator --seed 42` (voir `docs/data-sources.md`)
 - Charger des patients de démo (pile lancée) : `backend/.venv/Scripts/python scripts/load_synthetic_patient.py A01 B01 C01 --validate`
+- Évaluation imagerie : `cd backend && .venv/Scripts/python ../evaluation/run_imaging_eval.py --dataset rsna` (télécharge aussi les poids `-chex`)
 - Évaluation extraction : `cd backend && TESSERACT_CMD="C:/Program Files/Tesseract-OCR/tesseract.exe" .venv/Scripts/python ../evaluation/run_extraction_eval.py --split dev` (ne jamais régler le pipeline sur `--split test`)
 
 ## Pièges connus
 - Colonnes nommées `date` dans les modèles : annoter avec `dt.date` (import datetime as dt).
 - Contexte de build du backend = racine du dépôt (inclut `referential/`) ; `.dockerignore` racine en liste blanche.
 - Toutes les routes API sont sous `/api` ; toute route patient passe par `get_patient_for_doctor` (documents : `get_document_for_doctor`).
+- Imagerie : dans les tests, le modèle est remplacé par un faux (`monkeypatch` de `imaging.analyze`) ; `IMAGING_PRELOAD=false`.
 - Sessions SQLAlchemy sans autoflush : `db.flush()` avant de recompter des lignes modifiées dans la même requête.
 - Remplacements de texte contenant des antislashs (regex, espaces insécables) : passer par un fichier de script ou l'outil Edit, jamais par un heredoc shell (apostrophes et échappements cassés).

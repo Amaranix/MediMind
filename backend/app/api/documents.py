@@ -28,6 +28,7 @@ from app.db.models import (
     Document,
     DocumentStatus,
     DocumentType,
+    Imaging,
     Job,
     Measurement,
     Patient,
@@ -180,6 +181,9 @@ def update_document(body: DocumentUpdate, background: BackgroundTasks,
                                                     Treatment.validation_status.in_(OPEN_STATUSES))):
             t.start_date = body.exam_date
             t.end_date = body.exam_date + dt.timedelta(days=t.duration_days) if t.duration_days else None
+        im = db.scalar(select(Imaging).where(Imaging.document_id == doc.id))
+        if im is not None:
+            im.date = body.exam_date
         alert_engine.recompute(db, get_referential(), doc.patient_id)
     db.commit()
     audit(db, user.id, "document_update", "document", doc.id, body.model_dump(exclude_none=True, mode="json"))

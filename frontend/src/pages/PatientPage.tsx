@@ -114,6 +114,7 @@ export function PatientPage() {
         <nav className="sticky top-8 z-20 -mx-4 mb-5 flex gap-1 overflow-x-auto border-b border-grid bg-surface px-4 sm:-mx-6 sm:px-6"
           aria-label="Sections du dossier">
           <NavLink end to={`/patients/${patientId}`} className={tab}>Évolution</NavLink>
+          <NavLink to={`/patients/${patientId}/radiographies`} className={tab}>Radiographies</NavLink>
           <NavLink to={`/patients/${patientId}/documents`} className={tab}>Documents</NavLink>
           <NavLink to={`/patients/${patientId}/a-valider`} className={tab}>
             À valider

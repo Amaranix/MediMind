@@ -256,3 +256,33 @@ export type ExtractedEvent = {
   validation_status: ValidationStatus;
   manual: boolean;
 };
+
+// ---------------------------------------------------------------- imagerie
+export type ImagingItem = {
+  document_id: string;
+  imaging_id: string | null;
+  date: string | null;
+  name: string;
+  analyzed: boolean;
+  scores: Record<string, number> | null;
+  uncertainty: Record<string, number> | null;
+  quality_flags: string[];
+  view: "face" | "profil" | null;
+  model_name: string | null;
+  model_version: string | null;
+  doctor_assessment: string | null;
+};
+export type ImagingList = { pathologies: string[]; model_name: string; items: ImagingItem[] };
+
+/** Ressource binaire protégée (image, carte) récupérée avec le jeton puis convertie en URL locale. */
+export async function fetchBlobUrl(path: string): Promise<string> {
+  const headers = new Headers();
+  if (accessToken) headers.set("Authorization", `Bearer ${accessToken}`);
+  let r = await fetch(`/api${path}`, { headers });
+  if (r.status === 401 && (await refreshSession())) {
+    headers.set("Authorization", `Bearer ${accessToken}`);
+    r = await fetch(`/api${path}`, { headers });
+  }
+  if (!r.ok) throw new ApiError(r.status, "Image indisponible");
+  return URL.createObjectURL(await r.blob());
+}

@@ -76,3 +76,26 @@ export function fmtValue(v: number, unit: string): string {
 export function unitLabel(unit: string): string {
   return unit === "ratio" || unit === "pH" ? "" : unit;
 }
+
+export const PATHOLOGIES: Record<string, string> = {
+  Consolidation: "Consolidation",
+  Pneumonia: "Pneumonie",
+  "Lung Opacity": "Opacité pulmonaire",
+  Infiltration: "Infiltrat",
+  Effusion: "Épanchement pleural",
+  Atelectasis: "Atélectasie",
+  Emphysema: "Emphysème",
+  Fibrosis: "Fibrose",
+  Edema: "Œdème",
+  Cardiomegaly: "Cardiomégalie",
+};
+
+/** Score IA suivi par défaut selon la pathologie du patient. */
+export const DEFAULT_SCORE: Record<string, string> = { bpco: "Emphysema", fibrose: "Fibrosis", pneumonie: "Consolidation" };
+
+export const QUALITY: Record<string, string> = {
+  couleur: "Image en couleur (une radiographie est en niveaux de gris)",
+  resolution_faible: "Résolution faible",
+  proportions_inhabituelles: "Proportions inhabituelles (recadrage ou vue de profil ?)",
+  contraste_faible: "Contraste faible",
+};

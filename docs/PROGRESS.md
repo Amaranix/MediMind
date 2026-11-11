@@ -64,7 +64,21 @@ Tests : 86 tests backend verts ; parcours navigateur vérifié dans Docker (dép
 
 Tests : 120 tests backend verts. Trois patients chargés par l'API (A01 BPCO, B01 pneumonie, C01 fibrose) avec `scripts/load_synthetic_patient.py`.
 
-## Phases 5 à 10
+## Phase 5 : Module C, imagerie
+
+| Étape | Statut | Notes |
+|---|---|---|
+| 5.1 Service d'inférence | ✅ | TorchXRayVision CPU, 10 pathologies, contrôles de qualité (couleur, résolution, proportions, contraste), modèle et version stockés ; analyse au dépôt, 1,9 s par radio dans Docker |
+| 5.2 Grad-CAM et incertitude | ✅ | Carte par pathologie à la demande (mise en cache), écart-type sur 7 variantes |
+| 5.3 Liste et visionneuse | ✅ | Vignettes R1…Rn, côte à côte / superposition avec opacité, zoom et déplacement synchronisés, carte superposable, vue face/profil, lecture du médecin |
+| 5.4 Courbe des scores | ✅ | Scores IA ± incertitude sur l'axe commun de l'écran d'évolution, seuil du modèle 0,50, mention « indicatif, non diagnostique » |
+| 5.5 Évaluation imagerie | ⏳ | Script prêt (`evaluation/run_imaging_eval.py`), vérifié sur un échantillon. En attente de Kaggle (limite de débit, levée prévue vers 19 h 35 le 11/11) pour compléter RSNA à 1 500 images |
+
+Constats pour la fiche du modèle : plusieurs scores se regroupent autour de 0,50 (seuil de calibration) ; le Grad-CAM porte parfois sur les bords de l'image ou le cou (raccourcis appris), d'où la légende obligatoire.
+
+Tests : 125 tests backend verts (faux modèle pour les tests d'API, vrai modèle testé si ses poids sont présents).
+
+## Phases 6 à 10
 
 ⬜ Non commencées.
 

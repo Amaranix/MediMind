@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import threading
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
@@ -9,7 +10,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from sqlalchemy import select
 
-from app.api import auth, clinical, documents, patients, system, users
+from app.api import auth, clinical, documents, imaging, patients, system, users
 from app.core.config import get_settings
 from app.core.logging import setup_logging
 from app.core.security import hash_password
@@ -19,6 +20,15 @@ from app.services.jobs import reset_interrupted
 from app.services.referential import get_referential, sync_parameters
 
 log = logging.getLogger("medimind")
+
+
+def _preload_imaging() -> None:
+    try:
+        from app.services.imaging import XrayModel
+        XrayModel.get()
+        log.info("modèle d'imagerie chargé")
+    except Exception as exc:  # noqa: BLE001
+        log.warning(f"modèle d'imagerie indisponible : {exc}")
 
 
 def bootstrap() -> None:
@@ -37,6 +47,8 @@ def bootstrap() -> None:
         if n:
             log.warning(f"{n} tâche(s) interrompue(s) remise(s) en échec")
     s.storage_path.mkdir(parents=True, exist_ok=True)
+    if s.imaging_preload:  # le modèle met ~15 s à se charger : on le prépare en arrière-plan
+        threading.Thread(target=_preload_imaging, daemon=True).start()
     log.info(f"référentiel clinique v{ref.version} chargé ({len(ref.parameters)} paramètres, "
              f"{len(ref.alert_rules)} règles)")
 
@@ -51,7 +63,8 @@ async def lifespan(app: FastAPI):
 def create_app(run_bootstrap: bool = True) -> FastAPI:
     app = FastAPI(title="MediMind API", version="0.1.0", lifespan=lifespan if run_bootstrap else None,
                   docs_url="/api/docs", openapi_url="/api/openapi.json", redoc_url=None)
-    for r in (auth.router, users.router, patients.router, documents.router, clinical.router, system.router):
+    for r in (auth.router, users.router, patients.router, documents.router, clinical.router, imaging.router,
+              system.router):
         app.include_router(r, prefix="/api")
 
     @app.exception_handler(RequestValidationError)

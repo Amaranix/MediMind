@@ -124,7 +124,8 @@ def main() -> None:
           f"date {summary['date_accuracy']:.1%} | {summary['mean_seconds']} s/doc (max {summary['max_seconds']} s)")
     for k, m in summary["metrics"].items():
         if k == "ALL" or k.split(":")[0] in ("format", "template", "type"):
-            print(f"  {k:24s} P={m['precision']:.3f} R={m['recall']:.3f} F1={m['f1']:.3f}  (tp {m['tp']}, fp {m['fp']}, fn {m['fn']})")
+            print(f"  {k:24s} P={m['precision']:.3f} R={m['recall']:.3f} F1={m['f1']:.3f}  "
+                  f"(tp {m['tp']}, fp {m['fp']}, fn {m['fn']})")
     weak = [(k, m) for k, m in summary["metrics"].items() if k.startswith("param:") and m["f1"] < 0.95]
     for k, m in weak:
         print(f"  ! {k:22s} F1={m['f1']:.3f}  (tp {m['tp']}, fp {m['fp']}, fn {m['fn']})")

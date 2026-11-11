@@ -14,6 +14,7 @@ ignore = ["B008", "S101"]  # Depends() dans les signatures FastAPI ; assert dans
 
 [tool.ruff.lint.per-file-ignores]
 "tests/*" = ["S105", "S106"]  # mots de passe factices des tests
+"tests/conftest.py" = ["E402"]  # variables d environnement posées avant l import de l application
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

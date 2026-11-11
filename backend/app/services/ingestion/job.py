@@ -106,6 +106,13 @@ def ingest_document(db: Session, job: Job) -> None:
     if doc.type in (DocumentType.bilan_bio, DocumentType.efr, DocumentType.compte_rendu) and not values:
         warnings.append("Aucune valeur reconnue dans ce document.")
     doc.warnings = warnings
+    if doc.type == DocumentType.radiographie:
+        try:
+            from app.services.imaging import run_analysis
+            run_analysis(db, doc)
+        except Exception as exc:  # noqa: BLE001 - l'analyse IA ne doit jamais bloquer le dépôt
+            warnings.append(f"Analyse IA de la radiographie indisponible ({type(exc).__name__}).")
+        doc.warnings = warnings
     doc.status = DocumentStatus.extracted
     db.flush()
     refresh_document_status(db, doc)

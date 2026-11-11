@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     tesseract_cmd: str = "tesseract"
     llm_timeout_s: float = 60.0
     llm_enabled: bool = True
+    imaging_preload: bool = True
 
 
 @lru_cache

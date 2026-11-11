@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useLayoutEffect, useMemo, useRef, useState, type FormEvent, type PointerEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { api, ApiError, post, type Series, type SeriesPoint, type Timeline, type Trend } from "../api/client";
-import { DEFAULT_PARAMS, EVENT_TYPES, fmtDate, fmtValue, TREND, unitLabel } from "../labels";
+import { api, ApiError, post, type ImagingList, type Series, type SeriesPoint, type Timeline, type Trend } from "../api/client";
+import { DEFAULT_PARAMS, DEFAULT_SCORE, EVENT_TYPES, fmtDate, fmtValue, PATHOLOGIES, TREND, unitLabel } from "../labels";
 import { usePatient } from "./PatientPage";
 
 /*
@@ -90,7 +90,11 @@ function EventLines({ s, h, tl }: { s: Scale; h: number; tl: Timeline }) {
   );
 }
 
-function Chart({ series, s, tl, onOpen }: { series: Series; s: Scale; tl: Timeline; onOpen: (p: SeriesPoint) => void }) {
+function Chart({ series, s, tl, onOpen, errors, threshold: thr }: {
+  series: Series; s: Scale; tl: Timeline; onOpen: (p: SeriesPoint) => void;
+  errors?: Record<string, number>; threshold?: { value: number; label: string };
+}) {
+  const ai = !!errors;
   const inWin = (p: SeriesPoint) => toDate(p.date) >= s.start && toDate(p.date) <= s.end;
   const pts = series.points.filter(inWin);
   const pending = series.pending.filter(inWin);
@@ -108,7 +112,8 @@ function Chart({ series, s, tl, onOpen }: { series: Series; s: Scale; tl: Timeli
   const out = (v: number) => (ref?.low != null && v < ref.low) || (ref?.high != null && v > ref.high);
   const bandTop = ref?.high != null ? y(Math.min(ref.high, hi)) : PAD.t;
   const bandBottom = ref?.low != null ? y(Math.max(ref.low, lo)) : ROW_H - PAD.b;
-  const threshold = series.code === "FEV1_FVC" ? 0.7 : null;
+  const threshold = thr?.value ?? (series.code === "FEV1_FVC" ? 0.7 : null);
+  const thresholdLabel = thr?.label ?? "seuil 0,70";
   return (
     <svg width={s.w} height={ROW_H} role="img" aria-label={`Courbe ${series.name}`} className="block">
       <MonthGrid s={s} h={ROW_H} />
@@ -118,23 +123,28 @@ function Chart({ series, s, tl, onOpen }: { series: Series; s: Scale; tl: Timeli
       {threshold != null && threshold > lo && threshold < hi && (
         <>
           <line x1={PAD.l} x2={s.w - PAD.r} y1={y(threshold)} y2={y(threshold)} stroke={C.teal} strokeDasharray="5 4" />
-          <text x={s.w - PAD.r - 4} y={y(threshold) - 4} textAnchor="end" fontSize={11} fill={C.teal}>seuil 0,70</text>
+          <text x={s.w - PAD.r - 4} y={y(threshold) - 4} textAnchor="end" fontSize={11} fill={C.teal}>{thresholdLabel}</text>
         </>
       )}
       <EventLines s={s} h={ROW_H} tl={tl} />
       {pts.length > 1 && (
-        <polyline fill="none" stroke={C.ink} strokeWidth={2}
+        <polyline fill="none" stroke={ai ? C.info : C.ink} strokeWidth={2} strokeDasharray={ai ? "6 4" : undefined}
           points={pts.map((p) => `${s.x(toDate(p.date))},${y(p.value)}`).join(" ")} />
       )}
       {pending.map((p) => (
         <circle key={p.id} cx={s.x(toDate(p.date))} cy={y(p.value)} r={4.5} fill="#fff" stroke={C.ink3} strokeWidth={1.5}
           strokeDasharray="2 2"><title>{`${series.name} ${fmtValue(p.value, series.unit)} ${unitLabel(series.unit)}, ${fmtDate(p.date)} : à valider`}</title></circle>
       ))}
+      {errors && pts.map((p) => {
+        const e = errors[p.id] ?? 0;
+        const x = s.x(toDate(p.date));
+        return <line key={`e-${p.id}`} x1={x} x2={x} y1={y(p.value - 2 * e)} y2={y(p.value + 2 * e)} stroke={C.info} strokeWidth={6} opacity={0.25} />;
+      })}
       {pts.map((p) => {
-        const o = out(p.value);
+        const o = !ai && out(p.value);
         return (
-          <circle key={p.id} cx={s.x(toDate(p.date))} cy={y(p.value)} r={o ? 4.5 : 3.5} fill={o ? "#fff" : C.ink}
-            stroke={o ? C.alert : C.ink} strokeWidth={2} className="cursor-pointer" onClick={() => onOpen(p)}>
+          <circle key={p.id} cx={s.x(toDate(p.date))} cy={y(p.value)} r={o ? 4.5 : 3.5} fill={o ? "#fff" : ai ? C.info : C.ink}
+            stroke={o ? C.alert : ai ? C.info : C.ink} strokeWidth={2} className="cursor-pointer" onClick={() => onOpen(p)}>
             <title>{`${series.name} ${fmtValue(p.value, series.unit)} ${unitLabel(series.unit)}, ${fmtDate(p.date)}. Cliquer pour ouvrir le document source.`}</title>
           </circle>
         );
@@ -255,12 +265,28 @@ export function EvolutionTab() {
   const { data: patient } = usePatient(patientId);
   const seriesQ = useQuery({ queryKey: ["series", patientId], queryFn: () => api<Record<string, Series>>(`/patients/${patientId}/series`) });
   const tlQ = useQuery({ queryKey: ["timeline", patientId], queryFn: () => api<Timeline>(`/patients/${patientId}/timeline`) });
+  const imQ = useQuery({ queryKey: ["imaging", patientId], queryFn: () => api<ImagingList>(`/patients/${patientId}/imaging`) });
   const [months, setMonths] = useState(12);
   const [chosen, setChosen] = useState<string[] | null>(null);
   const [cursor, setCursor] = useState<{ x: number; date: Date } | null>(null);
   const [adding, setAdding] = useState(false);
   const [plotRef, plotW, plotEl] = useWidth<HTMLDivElement>();
-  const all = useMemo(() => seriesQ.data ?? {}, [seriesQ.data]);
+  // Scores IA par pathologie : séries « IA:<pathologie> » sur le même axe que la biologie (F-C5).
+  // Les vues de profil sont exclues. Incertitude = écart-type sur les variantes de l'image.
+  const { aiSeries, aiErrors } = useMemo(() => {
+    const out: Record<string, Series> = {};
+    const err: Record<string, Record<string, number>> = {};
+    const items = (imQ.data?.items ?? []).filter((i) => i.analyzed && i.view !== "profil" && i.date)
+      .sort((a, b) => (a.date! < b.date! ? -1 : 1));
+    for (const p of imQ.data?.pathologies ?? []) {
+      const code = `IA:${p}`;
+      out[code] = { code, name: `Score IA : ${(PATHOLOGIES[p] ?? p).toLowerCase()}`, unit: "score", category: "ia", reference: null,
+        pending: [], points: items.map((i) => ({ id: i.document_id, date: i.date!, value: i.scores![p], context: [], document_id: i.document_id, status: "validated" })) };
+      err[code] = Object.fromEntries(items.map((i) => [i.document_id, i.uncertainty?.[p] ?? 0]));
+    }
+    return { aiSeries: items.length ? out : {}, aiErrors: err };
+  }, [imQ.data]);
+  const all = useMemo(() => ({ ...(seriesQ.data ?? {}), ...aiSeries }), [seriesQ.data, aiSeries]);
   const tl = tlQ.data;
 
   const lastDate = useMemo(() => {
@@ -281,8 +307,8 @@ export function EvolutionTab() {
   });
   const trendBy = Object.fromEntries((trendsQ.data ?? []).map((t) => [t.param, t]));
 
-  const available = Object.keys(all);
-  const defaults = (patient?.conditions ?? []).flatMap((c) => DEFAULT_PARAMS[c] ?? []);
+  const available = [...Object.keys(all).filter((c) => !c.startsWith("IA:")), ...Object.keys(all).filter((c) => c.startsWith("IA:"))];
+  const defaults = (patient?.conditions ?? []).flatMap((c) => [...(DEFAULT_PARAMS[c] ?? []), `IA:${DEFAULT_SCORE[c]}`]);
   const shown = (chosen ?? (defaults.length ? defaults : available.slice(0, 5))).filter((c) => all[c]);
 
   function onMove(e: PointerEvent<HTMLDivElement>) {
@@ -342,14 +368,19 @@ export function EvolutionTab() {
                 <div className="text-[12.5px] text-ink-3">
                   {lv ? `${cursor ? "Valeur au" : "Dernière valeur,"} ${fmtDate(lv.date)}` : "Aucune valeur avant cette date"}
                 </div>
+                {code.startsWith("IA:") ? (
+                  <span className="mt-1.5 inline-block rounded bg-info-soft px-1.5 text-[12.5px] font-semibold text-info">Indicatif, non diagnostique</span>
+                ) : (
                 <span className={`mt-1.5 inline-block rounded px-1.5 text-[12.5px] font-semibold ${tr.tone}`}
                   title={t?.slope_per_year != null ? `Pente ${fmtValue(t.slope_per_year, s.unit)} ${unitLabel(s.unit)} par an (Theil-Sen, ${t.n} mesures)` : undefined}>
                   {tr.label}
                 </span>
+                )}
                 {pend > 0 && <div className="mt-1 text-[12px] text-warn">{pend} valeur(s) à valider</div>}
               </div>
               <div ref={code === shown[0] ? plotRef : undefined} className="min-w-0">
-                <Chart series={s} s={scale} tl={tl} onOpen={openPoint} />
+                <Chart series={s} s={scale} tl={tl} onOpen={openPoint} errors={aiErrors[code]}
+                  threshold={code.startsWith("IA:") ? { value: 0.5, label: "seuil du modèle 0,50" } : undefined} />
               </div>
             </div>
           );
@@ -361,7 +392,7 @@ export function EvolutionTab() {
             <div className="text-[12.5px] text-ink-3">Exacerbations, hospitalisations, radiographies</div>
             <button type="button" className="mt-2 text-[13px] text-teal-ink underline" onClick={() => setAdding(true)}>Ajouter un événement</button>
           </div>
-          <div className="min-w-0"><Frise s={scale} tl={tl} onOpenDoc={(id) => navigate(`/patients/${patientId}/documents/${id}`)} /></div>
+          <div className="min-w-0"><Frise s={scale} tl={tl} onOpenDoc={() => navigate(`/patients/${patientId}/radiographies`)} /></div>
         </div>
         <div className="grid grid-cols-[132px_minmax(0,1fr)] sm:grid-cols-[208px_minmax(0,1fr)]">
           <div className="border-r border-grid" />
@@ -384,6 +415,7 @@ export function EvolutionTab() {
         <span className="inline-flex items-center gap-1.5"><svg width="14" height="12"><line x1="7" y1="0" x2="7" y2="12" stroke={C.alert} strokeDasharray="3 2" /></svg>Exacerbation</span>
         <span className="inline-flex items-center gap-1.5"><svg width="14" height="12"><line x1="7" y1="0" x2="7" y2="12" stroke={C.teal} strokeDasharray="4 2" /></svg>Changement de traitement</span>
         <span className="inline-flex items-center gap-1.5"><svg width="14" height="12"><rect x="3" y="2" width="8" height="8" fill={C.ink} transform="rotate(45 7 6)" /></svg>Radiographie</span>
+        <span className="inline-flex items-center gap-1.5"><svg width="18" height="12"><line x1="0" y1="6" x2="18" y2="6" stroke={C.info} strokeWidth="2" strokeDasharray="5 3" /></svg>Score IA ± incertitude</span>
       </div>
       {adding && <EventForm patientId={patientId} onDone={() => setAdding(false)} />}
     </>

@@ -19,6 +19,11 @@ from app.services.referential import get_referential
 router = APIRouter(tags=["system"])
 
 
+def _imaging_status() -> str:
+    from app.services.imaging import MODEL_NAME, XrayModel
+    return "ok" if XrayModel.loaded() else f"{MODEL_NAME} en cours de chargement"
+
+
 @router.get("/health", response_model=HealthOut)
 def health(db: Session = Depends(get_db)) -> HealthOut:
     s = get_settings()
@@ -34,7 +39,7 @@ def health(db: Session = Depends(get_db)) -> HealthOut:
     except Exception:  # noqa: BLE001
         ollama = "injoignable"
     return HealthOut(status="ok" if database == "ok" else "dégradé", database=database, ollama=ollama,
-                     ollama_model=s.ollama_model, imaging_model="non chargé (phase 5)",
+                     ollama_model=s.ollama_model, imaging_model=_imaging_status(),
                      referential_version=get_referential().version)
 
 
