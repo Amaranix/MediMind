@@ -1,0 +1,46 @@
+@startuml sequence-upload-validation
+title Séquence - Dépôt d'un document puis validation
+actor Pneumologue as U
+participant "Frontend React" as FE
+participant "API FastAPI" as API
+participant "Tâche de fond\n(ingestion)" as BG
+participant "OCR / PyMuPDF" as OCR
+participant "Ollama" as LLM
+database PostgreSQL as DB
+collections "Volume storage" as FS
+
+U -> FE : dépose fichiers + date d'examen
+FE -> API : POST /patients/{id}/documents
+API -> API : contrôle accès médecin/patient, type, taille, SHA-256
+API -> FS : enregistre le fichier
+API -> DB : INSERT document(status=queued), job(queued)
+API --> FE : 202 {job_id}
+API ->> BG : BackgroundTasks
+
+BG -> DB : job = running
+BG -> OCR : texte + boîtes + confiance
+BG -> BG : classification par règles
+alt score règles < seuil
+  BG -> LLM : classification (JSON contraint)
+end
+BG -> BG : extraction par parseurs/regex
+alt valeurs non couvertes (texte libre)
+  BG -> LLM : extraction (JSON contraint)
+  BG -> BG : rejet si valeur absente du texte source
+end
+BG -> BG : normalisation (synonymes, unités, contexte, plausibilité)
+BG -> DB : INSERT measurements(status=pending), job = done
+
+loop sondage
+  FE -> API : GET /jobs/{id}
+end
+U -> FE : ouvre l'écran de validation
+FE -> API : GET /documents/{id}/extractions
+API --> FE : valeurs + bbox + confiance
+U -> FE : valide / corrige / rejette
+FE -> API : PATCH /measurements/{id}
+API -> DB : status, validated_by, validated_at
+API -> DB : INSERT audit_log
+API -> API : recalcul des alertes du patient
+API --> FE : 200
+@enduml

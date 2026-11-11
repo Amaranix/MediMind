@@ -1,0 +1,29 @@
+# Décisions d'architecture et de périmètre
+
+> Format : une entrée par décision. Statut : `acceptée` / `refusée` / `remplacée par Dxx`.
+> Toute modification d'un seuil clinique, d'un dataset ou d'une priorité doit être ajoutée ici.
+
+## Écarts au cahier des charges, validés par l'encadrant (Pr A. Chergui), 2026-11-11
+
+| # | Décision | Raison | Statut |
+|---|---|---|---|
+| D1 | Patients adultes uniquement (≥ 18 ans, refus à la saisie) | Utilisateur = pneumologue adulte ; modèles et normes adultes | acceptée |
+| D2 | Dataset Kermany (pédiatrique) retiré ; sous-ensemble NIH ChestX-ray14 (séries) + RSNA Pneumonia (évaluation) | Kermany pédiatrique, sans série, val inutilisable ; RSNA relu par des radiologues | acceptée |
+| D3 | LLM local uniquement (Ollama), API Groq retirée | Données de santé ne quittent pas la machine (loi 09-08) | acceptée |
+| D4 | Fiche pré-consultation par gabarit déterministe par défaut ; reformulation LLM optionnelle + vérificateur | Pas de GPU ; zéro hallucination | acceptée |
+| D5 | F-C6 = « variation des scores entre deux radios » + incertitude ; pas de verdict IA ; cible de 70 % supprimée | Pas de vérité terrain d'évolution | acceptée |
+| D6 | F-D3 (interactions médicamenteuses) et F-E5 (brouillon de compte rendu) retirées | Hors fil conducteur / risque clinique | acceptée |
+| D7 | Règles d'alerte corrigées et sourcées (PLAN §5) | Contexte post-BD, fatigue d'alerte, critère PPF 1/3 | acceptée |
+| D8 | F-A8 (validation) et F-A9 (audit) dès la tranche T1 | Socle de la confiance et de la traçabilité | acceptée |
+| D9 | 4 gabarits de laboratoire, dont 1 tenu à l'écart pour le test | Limiter l'évaluation circulaire | acceptée |
+| D10 | Budget de la fiche avec LLM porté à 60 s (gabarit < 5 s) | Matériel CPU sans GPU | acceptée |
+| D11 | Pas d'affinage du modèle d'imagerie | Pas de GPU ; pré-entraîné suffisant pour un démonstrateur | acceptée |
+
+## Décisions techniques
+
+| # | Date | Décision | Raison |
+|---|---|---|---|
+| T1 | 2026-11-11 | Le dépôt Git = dossier racine du projet ; CdC déplacé en `docs/CDC.pdf`, ancien plan archivé dans `docs/archive/` | Un seul dépôt, structure du PLAN §7.4 |
+| T2 | 2026-11-11 | Ollama exécuté sur l'hôte Windows, accédé depuis Docker via `host.docker.internal:11434` ; modèle par défaut `llama3.2:3b` | Déjà installé ; plus simple sans GPU |
+| T3 | 2026-11-11 | Unités canoniques du référentiel adaptées aux laboratoires marocains francophones (CRP mg/L, créatinine mg/L, Hb g/dL, cellules en G/L, gaz du sang en mmHg) | Correspond aux comptes rendus rencontrés au Maroc |
+| T4 | 2026-11-11 | Conception UI guidée par la skill `frontend-design` | Demande du binôme |

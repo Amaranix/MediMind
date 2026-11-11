@@ -1,0 +1,349 @@
+# MediMind AI : référentiel clinique
+# Démonstrateur de recherche, non dispositif médical.
+# Règles et seuils validés par l'encadrant (Pr A. Chergui) le 2026-11-11.
+# Toute modification : incrémenter `version` et noter la raison dans docs/DECISIONS.md.
+
+version: "0.1.0"
+population: adult           # >= 18 ans uniquement
+updated: "2026-11-11"
+validated_by: "Encadrant PFA, 2026-11-11"
+
+# Contextes de mesure reconnus (F-A7)
+contexts:
+  pre_bd: "Avant bronchodilatateur"
+  post_bd: "Après bronchodilatateur"
+  rest: "Au repos"
+  exercise: "À l'effort"
+  room_air: "Air ambiant"
+  oxygen: "Sous oxygène"
+
+# alt_units : facteur multiplicatif pour convertir VERS l'unité canonique `unit`.
+# plausible : bornes physiologiques ; hors bornes => statut `suspect` (à vérifier par le médecin).
+# reference : zone normale adulte affichée sur les courbes (null = pas de zone fixe).
+# mcid : variation minimale considérée significative pour la qualification de tendance (F-B4).
+# better : sens d'amélioration (higher / lower / range).
+
+parameters:
+  # ---------- Explorations fonctionnelles respiratoires ----------
+  - code: FEV1
+    name: VEMS
+    category: efr
+    synonyms: ["VEMS", "FEV1", "FEV 1", "V.E.M.S", "VEMS (L)", "Volume expiratoire maximal seconde"]
+    unit: L
+    alt_units: {mL: 0.001}
+    plausible: [0.2, 7.0]
+    reference: null
+    mcid: {abs: 0.10}
+    better: higher
+
+  - code: FEV1_PRED
+    name: VEMS (% prédit)
+    category: efr
+    synonyms: ["VEMS % th", "VEMS %prédit", "VEMS % théorique", "FEV1 %pred", "VEMS/théo"]
+    unit: "%"
+    plausible: [10, 160]
+    reference: {low: 80, high: null, note: "Approximation ; la LIN (z-score) est préférable"}
+    mcid: {abs: 5}
+    better: higher
+
+  - code: FVC
+    name: CVF
+    category: efr
+    synonyms: ["CVF", "FVC", "Capacité vitale forcée", "CVF (L)"]
+    unit: L
+    alt_units: {mL: 0.001}
+    plausible: [0.3, 8.0]
+    reference: null
+    mcid: {abs: 0.15}
+    better: higher
+
+  - code: FVC_PRED
+    name: CVF (% prédit)
+    category: efr
+    synonyms: ["CVF % th", "CVF %prédit", "CVF % théorique", "FVC %pred"]
+    unit: "%"
+    plausible: [10, 160]
+    reference: {low: 80, high: null, note: "Approximation ; la LIN (z-score) est préférable"}
+    mcid: {abs: 5, source: "ATS/ERS/JRS/ALAT 2022"}
+    better: higher
+
+  - code: FEV1_FVC
+    name: Rapport VEMS/CVF
+    category: efr
+    synonyms: ["VEMS/CVF", "Tiffeneau", "Rapport de Tiffeneau", "FEV1/FVC", "VEMS/CV"]
+    unit: ratio
+    alt_units: {"%": 0.01}
+    plausible: [0.20, 1.00]
+    reference: {low: 0.70, high: null, note: "Seuil fixe GOLD, post-bronchodilatateur"}
+    mcid: {abs: 0.05}
+    better: higher
+
+  - code: DLCO_PRED
+    name: DLCO (% prédit)
+    category: efr
+    synonyms: ["DLCO", "DLCO %", "TLCO", "DLCO % th", "Transfert du CO"]
+    unit: "%"
+    plausible: [10, 160]
+    reference: {low: 75, high: null, note: "Approximation ; la LIN est préférable"}
+    mcid: {abs: 10, source: "ATS/ERS/JRS/ALAT 2022"}
+    better: higher
+
+  - code: SPO2
+    name: SpO2
+    category: vital
+    synonyms: ["SpO2", "SpO₂", "Sat O2", "Saturation", "Saturation pulsée en oxygène"]
+    unit: "%"
+    plausible: [50, 100]
+    reference: {low: 95, high: 100}
+    mcid: {abs: 2}
+    better: higher
+
+  # ---------- Biologie : inflammation ----------
+  - code: CRP
+    name: CRP
+    category: bio
+    synonyms: ["CRP", "Protéine C réactive", "C-réactive protéine", "PCR"]
+    unit: mg/L
+    alt_units: {mg/dL: 10}
+    plausible: [0, 600]
+    reference: {low: 0, high: 5}
+    mcid: {abs: 10}
+    better: lower
+
+  - code: PCT
+    name: Procalcitonine
+    category: bio
+    synonyms: ["PCT", "Procalcitonine"]
+    unit: ng/mL
+    alt_units: {"µg/L": 1, "ug/L": 1}
+    plausible: [0, 300]
+    reference: {low: 0, high: 0.5, note: "Seuil usuel d'orientation bactérienne"}
+    mcid: {abs: 0.25}
+    better: lower
+
+  # ---------- Biologie : NFS ----------
+  - code: WBC
+    name: Leucocytes
+    category: bio
+    synonyms: ["Leucocytes", "GB", "Globules blancs", "WBC", "Leuco"]
+    unit: G/L
+    alt_units: {"10^9/L": 1, "10^3/µL": 1, "/mm3": 0.001, "/µL": 0.001}
+    plausible: [0.1, 150]
+    reference: {low: 4.0, high: 10.0}
+    mcid: {abs: 2.0}
+    better: range
+
+  - code: NEUT
+    name: Polynucléaires neutrophiles
+    category: bio
+    synonyms: ["PNN", "Neutrophiles", "Polynucléaires neutrophiles", "Poly. neutrophiles"]
+    unit: G/L
+    alt_units: {"10^9/L": 1, "10^3/µL": 1, "/mm3": 0.001, "/µL": 0.001}
+    plausible: [0, 100]
+    reference: {low: 1.5, high: 7.5}
+    mcid: {abs: 1.5}
+    better: range
+
+  - code: LYMPH
+    name: Lymphocytes
+    category: bio
+    synonyms: ["Lymphocytes", "Lympho"]
+    unit: G/L
+    alt_units: {"10^9/L": 1, "10^3/µL": 1, "/mm3": 0.001, "/µL": 0.001}
+    plausible: [0, 80]
+    reference: {low: 1.0, high: 4.0}
+    mcid: {abs: 0.5}
+    better: range
+
+  - code: EOS
+    name: Polynucléaires éosinophiles
+    category: bio
+    synonyms: ["Éosinophiles", "Eosinophiles", "PNE", "Poly. éosinophiles", "Éosino"]
+    unit: G/L
+    alt_units: {"10^9/L": 1, "10^3/µL": 1, "/mm3": 0.001, "/µL": 0.001}
+    plausible: [0, 20]
+    reference: {low: 0, high: 0.5}
+    mcid: {abs: 0.1}
+    better: range
+
+  - code: HB
+    name: Hémoglobine
+    category: bio
+    synonyms: ["Hémoglobine", "Hb", "HGB", "Hemoglobine"]
+    unit: g/dL
+    alt_units: {g/L: 0.1}
+    plausible: [3, 25]
+    reference: {low: 12.0, high: 17.0, note: "F 12-16, H 13-17"}
+    mcid: {abs: 1.0}
+    better: range
+
+  - code: PLT
+    name: Plaquettes
+    category: bio
+    synonyms: ["Plaquettes", "PLT", "Numération plaquettaire"]
+    unit: G/L
+    alt_units: {"10^9/L": 1, "10^3/µL": 1, "/mm3": 0.001, "/µL": 0.001}
+    plausible: [5, 2000]
+    reference: {low: 150, high: 400}
+    mcid: {abs: 50}
+    better: range
+
+  # ---------- Biologie : rein ----------
+  - code: CREAT
+    name: Créatinine
+    category: bio
+    synonyms: ["Créatinine", "Creatinine", "Créatininémie", "Créat"]
+    unit: mg/L
+    alt_units: {"µmol/L": 0.1131, "umol/L": 0.1131, mg/dL: 10}
+    plausible: [1, 200]
+    reference: {low: 6, high: 13, note: "F 5-11, H 7-13"}
+    mcid: {abs: 3}
+    better: range
+
+  # ---------- Gaz du sang artériel ----------
+  - code: PH
+    name: pH artériel
+    category: gds
+    synonyms: ["pH", "pH artériel"]
+    unit: pH
+    plausible: [6.80, 7.80]
+    reference: {low: 7.35, high: 7.45}
+    mcid: {abs: 0.05}
+    better: range
+
+  - code: PAO2
+    name: PaO2
+    category: gds
+    synonyms: ["PaO2", "PaO₂", "PO2", "Pression artérielle en O2"]
+    unit: mmHg
+    alt_units: {kPa: 7.50062}
+    plausible: [20, 600]
+    reference: {low: 80, high: 100, note: "Air ambiant"}
+    mcid: {abs: 5}
+    better: higher
+
+  - code: PACO2
+    name: PaCO2
+    category: gds
+    synonyms: ["PaCO2", "PaCO₂", "PCO2", "Pression artérielle en CO2"]
+    unit: mmHg
+    alt_units: {kPa: 7.50062}
+    plausible: [10, 150]
+    reference: {low: 35, high: 45}
+    mcid: {abs: 5}
+    better: range
+
+  - code: HCO3
+    name: Bicarbonates
+    category: gds
+    synonyms: ["HCO3", "HCO3-", "Bicarbonates", "Bicar"]
+    unit: mmol/L
+    alt_units: {mEq/L: 1}
+    plausible: [5, 60]
+    reference: {low: 22, high: 26}
+    mcid: {abs: 3}
+    better: range
+
+# Qualification de tendance (F-B4)
+trend_qualification:
+  min_points: 3
+  method: theil_sen
+  labels: {stable: "Stable", improving: "Amélioration", worsening: "Dégradation", insufficient: "Données insuffisantes"}
+  # Variation |delta| < mcid du paramètre => stable ; sinon selon `better`.
+  # Pour better=range : rapprochement de la zone de référence => amélioration.
+
+# Règles d'alerte (F-B5). Chaque règle cite sa source.
+# types : threshold | delta_window | rise | after_treatment
+alert_rules:
+  - id: OBS_FEV1_FVC
+    label: "Rapport VEMS/CVF < 0,70 post-bronchodilatateur : trouble ventilatoire obstructif"
+    type: threshold
+    param: FEV1_FVC
+    op: "<"
+    value: 0.70
+    require_context: [post_bd]
+    severity: info
+    source: "GOLD 2025, Global Strategy for the Diagnosis, Management and Prevention of COPD"
+
+  - id: FEV1_DECLINE
+    label: "Déclin du VEMS ≥ 100 mL sur 12 mois"
+    type: delta_window
+    param: FEV1
+    window_days: 365
+    min_points: 3
+    method: theil_sen
+    delta_abs_lte: -0.100
+    severity: warning
+    source: "Stanojevic et al., ERS/ATS technical standard on interpretive strategies for routine lung function tests, Eur Respir J 2022"
+
+  - id: PPF_FVC
+    label: "Baisse absolue de la CVF ≥ 5 % du prédit sur 1 an : critère physiologique de progression (1 sur 3)"
+    type: delta_window
+    param: FVC_PRED
+    window_days: 365
+    min_points: 2
+    method: first_last
+    delta_abs_lte: -5
+    severity: warning
+    source: "Raghu et al., ATS/ERS/JRS/ALAT Clinical Practice Guideline, AJRCCM 2022;205(9):e18-e47"
+    note: "Ne suffit pas à conclure à une fibrose progressive (2 critères sur 3 requis)"
+
+  - id: PPF_DLCO
+    label: "Baisse absolue de la DLCO ≥ 10 % du prédit sur 1 an : critère physiologique de progression (1 sur 3)"
+    type: delta_window
+    param: DLCO_PRED
+    window_days: 365
+    min_points: 2
+    method: first_last
+    delta_abs_lte: -10
+    severity: warning
+    source: "Raghu et al., ATS/ERS/JRS/ALAT Clinical Practice Guideline, AJRCCM 2022;205(9):e18-e47"
+    note: "Ne suffit pas à conclure à une fibrose progressive (2 critères sur 3 requis)"
+
+  - id: CRP_RISE
+    label: "CRP > 10 mg/L en hausse par rapport à la valeur précédente"
+    type: rise
+    param: CRP
+    value_gt: 10
+    vs_previous: increase
+    severity: warning
+    source: "Seuil biologique usuel (borne haute 5 mg/L) ; seuil relevé pour limiter la fatigue d'alerte"
+
+  - id: CRP_NOT_NORMALIZED
+    label: "CRP > 5 mg/L au moins 14 jours après le début d'un antibiotique"
+    type: after_treatment
+    param: CRP
+    value_gt: 5
+    treatment_class: antibiotic
+    min_days_after_start: 14
+    severity: warning
+    source: "Parcours B (pneumonie) ; seuil de normalisation = borne haute de référence"
+
+  - id: SPO2_LOW
+    label: "SpO2 < 92 % au repos en air ambiant"
+    type: threshold
+    param: SPO2
+    op: "<"
+    value: 92
+    require_context: [rest, room_air]
+    severity: warning
+    source: "O'Driscoll et al., BTS guideline for oxygen use in adults, Thorax 2017"
+
+  - id: EOS_HIGH
+    label: "Éosinophiles ≥ 0,3 G/L (élément d'aide au choix d'un corticoïde inhalé dans la BPCO)"
+    type: threshold
+    param: EOS
+    op: ">="
+    value: 0.3
+    severity: info
+    source: "GOLD 2025"
+
+# Classes de traitements (F-D1) : utilisées par les règles after_treatment et la frise.
+treatment_classes:
+  antibiotic: ["amoxicilline", "amoxicilline-acide clavulanique", "ceftriaxone", "lévofloxacine", "moxifloxacine", "azithromycine", "clarithromycine", "doxycycline"]
+  laba: ["salmétérol", "formotérol", "indacatérol", "olodatérol", "vilantérol"]
+  lama: ["tiotropium", "glycopyrronium", "uméclidinium", "aclidinium"]
+  ics: ["fluticasone", "budésonide", "béclométasone"]
+  saba: ["salbutamol", "terbutaline"]
+  systemic_steroid: ["prednisolone", "prednisone", "méthylprednisolone"]
+  antifibrotic: ["nintédanib", "pirfénidone"]

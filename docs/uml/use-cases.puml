@@ -1,0 +1,50 @@
+@startuml use-cases
+left to right direction
+skinparam packageStyle rectangle
+title MediMind AI - Cas d'utilisation
+
+actor "Pneumologue" as Doc
+actor "Administrateur" as Admin
+actor "Ollama (LLM local)" as LLM <<système>>
+
+rectangle "MediMind AI" {
+  usecase "Se connecter" as UC_Login
+  usecase "Gérer les comptes médecins" as UC_Users
+  usecase "Gérer la fiche patient" as UC_Patient
+  usecase "Supprimer un dossier patient" as UC_Delete
+  usecase "Déposer des documents\net radiographies" as UC_Upload
+  usecase "Extraire et normaliser\nles valeurs" as UC_Extract
+  usecase "Valider / corriger\nles valeurs extraites" as UC_Validate
+  usecase "Consulter l'évolution\n(courbes + frise)" as UC_Curves
+  usecase "Consulter et acquitter\nles alertes" as UC_Alerts
+  usecase "Analyser une radiographie\n(scores, Grad-CAM)" as UC_Xray
+  usecase "Comparer deux radiographies" as UC_Compare
+  usecase "Générer la fiche\npré-consultation" as UC_Sheet
+  usecase "Interroger le dossier (RAG)" as UC_Chat
+  usecase "Journaliser l'action" as UC_Audit
+}
+
+Doc --> UC_Login
+Admin --> UC_Login
+Admin --> UC_Users
+Doc --> UC_Patient
+Doc --> UC_Delete
+Doc --> UC_Upload
+Doc --> UC_Validate
+Doc --> UC_Curves
+Doc --> UC_Alerts
+Doc --> UC_Compare
+Doc --> UC_Sheet
+Doc --> UC_Chat
+
+UC_Upload ..> UC_Extract : <<include>>
+UC_Upload ..> UC_Xray : <<extend>>\n(si radiographie)
+UC_Curves ..> UC_Alerts : <<include>>
+UC_Extract --> LLM : repli
+UC_Sheet --> LLM : reformulation optionnelle
+UC_Chat --> LLM
+
+UC_Validate ..> UC_Audit : <<include>>
+UC_Sheet ..> UC_Audit : <<include>>
+UC_Delete ..> UC_Audit : <<include>>
+@enduml

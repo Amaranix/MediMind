@@ -1,0 +1,137 @@
+@startuml class-diagram
+title MediMind AI - Modèle de données
+hide methods
+skinparam classAttributeIconSize 0
+
+class User {
+  id : UUID
+  name : str
+  email : str
+  password_hash : str
+  role : doctor | admin
+  is_active : bool
+}
+class Patient {
+  id : UUID
+  doctor_id : UUID
+  birth_date : date
+  sex : M | F
+  height_cm : int
+  antecedents : text
+  pack_years : float
+  allergies : text
+  base_treatments : text
+}
+class Document {
+  id : UUID
+  type : bilan_bio | efr | compte_rendu | ordonnance | radiographie
+  exam_date : date
+  file_path : str
+  sha256 : str
+  extracted_text : text
+  ocr_boxes : JSONB
+  status : str
+  confidence : float
+}
+class Parameter {
+  code : str
+  name : str
+  synonyms : str[]
+  unit : str
+  plausible_min / max : float
+  ref_low / ref_high : float
+}
+class Measurement {
+  id : UUID
+  value : float
+  unit : str
+  date : date
+  context : str[]
+  bbox : JSONB
+  confidence : float
+  validation_status : pending | validated | corrected | rejected | suspect
+  validated_by : UUID
+  validated_at : datetime
+}
+class Treatment {
+  id : UUID
+  molecule : str
+  drug_class : str
+  dosage : str
+  start_date : date
+  end_date : date
+  validation_status : str
+}
+class ClinicalEvent {
+  id : UUID
+  type : exacerbation | hospitalisation | treatment_change | other
+  date : date
+  note : text
+}
+class Imaging {
+  id : UUID
+  date : date
+  view : PA | AP
+  quality_flag : str
+  scores : JSONB
+  uncertainty : JSONB
+  gradcam_path : str
+  model_name : str
+  model_version : str
+  doctor_assessment : text
+}
+class Alert {
+  id : UUID
+  rule_id : str
+  ruleset_version : str
+  source_values : JSONB
+  date : date
+  state : open | acknowledged
+  acknowledged_by : UUID
+  acknowledged_at : datetime
+}
+class ConsultationSheet {
+  id : UUID
+  date : datetime
+  facts : JSONB
+  text : text
+  mode : template | llm
+  verification : JSONB
+  pdf_path : str
+}
+class Conversation {
+  id : UUID
+  messages : JSONB
+  cited_sources : JSONB
+}
+class AuditLog {
+  id : UUID
+  action : str
+  object_type : str
+  object_id : UUID
+  timestamp : datetime
+}
+class Job {
+  id : UUID
+  type : str
+  ref_id : UUID
+  status : queued | running | done | failed
+  error : text
+  created_at / finished_at : datetime
+}
+
+User "1" -- "0..*" Patient : suit >
+Patient "1" -- "0..*" Document
+Patient "1" -- "0..*" Measurement
+Patient "1" -- "0..*" Treatment
+Patient "1" -- "0..*" ClinicalEvent
+Patient "1" -- "0..*" Alert
+Patient "1" -- "0..*" ConsultationSheet
+Patient "1" -- "0..*" Conversation
+Document "1" -- "0..*" Measurement : source >
+Document "1" -- "0..*" Treatment : source >
+Document "1" -- "0..1" Imaging
+Parameter "1" -- "0..*" Measurement
+User "1" -- "0..*" AuditLog
+User "1" -- "0..*" Conversation
+@enduml

@@ -1,0 +1,42 @@
+@startuml sequence-consultation-sheet
+title Séquence - Génération de la fiche pré-consultation
+actor Pneumologue as U
+participant "Frontend React" as FE
+participant "API FastAPI" as API
+participant "Service faits" as F
+participant "Gabarit Jinja2" as T
+participant "Ollama" as LLM
+participant "Vérificateur" as V
+participant "WeasyPrint" as PDF
+database PostgreSQL as DB
+
+U -> FE : « Préparer la consultation » (option rédaction assistée)
+FE -> API : POST /patients/{id}/summaries {mode}
+API -> F : construire les faits
+F -> DB : mesures validées, tendances, alertes, traitements, radios
+F --> API : facts JSON (chaque fait référencé)
+API -> T : rendu déterministe
+T --> API : texte gabarit
+
+alt mode = rédaction assistée
+  loop au plus 2 essais
+    API -> LLM : reformuler à partir des faits uniquement
+    LLM --> API : texte
+    API -> V : nombres et dates ⊂ faits ? mots interdits ?
+    alt vérification OK
+      V --> API : OK
+    else échec
+      V --> API : écarts
+    end
+  end
+  alt 2 échecs
+    API -> API : repli sur le texte gabarit + mention
+  end
+end
+
+API -> PDF : HTML 1 page + bandeau « aide à la décision »
+PDF --> API : fichier PDF
+API -> DB : INSERT consultation_sheet(facts, text, mode, verification, pdf_path)
+API -> DB : INSERT audit_log
+API --> FE : aperçu + lien PDF
+@enduml
