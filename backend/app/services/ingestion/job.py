@@ -8,17 +8,20 @@ Règles :
 """
 from __future__ import annotations
 
+import datetime as dt
 import uuid
 
 from sqlalchemy import delete, select
 from sqlalchemy.orm import Session
 
 from app.db.models import (
+    ClinicalEvent,
     Document,
     DocumentStatus,
     DocumentType,
     Job,
     Measurement,
+    Treatment,
     ValidationStatus,
 )
 from app.services import storage
@@ -82,20 +85,50 @@ def ingest_document(db: Session, job: Job) -> None:
                            validation_status=ValidationStatus.suspect if v.suspect else ValidationStatus.pending))
     if duplicates:
         warnings.append(f"{duplicates} valeur(s) déjà présente(s) dans le dossier, non dupliquée(s).")
+
+    # Traitements (ordonnances) et événements (comptes rendus), eux aussi « à valider »
+    open_ = [ValidationStatus.pending, ValidationStatus.suspect]
+    db.execute(delete(Treatment).where(Treatment.source_document_id == doc.id,
+                                       Treatment.validation_status.in_(open_)))
+    db.execute(delete(ClinicalEvent).where(ClinicalEvent.source_document_id == doc.id,
+                                           ClinicalEvent.validation_status.in_(open_)))
+    if doc.type.value == res.doc_type:
+        for t in res.treatments:
+            end = doc.exam_date + dt.timedelta(days=t.duration_days) if t.duration_days else None
+            db.add(Treatment(patient_id=doc.patient_id, molecule=t.molecule, drug_class=t.drug_class,
+                             dosage=t.dosage, start_date=doc.exam_date, end_date=end, duration_days=t.duration_days,
+                             source_document_id=doc.id, confidence=t.confidence, bbox=t.bbox,
+                             source_text=t.source_text, flags=t.flags))
+        for e in res.events:
+            db.add(ClinicalEvent(patient_id=doc.patient_id, type=e.type, date=e.date or doc.exam_date,
+                                 end_date=e.end_date, note=e.note, source_document_id=doc.id,
+                                 confidence=e.confidence, bbox=e.bbox))
     if doc.type in (DocumentType.bilan_bio, DocumentType.efr, DocumentType.compte_rendu) and not values:
         warnings.append("Aucune valeur reconnue dans ce document.")
     doc.warnings = warnings
-    # Ordonnances (phase 4) et radiographies (phase 5) n'ont pas de mesures biologiques à valider ici
-    nothing_to_validate = not values and doc.type in (DocumentType.ordonnance, DocumentType.radiographie)
-    doc.status = DocumentStatus.validated if nothing_to_validate else DocumentStatus.extracted
+    doc.status = DocumentStatus.extracted
+    db.flush()
+    refresh_document_status(db, doc)
     db.commit()
 
 
 def refresh_document_status(db: Session, doc: Document) -> None:
     """Un document est « validé » quand plus aucune de ses mesures n'attend de décision."""
     db.flush()  # sessions sans autoflush : rendre visibles les décisions en cours avant de compter
-    pending = db.scalar(select(Measurement.id).where(
-        Measurement.source_document_id == doc.id,
-        Measurement.validation_status.in_([ValidationStatus.pending, ValidationStatus.suspect])).limit(1))
-    if doc.status in (DocumentStatus.extracted, DocumentStatus.validated):
-        doc.status = DocumentStatus.extracted if pending else DocumentStatus.validated
+    # - des éléments attendent une décision                -> « à valider »
+    # - tout est décidé                                      -> « validé »
+    # - rien n'a été extrait : radiographie (analysée par le module imagerie) -> « validé » ;
+    #   autre type -> reste « à valider » pour que le médecin vérifie le type ou le document
+    if doc.status not in (DocumentStatus.extracted, DocumentStatus.validated):
+        return
+    open_ = [ValidationStatus.pending, ValidationStatus.suspect]
+    models = (Measurement, Treatment, ClinicalEvent)
+    pending = any(db.scalar(select(m.id).where(m.source_document_id == doc.id, m.validation_status.in_(open_))
+                            .limit(1)) for m in models)
+    extracted = any(db.scalar(select(m.id).where(m.source_document_id == doc.id).limit(1)) for m in models)
+    if pending:
+        doc.status = DocumentStatus.extracted
+    elif extracted or doc.type == DocumentType.radiographie:
+        doc.status = DocumentStatus.validated
+    else:
+        doc.status = DocumentStatus.extracted

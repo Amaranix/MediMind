@@ -99,6 +99,7 @@ class Patient(Base):
     pack_years: Mapped[float | None] = mapped_column(Float)
     allergies: Mapped[str | None] = mapped_column(Text)
     base_treatments: Mapped[str | None] = mapped_column(Text)
+    conditions: Mapped[list] = mapped_column(JsonType, default=list)  # pathologies suivies (référentiel)
     created_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
     documents: Mapped[list[Document]] = relationship(back_populates="patient", cascade="all, delete-orphan")
@@ -180,6 +181,13 @@ class Treatment(Base):
     source_document_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("documents.id", ondelete="CASCADE"))
     validation_status: Mapped[ValidationStatus] = mapped_column(_enum(ValidationStatus, "validation_status"),
                                                                 default=ValidationStatus.pending)
+    duration_days: Mapped[int | None] = mapped_column(Integer)
+    confidence: Mapped[float | None] = mapped_column(Float)
+    bbox: Mapped[dict | None] = mapped_column(JsonType)
+    source_text: Mapped[str | None] = mapped_column(Text)
+    flags: Mapped[list | None] = mapped_column(JsonType)
+    validated_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"))
+    validated_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class ClinicalEvent(Base):
@@ -193,6 +201,11 @@ class ClinicalEvent(Base):
     source_document_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("documents.id", ondelete="SET NULL"))
     validation_status: Mapped[ValidationStatus] = mapped_column(_enum(ValidationStatus, "validation_status"),
                                                                 default=ValidationStatus.pending)
+    confidence: Mapped[float | None] = mapped_column(Float)
+    bbox: Mapped[dict | None] = mapped_column(JsonType)
+    created_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"))
+    validated_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"))
+    validated_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
 
 
 class Imaging(Base):
@@ -219,6 +232,8 @@ class Alert(Base):
     source_values: Mapped[dict] = mapped_column(JsonType)
     date: Mapped[dt.date] = mapped_column(Date)
     state: Mapped[AlertState] = mapped_column(_enum(AlertState, "alert_state"), default=AlertState.open)
+    current: Mapped[bool] = mapped_column(Boolean, default=True)  # porte sur la donnée la plus récente
+    message: Mapped[str | None] = mapped_column(Text)
     acknowledged_by: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id"))
     acknowledged_at: Mapped[dt.datetime | None] = mapped_column(DateTime(timezone=True))
 

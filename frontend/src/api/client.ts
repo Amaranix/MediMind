@@ -83,6 +83,7 @@ export type Patient = {
   pack_years: number | null;
   allergies: string | null;
   base_treatments: string | null;
+  conditions: string[];
 };
 export type Health = {
   status: string;
@@ -152,7 +153,12 @@ export type UploadResult = {
   job_id: string | null;
 };
 export type ParameterDef = { code: string; name: string; unit: string; category: string };
-export type Referential = { version: string; contexts: Record<string, string>; parameters: ParameterDef[] };
+export type Referential = {
+  version: string;
+  contexts: Record<string, string>;
+  conditions: Record<string, string>;
+  parameters: ParameterDef[];
+};
 
 export function uploadDocuments(patientId: string, files: File[], examDate?: string, docType?: string) {
   const fd = new FormData();
@@ -174,3 +180,79 @@ export async function fetchPageUrl(documentId: string, page: number, width = 100
   if (!r.ok) throw new ApiError(r.status, "Aperçu indisponible");
   return URL.createObjectURL(await r.blob());
 }
+
+// ---------------------------------------------------------------- évolution
+export type SeriesPoint = { id: string; date: string; value: number; context: string[]; document_id: string | null; status: string };
+export type Series = {
+  code: string;
+  name: string;
+  unit: string;
+  category: string;
+  reference: { low: number | null; high: number | null; note?: string | null } | null;
+  points: SeriesPoint[];
+  pending: SeriesPoint[];
+};
+export type Trend = {
+  param: string;
+  n: number;
+  unit: string;
+  qualification: "improving" | "worsening" | "stable" | "insufficient";
+  slope_per_year?: number;
+  change?: number;
+  delta_abs?: number;
+};
+export type TimelineBar = {
+  molecule: string;
+  drug_class: string | null;
+  dosage: string | null;
+  start: string;
+  end: string | null;
+  long_term: boolean;
+  documents: string[];
+};
+export type ClinicalEvent = { id: string; type: string; date: string; end_date: string | null; note: string | null; document_id: string | null };
+export type Timeline = {
+  treatments: TimelineBar[];
+  treatment_changes: { date: string; added: string[]; stopped: string[] }[];
+  events: ClinicalEvent[];
+  radiographs: { document_id: string; date: string; name: string }[];
+};
+export type AlertItem = {
+  id: string;
+  rule_id: string;
+  label: string;
+  severity: "warning" | "info";
+  source: string | null;
+  note: string | null;
+  date: string;
+  current: boolean;
+  state: "open" | "acknowledged";
+  message: string;
+  values: { date: string; value: number; unit: string; document_id: string | null }[];
+  ruleset_version: string;
+};
+export type ExtractedTreatment = {
+  id: string;
+  molecule: string;
+  drug_class: string | null;
+  dosage: string | null;
+  start_date: string;
+  end_date: string | null;
+  duration_days: number | null;
+  confidence: number | null;
+  bbox: Bbox | null;
+  source_text: string | null;
+  flags: string[];
+  validation_status: ValidationStatus;
+};
+export type ExtractedEvent = {
+  id: string;
+  type: string;
+  date: string;
+  end_date: string | null;
+  note: string | null;
+  confidence: number | null;
+  bbox: Bbox | null;
+  validation_status: ValidationStatus;
+  manual: boolean;
+};

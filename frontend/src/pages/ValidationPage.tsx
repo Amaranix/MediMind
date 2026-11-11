@@ -7,10 +7,13 @@ import {
   fetchPageUrl,
   patch,
   post,
+  type Bbox,
+  type ExtractedEvent,
+  type ExtractedTreatment,
   type Measurement,
   type MedDocument,
 } from "../api/client";
-import { DATE_SOURCE, DOC_STATUS, DOC_TYPES, FLAGS, fmtNum } from "../labels";
+import { DATE_SOURCE, DOC_STATUS, DOC_TYPES, EVENT_TYPES, FLAGS, fmtDate, fmtNum } from "../labels";
 import { useReferential } from "./PatientPage";
 
 const STATUS_LABEL: Record<string, { label: string; tone: string }> = {
@@ -28,7 +31,7 @@ function confTone(c: number | null) {
 
 /** Aperçu d'une page avec les zones des valeurs extraites superposées (coordonnées normalisées). */
 function PageView({ docId, page, ms, active, onPick }: {
-  docId: string; page: number; ms: Measurement[]; active: string | null; onPick: (id: string) => void;
+  docId: string; page: number; ms: { id: string; bbox: Bbox | null }[]; active: string | null; onPick: (id: string) => void;
 }) {
   const [url, setUrl] = useState<string | null>(null);
   const [failed, setFailed] = useState(false);
@@ -53,6 +56,90 @@ function PageView({ docId, page, ms, active, onPick }: {
         );
       })}
     </div>
+  );
+}
+
+const CLINICAL_FLAGS: Record<string, string> = {
+  duration_unknown: "Durée non trouvée : préciser s'il s'agit d'un traitement au long cours",
+  molecule_fuzzy: "Molécule mal lue, rapprochée de la plus proche",
+};
+
+type Clinical = { treatments: ExtractedTreatment[]; events: ExtractedEvent[] };
+
+/** Traitements (ordonnances) et événements (comptes rendus) extraits, à valider comme les valeurs. */
+function ClinicalItems({ docId, active, onFocus, onChanged }: {
+  docId: string; active: string | null; onFocus: (id: string) => void; onChanged: () => void;
+}) {
+  const qc = useQueryClient();
+  const { data } = useQuery({ queryKey: ["clinical", docId], queryFn: () => api<Clinical>(`/documents/${docId}/clinical`) });
+  const [editing, setEditing] = useState<string | null>(null);
+  const [days, setDays] = useState("");
+  async function act(kind: "treatments" | "events", id: string, body: Record<string, unknown>) {
+    await patch(`/${kind}/${id}`, body);
+    setEditing(null);
+    qc.invalidateQueries({ queryKey: ["clinical", docId] });
+    onChanged();
+  }
+  if (!data || (data.treatments.length === 0 && data.events.length === 0)) return null;
+  const actions = (kind: "treatments" | "events", id: string, st: string, canEdit: boolean) => {
+    const decided = STATUS_LABEL[st];
+    if (decided)
+      return (
+        <div className="flex flex-col items-end gap-1">
+          <span className={`text-sm font-semibold ${decided.tone}`}>{decided.label}</span>
+          <button type="button" className="btn px-2 py-0.5 text-[13px]" onClick={() => void act(kind, id, { action: "reset" })}>Annuler</button>
+        </div>
+      );
+    return (
+      <div className="flex gap-1.5">
+        <button type="button" className="btn border-ok px-2 py-0.5 text-[13px] text-ok"
+          onClick={() => void act(kind, id, { action: "validate" })}>Valider</button>
+        {canEdit && <button type="button" className="btn px-2 py-0.5 text-[13px]" onClick={() => setEditing(id)}>Corriger</button>}
+        <button type="button" className="btn px-2 py-0.5 text-[13px]" onClick={() => void act(kind, id, { action: "reject" })}>Rejeter</button>
+      </div>
+    );
+  };
+  const rowCls = (id: string) =>
+    `grid grid-cols-[1fr_auto] gap-3 border-b border-grid px-4 py-3 outline-none ${active === id ? "bg-teal-soft/60" : ""}`;
+  return (
+    <>
+      {data.treatments.length > 0 && <h4 className="border-b border-grid bg-paper px-4 py-2 text-sm font-bold">Traitements prescrits</h4>}
+      {data.treatments.map((t) => (
+        <div key={t.id} tabIndex={0} onFocus={() => onFocus(t.id)} onMouseEnter={() => onFocus(t.id)} className={rowCls(t.id)}>
+          <div className="min-w-0">
+            <div className="font-semibold capitalize">{t.molecule}</div>
+            <div className="text-sm">{t.dosage}</div>
+            <div className="text-sm text-ink-2">
+              {t.duration_days
+                ? `Pendant ${t.duration_days} jours, du ${fmtDate(t.start_date)} au ${fmtDate(t.end_date)}`
+                : `Au long cours, depuis le ${fmtDate(t.start_date)}`}
+            </div>
+            {t.flags.map((f) => <div key={f} className="text-[12.5px] text-warn">{CLINICAL_FLAGS[f] ?? FLAGS[f] ?? f}</div>)}
+            {editing === t.id && (
+              <div className="mt-2 flex flex-wrap items-center gap-2 text-sm">
+                <label htmlFor={`d-${t.id}`}>Durée (jours)</label>
+                <input id={`d-${t.id}`} className="field w-20" inputMode="numeric" value={days} onChange={(e) => setDays(e.target.value)} />
+                <button type="button" className="btn btn-primary px-2 py-0.5 text-[13px]" disabled={!Number(days)}
+                  onClick={() => void act("treatments", t.id, { action: "correct", duration_days: Number(days) })}>Enregistrer</button>
+                <button type="button" className="btn px-2 py-0.5 text-[13px]"
+                  onClick={() => void act("treatments", t.id, { action: "correct", long_term: true })}>Au long cours</button>
+              </div>
+            )}
+          </div>
+          {actions("treatments", t.id, t.validation_status, true)}
+        </div>
+      ))}
+      {data.events.length > 0 && <h4 className="border-b border-grid bg-paper px-4 py-2 text-sm font-bold">Événements cliniques</h4>}
+      {data.events.map((e) => (
+        <div key={e.id} tabIndex={0} onFocus={() => onFocus(e.id)} onMouseEnter={() => onFocus(e.id)} className={rowCls(e.id)}>
+          <div>
+            <div className="font-semibold">{EVENT_TYPES[e.type] ?? e.type}</div>
+            <div className="text-sm text-ink-2">{e.end_date ? `Du ${fmtDate(e.date)} au ${fmtDate(e.end_date)}` : `Le ${fmtDate(e.date)}`}</div>
+          </div>
+          {actions("events", e.id, e.validation_status, false)}
+        </div>
+      ))}
+    </>
   );
 }
 
@@ -162,6 +249,7 @@ export function ValidationPage() {
     refetchInterval: (q) => (q.state.data && ["uploaded", "processing"].includes(q.state.data.status) ? 2000 : false),
   });
   const msQ = useQuery({ queryKey: ["measurements", docId], queryFn: () => api<Measurement[]>(`/documents/${docId}/measurements`) });
+  const clinQ = useQuery({ queryKey: ["clinical", docId], queryFn: () => api<Clinical>(`/documents/${docId}/clinical`) });
   const [active, setActive] = useState<string | null>(null);
   const names = useMemo(() => Object.fromEntries((ref?.parameters ?? []).map((p) => [p.code, p.name])), [ref]);
   const doc = docQ.data;
@@ -172,6 +260,9 @@ export function ValidationPage() {
     qc.invalidateQueries({ queryKey: ["document", docId] });
     qc.invalidateQueries({ queryKey: ["documents", patientId] });
     qc.invalidateQueries({ queryKey: ["pending", patientId] });
+    qc.invalidateQueries({ queryKey: ["series", patientId] });
+    qc.invalidateQueries({ queryKey: ["timeline", patientId] });
+    qc.invalidateQueries({ queryKey: ["alerts", patientId] });
   };
   const updateDoc = useMutation({
     mutationFn: (body: { type?: string; exam_date?: string }) => patch<MedDocument>(`/documents/${docId}`, body),
@@ -200,7 +291,7 @@ export function ValidationPage() {
     <>
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
-          <Link to={`/patients/${patientId}`} className="text-sm text-teal-ink underline">Retour aux documents</Link>
+          <Link to={`/patients/${patientId}/documents`} className="text-sm text-teal-ink underline">Retour aux documents</Link>
           <h2 className="mt-1 text-xl font-bold break-all">{doc.original_name}</h2>
           <p className="text-sm text-ink-2">
             <span className={`mr-2 rounded px-2 py-0.5 text-[13px] font-semibold ${st.tone}`}>{st.label}</span>
@@ -234,7 +325,8 @@ export function ValidationPage() {
         <div className="panel overflow-hidden" aria-label="Document source">
           {Array.from({ length: doc.page_count ?? 1 }, (_, i) => (
             <div key={i} className={i > 0 ? "border-t border-grid" : ""}>
-              <PageView docId={docId} page={i} ms={ms} active={active} onPick={(id) => {
+              <PageView docId={docId} page={i} active={active}
+                ms={[...ms, ...(clinQ.data?.treatments ?? []), ...(clinQ.data?.events ?? [])]} onPick={(id) => {
                 setActive(id);
                 (document.querySelector(`[data-mid="${id}"]`) as HTMLElement | null)?.focus();
               }} />
@@ -251,11 +343,11 @@ export function ValidationPage() {
               </button>
             )}
           </header>
-          {ms.length === 0 && (
+          {ms.length === 0 && !clinQ.data?.treatments.length && !clinQ.data?.events.length && (
             <p className="px-4 py-6 text-ink-2">
-              {doc.type === "ordonnance" ? "Les traitements des ordonnances seront extraits à l'étape suivante du projet."
-                : doc.type === "radiographie" ? "Les radiographies sont analysées dans l'onglet dédié (module imagerie)."
-                : "Aucune valeur reconnue. Vérifiez le type du document ci-dessus."}
+              {doc.type === "radiographie" ? "Les radiographies sont analysées dans le module imagerie."
+                : doc.type === "ordonnance" ? "Aucun médicament reconnu dans cette ordonnance."
+                : "Aucune donnée reconnue. Vérifiez le type du document ci-dessus."}
             </p>
           )}
           <div className="max-h-[calc(100vh-240px)] overflow-y-auto">
@@ -264,6 +356,7 @@ export function ValidationPage() {
                 contexts={ref?.contexts ?? {}} active={m.id === active} onFocus={() => setActive(m.id)}
                 onAct={(body) => act(m.id, body)} />
             ))}
+            <ClinicalItems docId={docId} active={active} onFocus={setActive} onChanged={refresh} />
           </div>
           <p className="border-t border-grid px-4 py-2.5 text-[13px] text-ink-3">
             Clavier : Entrée valide, E corrige, R rejette. Seules les valeurs validées ou corrigées alimentent les courbes et les alertes.

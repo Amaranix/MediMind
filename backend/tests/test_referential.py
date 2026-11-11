@@ -14,7 +14,7 @@ def raw() -> dict:
 
 def test_referential_file_is_valid():
     ref = get_referential()
-    assert ref.version == "0.1.0"
+    assert ref.version == "0.2.0"
     assert len(ref.parameters) == 20
     assert len(ref.alert_rules) == 8
     assert all(len(r.source) > 5 for r in ref.alert_rules)

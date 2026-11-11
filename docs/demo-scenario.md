@@ -18,16 +18,21 @@
 | 17/09/2026 | Visite de suivi reportée à J28 après l'exacerbation : EFR, bilan | VEMS post-BD 1,54 L |
 | 05/11/2026 | Dernière visite : EFR, bilan (T3), compte rendu, radio R5 | VEMS post-BD 1,50 L (49 % th) |
 
-## Alertes attendues
+## Alertes calculées par le moteur (vérifiées le 11/11/2026, référentiel v0.2.0)
 
-| Règle | Déclenchement attendu |
-|---|---|
-| OBS_FEV1_FVC | Oui : VEMS/CVF post-BD < 0,70 à chaque EFR |
-| FEV1_DECLINE | Oui : 1,62 L → 1,50 L, soit −120 mL sur 12 mois (pente Theil-Sen à confirmer par le moteur) |
-| CRP_RISE | Oui : 10/02/2026 et 20/08/2026 |
-| SPO2_LOW | Oui : 91 % au repos en air ambiant le 10/02 et le 20/08 |
-| EOS_HIGH | Oui : éosinophiles ≥ 0,3 G/L à plusieurs bilans |
-| PPF_FVC, PPF_DLCO, CRP_NOT_NORMALIZED | Non |
+Patient suivi pour **BPCO** : les critères de progression de fibrose (PPF_FVC, PPF_DLCO) ne s'appliquent pas.
+
+| Règle | Alerte actuelle (donnée la plus récente) | Historique |
+|---|---|---|
+| FEV1_DECLINE | Oui : pente −0,125 L sur 12 mois (5 mesures) | 17/09/2026 |
+| OBS_FEV1_FVC | Oui : 0,49 le 05/11/2026 | chaque EFR |
+| EOS_HIGH | Oui : 0,34 G/L le 05/11/2026 | plusieurs bilans |
+| CRP_RISE | Non | 10/02/2026 (106 mg/L), 20/08/2026 (103 mg/L) |
+| SPO2_LOW | Non | 10/02/2026 et 20/08/2026 (91 %) |
+| CRP_NOT_NORMALIZED | Non | 25/02/2026 (6,2 mg/L, 15 jours après l'antibiotique), 06/09/2026 (5,4 mg/L) |
+| PPF_FVC, PPF_DLCO | Non applicables (patient BPCO) | |
+
+Chargement du patient pour la démo : `backend/.venv/Scripts/python scripts/load_synthetic_patient.py A01 --validate`.
 
 ## Déroulé en direct (environ 5 minutes)
 

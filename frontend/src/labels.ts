@@ -44,3 +44,35 @@ export function fmtNum(v: number, unit?: string): string {
   const s = v.toLocaleString("fr-FR", { maximumFractionDigits: unit === "ratio" ? 2 : 3 });
   return unit && unit !== "ratio" && unit !== "pH" ? `${s} ${unit}` : s;
 }
+
+export const EVENT_TYPES: Record<string, string> = {
+  exacerbation: "Exacerbation",
+  hospitalisation: "Hospitalisation",
+  pneumonie: "Pneumonie",
+  treatment_change: "Changement de traitement",
+  autre: "Autre événement",
+};
+
+export const TREND: Record<string, { label: string; tone: string }> = {
+  improving: { label: "Amélioration", tone: "bg-ok-soft text-ok" },
+  worsening: { label: "Dégradation", tone: "bg-alert-soft text-alert" },
+  stable: { label: "Stable", tone: "bg-paper text-ink-2" },
+  insufficient: { label: "Moins de 3 mesures", tone: "bg-paper text-ink-3" },
+};
+
+/** Paramètres affichés par défaut selon la pathologie suivie. */
+export const DEFAULT_PARAMS: Record<string, string[]> = {
+  bpco: ["FEV1", "FEV1_FVC", "SPO2", "CRP", "EOS"],
+  fibrose: ["FVC_PRED", "DLCO_PRED", "SPO2", "CRP"],
+  pneumonie: ["CRP", "WBC", "PCT", "SPO2"],
+};
+
+export function fmtValue(v: number, unit: string): string {
+  const digits = Math.abs(v) >= 100 ? 0 : Math.abs(v) >= 10 ? 1 : 2;
+  const s = v.toLocaleString("fr-FR", { maximumFractionDigits: digits });
+  return unit === "ratio" || unit === "pH" ? s : s;
+}
+
+export function unitLabel(unit: string): string {
+  return unit === "ratio" || unit === "pH" ? "" : unit;
+}

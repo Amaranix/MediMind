@@ -8,6 +8,7 @@ import { Layout } from "./components/Layout";
 import "./index.css";
 import { homeFor, LoginPage } from "./pages/LoginPage";
 import { DocumentsTab } from "./pages/DocumentsTab";
+import { EvolutionTab } from "./pages/EvolutionTab";
 import { PatientPage } from "./pages/PatientPage";
 import { PatientsPage } from "./pages/PatientsPage";
 import { PendingTab } from "./pages/PendingTab";
@@ -52,7 +53,8 @@ createRoot(document.getElementById("root")!).render(
             <Route element={<Layout />}>
               <Route path="/patients" element={<RequireRole role="doctor"><PatientsPage /></RequireRole>} />
               <Route path="/patients/:patientId" element={<RequireRole role="doctor"><PatientPage /></RequireRole>}>
-                <Route index element={<DocumentsTab />} />
+                <Route index element={<EvolutionTab />} />
+                <Route path="documents" element={<DocumentsTab />} />
                 <Route path="a-valider" element={<PendingTab />} />
                 <Route path="documents/:docId" element={<ValidationPage />} />
               </Route>

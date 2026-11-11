@@ -9,7 +9,9 @@ from app.api.deps import get_patient_for_doctor, require_doctor
 from app.db.models import Patient, User
 from app.db.session import get_db
 from app.schemas import PatientCreate, PatientOut, PatientUpdate
+from app.services import alerts as alert_engine
 from app.services.audit import audit
+from app.services.referential import get_referential
 
 router = APIRouter(prefix="/patients", tags=["patients"])
 
@@ -44,6 +46,8 @@ def update_patient(body: PatientUpdate, patient: Patient = Depends(get_patient_f
     changes = body.model_dump(exclude_unset=True)
     for k, v in changes.items():
         setattr(patient, k, v)
+    if "conditions" in changes:  # une règle réservée à une pathologie peut s'activer ou disparaître
+        alert_engine.recompute(db, get_referential(), patient.id)
     db.commit()
     audit(db, user.id, "patient_update", "patient", patient.id, {"fields": sorted(changes)})
     return PatientOut.from_row(patient)

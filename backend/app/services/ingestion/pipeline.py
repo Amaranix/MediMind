@@ -11,6 +11,7 @@ from pathlib import Path
 
 from app.services import llm
 from app.services.ingestion.classify import Classification, classify_rules
+from app.services.ingestion.clinical import ExtractedEvent, ExtractedTreatment, extract_events, extract_treatments
 from app.services.ingestion.extract import (
     ExtractedValue,
     _finish,
@@ -35,6 +36,8 @@ class IngestionResult:
     text: DocumentText
     values: list[ExtractedValue] = field(default_factory=list)
     warnings: list[str] = field(default_factory=list)
+    treatments: list[ExtractedTreatment] = field(default_factory=list)
+    events: list[ExtractedEvent] = field(default_factory=list)
     seconds: float = 0.0
 
 
@@ -70,5 +73,10 @@ def ingest_file(path: Path, mime: str, ref: Referential, *, use_llm: bool = True
         values = llm_fallback_values(doc, ref)
     if doc.ocr and doc.mean_conf < 0.6:
         warnings.append("Qualité de lecture faible (scan ou photo) : vérifier chaque valeur.")
-    return IngestionResult(cls.type, cls.confidence, cls.method, find_exam_date(doc), doc, values, warnings,
-                           round(time.perf_counter() - t0, 2))
+    exam_date = find_exam_date(doc)
+    treatments = extract_treatments(doc, ref) if cls.type == "ordonnance" else []
+    events = extract_events(doc, exam_date) if cls.type == "compte_rendu" else []
+    if cls.type == "ordonnance" and not treatments:
+        warnings.append("Aucun médicament reconnu dans cette ordonnance.")
+    return IngestionResult(cls.type, cls.confidence, cls.method, exam_date, doc, values, warnings,
+                           seconds=round(time.perf_counter() - t0, 2), treatments=treatments, events=events)

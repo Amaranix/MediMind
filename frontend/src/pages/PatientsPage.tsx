@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { api, ApiError, post, type Patient } from "../api/client";
+import { useReferential } from "./PatientPage";
 
 const EMPTY = {
   first_name: "",
@@ -13,6 +14,7 @@ const EMPTY = {
   antecedents: "",
   allergies: "",
   base_treatments: "",
+  conditions: [] as string[],
 };
 
 function fmtDate(iso: string) {
@@ -21,9 +23,11 @@ function fmtDate(iso: string) {
 
 function PatientForm({ onDone }: { onDone: () => void }) {
   const qc = useQueryClient();
+  const { data: ref } = useReferential();
   const [form, setForm] = useState(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const set = (k: keyof typeof EMPTY) => (e: { target: { value: string } }) => setForm({ ...form, [k]: e.target.value });
+  type TextKey = Exclude<keyof typeof EMPTY, "conditions">;
+  const set = (k: TextKey) => (e: { target: { value: string } }) => setForm({ ...form, [k]: e.target.value });
 
   const create = useMutation({
     mutationFn: () =>
@@ -52,7 +56,7 @@ function PatientForm({ onDone }: { onDone: () => void }) {
     create.mutate();
   }
 
-  const field = (k: keyof typeof EMPTY, label: string, props: Record<string, unknown> = {}) => (
+  const field = (k: TextKey, label: string, props: Record<string, unknown> = {}) => (
     <div>
       <label htmlFor={k} className="label">{label}</label>
       <input id={k} className="field" value={form[k]} onChange={set(k)} aria-invalid={!!errors[k]}
@@ -81,6 +85,19 @@ function PatientForm({ onDone }: { onDone: () => void }) {
         {field("allergies", "Allergies")}
         {field("base_treatments", "Traitements de fond")}
       </div>
+      <fieldset className="mt-4">
+        <legend className="label">Pathologie suivie</legend>
+        <div className="flex flex-wrap gap-4">
+          {Object.entries(ref?.conditions ?? {}).map(([k, v]) => (
+            <label key={k} className="flex items-center gap-1.5">
+              <input type="checkbox" checked={form.conditions.includes(k)}
+                onChange={(e) => setForm({ ...form, conditions: e.target.checked ? [...form.conditions, k] : form.conditions.filter((c) => c !== k) })} />
+              {v}
+            </label>
+          ))}
+        </div>
+        <p className="mt-1 text-sm text-ink-3">Certaines alertes ne s'appliquent qu'à une pathologie (ex. critères de progression de la fibrose).</p>
+      </fieldset>
       <div className="mt-4">
         <label htmlFor="antecedents" className="label">Antécédents</label>
         <textarea id="antecedents" className="field min-h-20" value={form.antecedents} onChange={set("antecedents")} />

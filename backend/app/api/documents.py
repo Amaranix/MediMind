@@ -24,12 +24,14 @@ from sqlalchemy.orm import Session
 from app.api.deps import get_patient_for_doctor, require_doctor
 from app.core.config import get_settings
 from app.db.models import (
+    ClinicalEvent,
     Document,
     DocumentStatus,
     DocumentType,
     Job,
     Measurement,
     Patient,
+    Treatment,
     User,
     ValidationStatus,
     utcnow,
@@ -42,6 +44,7 @@ from app.schemas import (
     MeasurementOut,
     UploadResult,
 )
+from app.services import alerts as alert_engine
 from app.services import storage
 from app.services.audit import audit
 from app.services.ingestion import job as ingestion_job  # noqa: F401 - enregistre la tâche ingest_document
@@ -72,9 +75,11 @@ def get_measurement_for_doctor(measurement_id: uuid.UUID, user: User = Depends(r
 
 
 def _out(db: Session, doc: Document) -> DocumentOut:
-    counts = dict(db.execute(select(Measurement.validation_status, func.count())
-                             .where(Measurement.source_document_id == doc.id)
-                             .group_by(Measurement.validation_status)).all())
+    counts: dict = {}
+    for model in (Measurement, Treatment, ClinicalEvent):
+        for st, n in db.execute(select(model.validation_status, func.count()).where(model.source_document_id == doc.id)
+                                .group_by(model.validation_status)).all():
+            counts[st] = counts.get(st, 0) + n
     out = DocumentOut.model_validate(doc)
     out.type, out.status = doc.type.value, doc.status.value
     out.pending_count = sum(counts.get(s, 0) for s in OPEN_STATUSES)
@@ -171,6 +176,11 @@ def update_document(body: DocumentUpdate, background: BackgroundTasks,
                                                       Measurement.validation_status.in_(OPEN_STATUSES))):
             m.date = body.exam_date
         doc.warnings = [w for w in (doc.warnings or []) if "Date d'examen introuvable" not in w]
+        for t in db.scalars(select(Treatment).where(Treatment.source_document_id == doc.id,
+                                                    Treatment.validation_status.in_(OPEN_STATUSES))):
+            t.start_date = body.exam_date
+            t.end_date = body.exam_date + dt.timedelta(days=t.duration_days) if t.duration_days else None
+        alert_engine.recompute(db, get_referential(), doc.patient_id)
     db.commit()
     audit(db, user.id, "document_update", "document", doc.id, body.model_dump(exclude_none=True, mode="json"))
     if rerun:
@@ -247,6 +257,7 @@ def act_on_measurement(body: MeasurementAction, m: Measurement = Depends(get_mea
     m.validated_at = None if body.action == "reset" else utcnow()
     if m.source_document_id:
         refresh_document_status(db, db.get(Document, m.source_document_id))
+    alert_engine.recompute(db, ref, m.patient_id)
     db.commit()
     audit(db, user.id, f"measurement_{body.action}", "measurement", m.id,
           {"before": before, "after": {"value": m.value, "status": m.validation_status.value, "context": m.context}})
@@ -265,6 +276,7 @@ def validate_confident(doc: Document = Depends(get_document_for_doctor), user: U
             m.validation_status, m.validated_by, m.validated_at = ValidationStatus.validated, user.id, utcnow()
             n += 1
     refresh_document_status(db, doc)
+    alert_engine.recompute(db, get_referential(), doc.patient_id)
     db.commit()
     audit(db, user.id, "measurement_bulk_validate", "document", doc.id, {"count": n})
     return _out(db, doc)
@@ -272,8 +284,9 @@ def validate_confident(doc: Document = Depends(get_document_for_doctor), user: U
 
 @router.get("/patients/{patient_id}/pending-count")
 def pending_count(patient: Patient = Depends(get_patient_for_doctor), db: Session = Depends(get_db)) -> dict:
-    n = db.scalar(select(func.count()).select_from(Measurement).where(
-        Measurement.patient_id == patient.id, Measurement.validation_status.in_(OPEN_STATUSES)))
+    n = sum(db.scalar(select(func.count()).select_from(model).where(
+        model.patient_id == patient.id, model.validation_status.in_(OPEN_STATUSES)))
+        for model in (Measurement, Treatment, ClinicalEvent))
     docs = db.scalar(select(func.count()).select_from(Document).where(
         Document.patient_id == patient.id, Document.status == DocumentStatus.extracted))
     return {"measurements": n, "documents": docs}

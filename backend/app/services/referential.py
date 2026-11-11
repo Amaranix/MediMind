@@ -60,6 +60,7 @@ class AlertRule(BaseModel):
     treatment_class: str | None = None
     min_days_after_start: int | None = None
     note: str | None = None
+    conditions: list[str] = Field(default_factory=list)  # vide = tous les patients
 
     @model_validator(mode="after")
     def check_fields(self) -> AlertRule:
@@ -79,6 +80,7 @@ class Referential(BaseModel):
     version: str
     population: Literal["adult"]
     validated_by: str
+    conditions: dict[str, str]
     contexts: dict[str, str]
     parameters: list[ParameterDef]
     trend_qualification: dict
@@ -96,6 +98,9 @@ class Referential(BaseModel):
             unknown_ctx = set(r.require_context) - set(self.contexts)
             if unknown_ctx:
                 raise ValueError(f"règle {r.id} : contexte inconnu {unknown_ctx}")
+            unknown_cond = set(r.conditions) - set(self.conditions)
+            if unknown_cond:
+                raise ValueError(f"règle {r.id} : pathologie inconnue {unknown_cond}")
             if r.treatment_class and r.treatment_class not in self.treatment_classes:
                 raise ValueError(f"règle {r.id} : classe de traitement inconnue {r.treatment_class}")
         return self

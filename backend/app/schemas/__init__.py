@@ -68,6 +68,14 @@ def age_on(birth: dt.date, today: dt.date | None = None) -> int:
     return today.year - birth.year - ((today.month, today.day) < (birth.month, birth.day))
 
 
+def _check_conditions(v: list[str]) -> list[str]:
+    from app.services.referential import get_referential
+    unknown = set(v) - set(get_referential().conditions)
+    if unknown:
+        raise ValueError(f"Pathologie inconnue : {', '.join(sorted(unknown))}")
+    return sorted(set(v))
+
+
 class PatientBase(BaseModel):
     first_name: str = Field(min_length=1, max_length=80)
     last_name: str = Field(min_length=1, max_length=80)
@@ -78,6 +86,12 @@ class PatientBase(BaseModel):
     pack_years: float | None = Field(default=None, ge=0, le=300)
     allergies: str | None = Field(default=None, max_length=2000)
     base_treatments: str | None = Field(default=None, max_length=2000)
+    conditions: list[str] = Field(default_factory=list)
+
+    @field_validator("conditions")
+    @classmethod
+    def known_conditions(cls, v: list[str]) -> list[str]:
+        return _check_conditions(v)
 
     @field_validator("birth_date")
     @classmethod
@@ -103,6 +117,12 @@ class PatientUpdate(BaseModel):
     pack_years: float | None = Field(default=None, ge=0, le=300)
     allergies: str | None = Field(default=None, max_length=2000)
     base_treatments: str | None = Field(default=None, max_length=2000)
+    conditions: list[str] | None = None
+
+    @field_validator("conditions")
+    @classmethod
+    def known_conditions(cls, v: list[str] | None) -> list[str] | None:
+        return None if v is None else _check_conditions(v)
 
 
 class PatientOut(PatientBase, ORM):
@@ -112,6 +132,7 @@ class PatientOut(PatientBase, ORM):
     @classmethod
     def from_row(cls, p) -> PatientOut:
         data = {c: getattr(p, c) for c in PatientBase.model_fields}
+        data["conditions"] = data.get("conditions") or []
         return cls.model_construct(id=p.id, age=age_on(p.birth_date), **data)
 
 

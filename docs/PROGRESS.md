@@ -50,7 +50,21 @@ Tests : 29 tests backend verts ; parcours navigateur vérifié (connexion, sessi
 
 Tests : 86 tests backend verts ; parcours navigateur vérifié dans Docker (dépôt de 4 documents dont un scan, doublon détecté, validation au clavier et groupée).
 
-## Phases 4 à 10
+## Phase 4 : Modules B et D, évolution, traitements, alertes
+
+| Étape | Statut | Notes |
+|---|---|---|
+| 4.1 API de séries | ✅ | Séries validées (pré-BD exclu), valeurs en attente séparées ; frise (traitements, changements, événements, radiographies) |
+| 4.2 Courbes et période | ✅ | 3 mois / 6 mois / 1 an / tout, paramètres par pathologie suivie, zones de référence, hors zone, clic vers le document source |
+| 4.3 Traitements et événements | ✅ | Ordonnances : 133/133 traitements (molécule + durée) sur le jeu de dev ; comptes rendus : 41/42 événements ; validation par le médecin, saisie manuelle |
+| 4.4 Frise et annotations | ✅ | Barres de traitement (long cours / court), exacerbations, hospitalisations, changements de traitement, radiographies, curseur commun |
+| 4.5 Tendances | ✅ | Theil-Sen, variation, qualification par seuil cliniquement significatif |
+| 4.6 Alertes | ✅ | 4 types de règles, source et valeurs citées, actuelles / historique, acquittement conservé, réservées à une pathologie si besoin (référentiel v0.2.0) |
+| 4.7 Cas de référence | ✅ | 24 cas de référence tendances/alertes, 100 % de concordance |
+
+Tests : 120 tests backend verts. Trois patients chargés par l'API (A01 BPCO, B01 pneumonie, C01 fibrose) avec `scripts/load_synthetic_patient.py`.
+
+## Phases 5 à 10
 
 ⬜ Non commencées.
 

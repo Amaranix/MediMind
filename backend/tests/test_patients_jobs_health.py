@@ -86,4 +86,4 @@ def test_health_reports_each_dependency(client):
     assert r.status_code == 200
     assert body["database"] == "ok"
     assert body["ollama"] == "injoignable"
-    assert body["referential_version"] == "0.1.0"
+    assert body["referential_version"] == "0.2.0"

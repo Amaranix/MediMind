@@ -3,10 +3,16 @@
 # Règles et seuils validés par l'encadrant (Pr A. Chergui) le 2026-11-11.
 # Toute modification : incrémenter `version` et noter la raison dans docs/DECISIONS.md.
 
-version: "0.1.0"
+version: "0.2.0"
 population: adult           # >= 18 ans uniquement
 updated: "2026-11-11"
 validated_by: "Encadrant PFA, 2026-11-11"
+
+# Pathologies suivies (fiche patient). Une règle avec `conditions` ne s'applique qu'à ces patients.
+conditions:
+  bpco: "BPCO"
+  fibrose: "Fibrose pulmonaire / pneumopathie interstitielle fibrosante"
+  pneumonie: "Suites de pneumonie"
 
 # Contextes de mesure reconnus (F-A7)
 contexts:
@@ -277,6 +283,7 @@ alert_rules:
     source: "Stanojevic et al., ERS/ATS technical standard on interpretive strategies for routine lung function tests, Eur Respir J 2022"
 
   - id: PPF_FVC
+    conditions: [fibrose]   # ATS/ERS/JRS/ALAT 2022 : patients atteints de PID fibrosante
     label: "Baisse absolue de la CVF ≥ 5 % du prédit sur 1 an : critère physiologique de progression (1 sur 3)"
     type: delta_window
     param: FVC_PRED
@@ -289,6 +296,7 @@ alert_rules:
     note: "Ne suffit pas à conclure à une fibrose progressive (2 critères sur 3 requis)"
 
   - id: PPF_DLCO
+    conditions: [fibrose]   # ATS/ERS/JRS/ALAT 2022 : patients atteints de PID fibrosante
     label: "Baisse absolue de la DLCO ≥ 10 % du prédit sur 1 an : critère physiologique de progression (1 sur 3)"
     type: delta_window
     param: DLCO_PRED
