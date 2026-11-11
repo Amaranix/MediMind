@@ -35,7 +35,22 @@
 
 Tests : 29 tests backend verts ; parcours navigateur vérifié (connexion, session restaurée, refus mineur, redirections par rôle).
 
-## Phases 3 à 10
+## Phase 3 : Module A, ingestion
+
+| Étape | Statut | Notes |
+|---|---|---|
+| 3.1 Fiche patient | ✅ | Création (refus < 18 ans), fiche patient avec panneau d'identité et onglets |
+| 3.2 Téléversement | ✅ | Multi-fichiers, glisser-déposer, type détecté par signature binaire, SHA-256 (doublons), tâche de fond |
+| 3.3 Extraction du texte | ✅ | PDF natif (PyMuPDF) ; scans et photos : redressement, médian + Otsu, Tesseract `fra` ; boîtes normalisées |
+| 3.4 Classification | ✅ | Règles pondérées, repli LLM local ; 100 % sur le jeu de développement |
+| 3.5 Extraction structurée | ✅ | Bilans (4 mises en page), EFR (colonnes par en-tête ou par nombre de valeurs), comptes rendus (SpO2 + contexte, gaz du sang) |
+| 3.6 Normalisation | ✅ | Synonymes, unités (correspondance approchée), plausibilité, contexte, dédoublonnage |
+| 3.7 Écran de validation | ✅ | Document avec zones surlignées, valider / corriger / rejeter, clavier, validation groupée des seules valeurs sûres |
+| 3.8 Évaluation (dev) | ✅ | 709 documents : F1 1,000 PDF natifs, 0,936 scans, 0,953 photos ; classification 100 % ; date 99,8 % ; 0,9 s/document |
+
+Tests : 86 tests backend verts ; parcours navigateur vérifié dans Docker (dépôt de 4 documents dont un scan, doublon détecté, validation au clavier et groupée).
+
+## Phases 4 à 10
 
 ⬜ Non commencées.
 

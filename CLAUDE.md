@@ -32,8 +32,11 @@ Windows 11, pas de GPU, 16 Go de RAM. Ollama : `llama3.2:3b` par défaut.
 - Migration : `cd backend && .venv/Scripts/alembic revision --autogenerate -m "..."` (contre un PostgreSQL), puis vérifier le fichier généré
 - Frontend : `cd frontend && npm run lint && npm run build` ; dev : `npm run dev` (proxy /api -> :8000)
 - Données : `.venv/Scripts/python -m synthetic.generator --seed 42` (voir `docs/data-sources.md`)
+- Évaluation extraction : `cd backend && TESSERACT_CMD="C:/Program Files/Tesseract-OCR/tesseract.exe" .venv/Scripts/python ../evaluation/run_extraction_eval.py --split dev` (ne jamais régler le pipeline sur `--split test`)
 
 ## Pièges connus
 - Colonnes nommées `date` dans les modèles : annoter avec `dt.date` (import datetime as dt).
 - Contexte de build du backend = racine du dépôt (inclut `referential/`) ; `.dockerignore` racine en liste blanche.
-- Toutes les routes API sont sous `/api` ; toute route patient passe par `get_patient_for_doctor`.
+- Toutes les routes API sont sous `/api` ; toute route patient passe par `get_patient_for_doctor` (documents : `get_document_for_doctor`).
+- Sessions SQLAlchemy sans autoflush : `db.flush()` avant de recompter des lignes modifiées dans la même requête.
+- Remplacements de texte contenant des antislashs (`\d`, ` `) : passer par l'outil Edit, pas par un heredoc shell.
