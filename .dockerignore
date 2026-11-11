@@ -1,0 +1,11 @@
+# Contexte de build du backend = racine du dépôt : n'envoyer que backend/ et referential/
+**
+!backend/
+!referential/
+backend/.venv
+backend/storage
+backend/tests
+**/__pycache__
+**/.pytest_cache
+**/.ruff_cache
+**/.env

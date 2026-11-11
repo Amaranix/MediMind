@@ -18,11 +18,24 @@
 | Étape | Statut | Notes |
 |---|---|---|
 | 1.1 Sous-ensemble NIH | ✅ | 60 patients (20/profil, 10 F / 10 H), 327 radios, 128 Mo ; `ml/scripts/select_nih_patients.py`, `download_nih_subset.py` |
-| 1.2 Sous-ensemble RSNA | 🟨 | Script prêt (`prepare_rsna_subset.py`). Bloqué : règles de la compétition à accepter sur Kaggle |
+| 1.2 Sous-ensemble RSNA | 🟨 | 572/1 500 images adultes (189 positives). Kaggle a limité le débit ; script réécrit (archive complète, T13), à relancer avant la phase 5 |
 | 1.3 Générateur synthétique | ✅ | 36 patients, 846 documents (493 PDF natifs, 112 scans PDF, 74 photos, 167 radios), 4 gabarits (T4 test), vérité terrain contrôlée contre le texte des PDF |
 | 1.4 Questions et démo | ✅ | `evaluation/questions_60.jsonl`, `docs/demo-scenario.md` (patient A01) |
 
-## Phases 2 à 10
+## Phase 2 : Socle applicatif
+
+| Étape | Statut | Notes |
+|---|---|---|
+| 2.1 Infrastructure | ✅ | `docker-compose.yml` (db, backend, frontend, proxy Caddy HTTPS :8443), `.env.example` |
+| 2.2 Squelette backend | ✅ | FastAPI, 13 tables, migration Alembic 0001 (aller-retour vérifié), référentiel validé par schéma, `/api/health` |
+| 2.3 Authentification et isolation | ✅ | JWT + cookie httpOnly, rôles, isolation médecin/patient, admin sans accès patient |
+| 2.4 Jobs et audit | ✅ | Table `jobs`, relance, remise en échec au redémarrage ; audit des connexions et accès patients |
+| 2.5 Squelette frontend | ✅ | Connexion, liste et création de patients (refus < 18 ans), page admin (comptes + état du service), bandeau permanent |
+| 2.6 Intégration continue | ✅ | GitHub Actions : ruff + pytest, eslint + build, construction des images |
+
+Tests : 29 tests backend verts ; parcours navigateur vérifié (connexion, session restaurée, refus mineur, redirections par rôle).
+
+## Phases 3 à 10
 
 ⬜ Non commencées.
 

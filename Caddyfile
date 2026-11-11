@@ -1,0 +1,26 @@
+# Proxy HTTPS de MediMind : /api -> backend, le reste -> frontend.
+# Certificat local (autorité interne de Caddy) : le navigateur demandera de l'accepter une fois.
+{$SITE_ADDRESS:localhost:8443} {
+	tls internal
+	encode gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "same-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+
+	handle /api/* {
+		request_body {
+			max_size 30MB
+		}
+		reverse_proxy backend:8000
+	}
+
+	handle {
+		reverse_proxy frontend:80
+	}
+}

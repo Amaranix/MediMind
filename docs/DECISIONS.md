@@ -31,3 +31,8 @@
 | T6 | 2026-11-11 | Tous les documents synthétiques datés au plus tard du 05/11/2026 ; patient de démo A01 (Karim Alaoui) suivi du 20/11/2025 au 05/11/2026 | Dossiers « passés » au moment de la démonstration |
 | T7 | 2026-11-11 | Parcours A : visite programmée reportée à J28 si elle tombe dans les 4 semaines suivant une exacerbation | Pas d'EFR pendant une exacerbation ; cohérence CRP/EFR |
 | T8 | 2026-11-11 | Parcours B : demi-vie de la CRP 1,6 à 2,4 jours ; parcours C : patients stables à moins de 2,5 points de CVF/an | Séparer nettement les cas qui doivent déclencher une alerte de ceux qui ne le doivent pas |
+| T9 | 2026-11-11 | Nom et prénom du patient stockés en base | Nécessaires à l'usage (liste, en-têtes) ; aucune donnée ne sort de la machine (LLM local) |
+| T10 | 2026-11-11 | Identifiants de connexion au format e-mail validés par expression régulière (domaines internes `.local` acceptés) | La validation stricte refusait `.local` ; aucun e-mail n'est envoyé |
+| T11 | 2026-11-11 | Session : jeton d'accès 15 min en mémoire, jeton de rafraîchissement 7 j en cookie httpOnly/Secure/SameSite=Strict limité à `/api/auth` | Jeton non lisible par le JavaScript ; session restaurée au rechargement |
+| T12 | 2026-11-11 | HTTPS local par Caddy (`tls internal`) sur le port 8443 | Pas de droits administrateur ni de conflit avec 443 ; certificat local à accepter une fois |
+| T13 | 2026-11-11 | RSNA : archive complète téléchargée en une requête puis lecture dans le zip | Le téléchargement image par image déclenche la limitation de débit de Kaggle ; 572 images disponibles en attendant |

@@ -1,0 +1,69 @@
+@import "@fontsource/atkinson-hyperlegible-next/400.css";
+@import "@fontsource/atkinson-hyperlegible-next/600.css";
+@import "@fontsource/atkinson-hyperlegible-next/700.css";
+@import "tailwindcss";
+
+/* Système visuel : docs/mockups/DESIGN.md */
+@theme {
+  --color-paper: #f6f8f7;
+  --color-surface: #ffffff;
+  --color-ink: #1d2a31;
+  --color-ink-2: #4a5a62;
+  --color-ink-3: #7a8a91;
+  --color-grid: #dce6e3;
+  --color-grid-strong: #c3d3cf;
+  --color-teal: #0e6b6b;
+  --color-teal-soft: #dcefec;
+  --color-teal-ink: #08504f;
+  --color-alert: #a8233f;
+  --color-alert-soft: #f8e4e8;
+  --color-warn: #9a6400;
+  --color-warn-soft: #f7edd7;
+  --color-ok: #2c6e45;
+  --color-ok-soft: #e0f0e5;
+  --color-info: #3b5b8c;
+  --color-info-soft: #e3eaf5;
+  --color-lightbox: #14181b;
+  --font-sans: "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@layer base {
+  html,
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.45;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded border border-grid-strong bg-surface px-3 py-1.5 text-ink
+      hover:bg-paper disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-primary {
+    @apply border-teal bg-teal font-semibold text-white hover:bg-teal-ink;
+  }
+  .field {
+    @apply w-full rounded border border-grid-strong bg-surface px-2.5 py-1.5 text-ink
+      focus:border-teal focus:outline-none;
+  }
+  .label {
+    @apply mb-1 block text-sm font-semibold;
+  }
+  .panel {
+    @apply rounded-lg border border-grid bg-surface;
+  }
+}

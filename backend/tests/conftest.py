@@ -1,0 +1,61 @@
+"""Fixtures : base SQLite en mémoire (types JSON génériques), application sans démarrage réseau."""
+from __future__ import annotations
+
+import os
+
+os.environ.setdefault("JWT_SECRET", "test-secret-test-secret-0123456789")
+os.environ["COOKIE_SECURE"] = "false"           # le client de test parle en http
+os.environ["OLLAMA_URL"] = "http://127.0.0.1:9"  # port fermé : Ollama « injoignable » sans attente
+
+import pytest
+from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.pool import StaticPool
+
+from app.core.security import hash_password
+from app.db.models import Base, Role, User
+from app.db.session import SessionLocal, set_engine
+from app.main import create_app
+from app.services.referential import get_referential, sync_parameters
+
+PASSWORD = "motdepasse-solide-42"
+
+
+@pytest.fixture()
+def db_engine():
+    engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
+    Base.metadata.create_all(engine)
+    set_engine(engine)
+    with SessionLocal() as db:
+        sync_parameters(db, get_referential())
+    yield engine
+    engine.dispose()
+
+
+@pytest.fixture()
+def db(db_engine):
+    with SessionLocal() as session:
+        yield session
+
+
+@pytest.fixture()
+def client(db_engine):
+    return TestClient(create_app(run_bootstrap=False))
+
+
+def make_user(db, email: str, role: Role = Role.doctor, active: bool = True) -> User:
+    user = User(name=email.split("@")[0], email=email, password_hash=hash_password(PASSWORD), role=role,
+                is_active=active)
+    db.add(user)
+    db.commit()
+    return user
+
+
+def login(client: TestClient, email: str) -> dict[str, str]:
+    r = client.post("/api/auth/login", json={"email": email, "password": PASSWORD})
+    assert r.status_code == 200, r.text
+    return {"Authorization": f"Bearer {r.json()['access_token']}"}
+
+
+PATIENT = {"first_name": "Karim", "last_name": "Alaoui", "birth_date": "1962-03-14", "sex": "M", "height_cm": 172,
+           "pack_years": 40}

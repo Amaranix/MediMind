@@ -27,4 +27,13 @@ Windows 11, pas de GPU, 16 Go de RAM. Ollama : `llama3.2:3b` par défaut.
 - Chaque fonctionnalité = code + test + doc courte ; mettre à jour `docs/PROGRESS.md`.
 
 ## Commandes
-À compléter quand le socle existe (`docker compose up`, tests, seed).
+- Tout lancer : `docker compose up -d --build --wait` puis https://localhost:8443 (secrets dans `.env`, modèle `.env.example`)
+- Backend : `cd backend && .venv/Scripts/ruff check . && .venv/Scripts/pytest`
+- Migration : `cd backend && .venv/Scripts/alembic revision --autogenerate -m "..."` (contre un PostgreSQL), puis vérifier le fichier généré
+- Frontend : `cd frontend && npm run lint && npm run build` ; dev : `npm run dev` (proxy /api -> :8000)
+- Données : `.venv/Scripts/python -m synthetic.generator --seed 42` (voir `docs/data-sources.md`)
+
+## Pièges connus
+- Colonnes nommées `date` dans les modèles : annoter avec `dt.date` (import datetime as dt).
+- Contexte de build du backend = racine du dépôt (inclut `referential/`) ; `.dockerignore` racine en liste blanche.
+- Toutes les routes API sont sous `/api` ; toute route patient passe par `get_patient_for_doctor`.
