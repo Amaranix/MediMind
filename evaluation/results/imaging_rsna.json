@@ -1,0 +1,426 @@
+{
+ "dataset": "rsna",
+ "n_images": 1500,
+ "models": {
+  "interne_all": {
+   "weights": "densenet121-res224-all",
+   "seconds_per_image": 0.564,
+   "targets": {
+    "Lung Opacity": {
+     "global": {
+      "auc": 0.877,
+      "ci95": [
+       0.859,
+       0.894
+      ],
+      "n": 1500,
+      "positives": 500,
+      "sensibilite_0_5": 0.956,
+      "specificite_0_5": 0.545
+     },
+     "sex=F": {
+      "auc": 0.881,
+      "ci95": [
+       0.851,
+       0.906
+      ],
+      "n": 665,
+      "positives": 216,
+      "sensibilite_0_5": 0.958,
+      "specificite_0_5": 0.521
+     },
+     "sex=M": {
+      "auc": 0.875,
+      "ci95": [
+       0.854,
+       0.898
+      ],
+      "n": 835,
+      "positives": 284,
+      "sensibilite_0_5": 0.954,
+      "specificite_0_5": 0.564
+     },
+     "age_group=18-40": {
+      "auc": 0.908,
+      "ci95": [
+       0.883,
+       0.931
+      ],
+      "n": 496,
+      "positives": 169,
+      "sensibilite_0_5": 0.964,
+      "specificite_0_5": 0.612
+     },
+     "age_group=41-60": {
+      "auc": 0.858,
+      "ci95": [
+       0.829,
+       0.882
+      ],
+      "n": 704,
+      "positives": 231,
+      "sensibilite_0_5": 0.952,
+      "specificite_0_5": 0.518
+     },
+     "age_group=> 60": {
+      "auc": 0.866,
+      "ci95": [
+       0.814,
+       0.904
+      ],
+      "n": 300,
+      "positives": 100,
+      "sensibilite_0_5": 0.95,
+      "specificite_0_5": 0.5
+     }
+    },
+    "Pneumonia": {
+     "global": {
+      "auc": 0.827,
+      "ci95": [
+       0.806,
+       0.849
+      ],
+      "n": 1500,
+      "positives": 500,
+      "sensibilite_0_5": 0.594,
+      "specificite_0_5": 0.873
+     },
+     "sex=F": {
+      "auc": 0.835,
+      "ci95": [
+       0.803,
+       0.866
+      ],
+      "n": 665,
+      "positives": 216,
+      "sensibilite_0_5": 0.606,
+      "specificite_0_5": 0.878
+     },
+     "sex=M": {
+      "auc": 0.822,
+      "ci95": [
+       0.789,
+       0.846
+      ],
+      "n": 835,
+      "positives": 284,
+      "sensibilite_0_5": 0.585,
+      "specificite_0_5": 0.869
+     },
+     "age_group=18-40": {
+      "auc": 0.841,
+      "ci95": [
+       0.807,
+       0.879
+      ],
+      "n": 496,
+      "positives": 169,
+      "sensibilite_0_5": 0.657,
+      "specificite_0_5": 0.865
+     },
+     "age_group=41-60": {
+      "auc": 0.831,
+      "ci95": [
+       0.799,
+       0.863
+      ],
+      "n": 704,
+      "positives": 231,
+      "sensibilite_0_5": 0.584,
+      "specificite_0_5": 0.86
+     },
+     "age_group=> 60": {
+      "auc": 0.797,
+      "ci95": [
+       0.732,
+       0.852
+      ],
+      "n": 300,
+      "positives": 100,
+      "sensibilite_0_5": 0.51,
+      "specificite_0_5": 0.915
+     }
+    },
+    "Consolidation": {
+     "global": {
+      "auc": 0.854,
+      "ci95": [
+       0.835,
+       0.874
+      ],
+      "n": 1500,
+      "positives": 500,
+      "sensibilite_0_5": 0.902,
+      "specificite_0_5": 0.625
+     },
+     "sex=F": {
+      "auc": 0.859,
+      "ci95": [
+       0.829,
+       0.886
+      ],
+      "n": 665,
+      "positives": 216,
+      "sensibilite_0_5": 0.921,
+      "specificite_0_5": 0.597
+     },
+     "sex=M": {
+      "auc": 0.851,
+      "ci95": [
+       0.827,
+       0.876
+      ],
+      "n": 835,
+      "positives": 284,
+      "sensibilite_0_5": 0.887,
+      "specificite_0_5": 0.648
+     },
+     "age_group=18-40": {
+      "auc": 0.883,
+      "ci95": [
+       0.855,
+       0.909
+      ],
+      "n": 496,
+      "positives": 169,
+      "sensibilite_0_5": 0.911,
+      "specificite_0_5": 0.697
+     },
+     "age_group=41-60": {
+      "auc": 0.841,
+      "ci95": [
+       0.811,
+       0.867
+      ],
+      "n": 704,
+      "positives": 231,
+      "sensibilite_0_5": 0.9,
+      "specificite_0_5": 0.592
+     },
+     "age_group=> 60": {
+      "auc": 0.834,
+      "ci95": [
+       0.784,
+       0.877
+      ],
+      "n": 300,
+      "positives": 100,
+      "sensibilite_0_5": 0.89,
+      "specificite_0_5": 0.585
+     }
+    }
+   }
+  },
+  "externe_chex": {
+   "weights": "densenet121-res224-chex",
+   "seconds_per_image": 0.395,
+   "targets": {
+    "Lung Opacity": {
+     "global": {
+      "auc": 0.794,
+      "ci95": [
+       0.773,
+       0.817
+      ],
+      "n": 1500,
+      "positives": 500,
+      "sensibilite_0_5": 0.928,
+      "specificite_0_5": 0.448
+     },
+     "sex=F": {
+      "auc": 0.799,
+      "ci95": [
+       0.768,
+       0.832
+      ],
+      "n": 665,
+      "positives": 216,
+      "sensibilite_0_5": 0.926,
+      "specificite_0_5": 0.425
+     },
+     "sex=M": {
+      "auc": 0.793,
+      "ci95": [
+       0.762,
+       0.824
+      ],
+      "n": 835,
+      "positives": 284,
+      "sensibilite_0_5": 0.93,
+      "specificite_0_5": 0.466
+     },
+     "age_group=18-40": {
+      "auc": 0.824,
+      "ci95": [
+       0.789,
+       0.863
+      ],
+      "n": 496,
+      "positives": 169,
+      "sensibilite_0_5": 0.923,
+      "specificite_0_5": 0.511
+     },
+     "age_group=41-60": {
+      "auc": 0.782,
+      "ci95": [
+       0.747,
+       0.818
+      ],
+      "n": 704,
+      "positives": 231,
+      "sensibilite_0_5": 0.926,
+      "specificite_0_5": 0.461
+     },
+     "age_group=> 60": {
+      "auc": 0.783,
+      "ci95": [
+       0.718,
+       0.828
+      ],
+      "n": 300,
+      "positives": 100,
+      "sensibilite_0_5": 0.94,
+      "specificite_0_5": 0.315
+     }
+    },
+    "Pneumonia": {
+     "global": {
+      "auc": 0.773,
+      "ci95": [
+       0.75,
+       0.797
+      ],
+      "n": 1500,
+      "positives": 500,
+      "sensibilite_0_5": 0.814,
+      "specificite_0_5": 0.597
+     },
+     "sex=F": {
+      "auc": 0.782,
+      "ci95": [
+       0.747,
+       0.817
+      ],
+      "n": 665,
+      "positives": 216,
+      "sensibilite_0_5": 0.838,
+      "specificite_0_5": 0.599
+     },
+     "sex=M": {
+      "auc": 0.767,
+      "ci95": [
+       0.738,
+       0.799
+      ],
+      "n": 835,
+      "positives": 284,
+      "sensibilite_0_5": 0.796,
+      "specificite_0_5": 0.595
+     },
+     "age_group=18-40": {
+      "auc": 0.803,
+      "ci95": [
+       0.765,
+       0.843
+      ],
+      "n": 496,
+      "positives": 169,
+      "sensibilite_0_5": 0.793,
+      "specificite_0_5": 0.657
+     },
+     "age_group=41-60": {
+      "auc": 0.761,
+      "ci95": [
+       0.721,
+       0.795
+      ],
+      "n": 704,
+      "positives": 231,
+      "sensibilite_0_5": 0.81,
+      "specificite_0_5": 0.59
+     },
+     "age_group=> 60": {
+      "auc": 0.763,
+      "ci95": [
+       0.709,
+       0.807
+      ],
+      "n": 300,
+      "positives": 100,
+      "sensibilite_0_5": 0.86,
+      "specificite_0_5": 0.515
+     }
+    },
+    "Consolidation": {
+     "global": {
+      "auc": 0.792,
+      "ci95": [
+       0.77,
+       0.815
+      ],
+      "n": 1500,
+      "positives": 500,
+      "sensibilite_0_5": 0.906,
+      "specificite_0_5": 0.522
+     },
+     "sex=F": {
+      "auc": 0.798,
+      "ci95": [
+       0.767,
+       0.832
+      ],
+      "n": 665,
+      "positives": 216,
+      "sensibilite_0_5": 0.907,
+      "specificite_0_5": 0.494
+     },
+     "sex=M": {
+      "auc": 0.792,
+      "ci95": [
+       0.761,
+       0.822
+      ],
+      "n": 835,
+      "positives": 284,
+      "sensibilite_0_5": 0.905,
+      "specificite_0_5": 0.544
+     },
+     "age_group=18-40": {
+      "auc": 0.82,
+      "ci95": [
+       0.784,
+       0.858
+      ],
+      "n": 496,
+      "positives": 169,
+      "sensibilite_0_5": 0.911,
+      "specificite_0_5": 0.547
+     },
+     "age_group=41-60": {
+      "auc": 0.782,
+      "ci95": [
+       0.741,
+       0.817
+      ],
+      "n": 704,
+      "positives": 231,
+      "sensibilite_0_5": 0.896,
+      "specificite_0_5": 0.541
+     },
+     "age_group=> 60": {
+      "auc": 0.772,
+      "ci95": [
+       0.707,
+       0.821
+      ],
+      "n": 300,
+      "positives": 100,
+      "sensibilite_0_5": 0.92,
+      "specificite_0_5": 0.435
+     }
+    }
+   }
+  }
+ }
+}

@@ -18,7 +18,7 @@
 | Étape | Statut | Notes |
 |---|---|---|
 | 1.1 Sous-ensemble NIH | ✅ | 60 patients (20/profil, 10 F / 10 H), 327 radios, 128 Mo ; `ml/scripts/select_nih_patients.py`, `download_nih_subset.py` |
-| 1.2 Sous-ensemble RSNA | 🟨 | 572/1 500 images adultes (189 positives). Kaggle a limité le débit ; script réécrit (archive complète, T13), à relancer avant la phase 5 |
+| 1.2 Sous-ensemble RSNA | ✅ | 1 500 images adultes (500 positives, 665 F / 835 H), 543 Mo ; archive complète (T13), supprimée après extraction |
 | 1.3 Générateur synthétique | ✅ | 36 patients, 846 documents (493 PDF natifs, 112 scans PDF, 74 photos, 167 radios), 4 gabarits (T4 test), vérité terrain contrôlée contre le texte des PDF |
 | 1.4 Questions et démo | ✅ | `evaluation/questions_60.jsonl`, `docs/demo-scenario.md` (patient A01) |
 
@@ -72,9 +72,9 @@ Tests : 120 tests backend verts. Trois patients chargés par l'API (A01 BPCO, B0
 | 5.2 Grad-CAM et incertitude | ✅ | Carte par pathologie à la demande (mise en cache), écart-type sur 7 variantes |
 | 5.3 Liste et visionneuse | ✅ | Vignettes R1…Rn, côte à côte / superposition avec opacité, zoom et déplacement synchronisés, carte superposable, vue face/profil, lecture du médecin |
 | 5.4 Courbe des scores | ✅ | Scores IA ± incertitude sur l'axe commun de l'écran d'évolution, seuil du modèle 0,50, mention « indicatif, non diagnostique » |
-| 5.5 Évaluation imagerie | ⏳ | Script prêt (`evaluation/run_imaging_eval.py`), vérifié sur un échantillon. En attente de Kaggle (limite de débit, levée prévue vers 19 h 35 le 11/11) pour compléter RSNA à 1 500 images |
+| 5.5 Évaluation imagerie | ✅ | RSNA 1 500 images, `evaluation/results/imaging_rsna.json`. AUC externe (`-chex`) : opacité 0,794 [0,773–0,817], pneumonie 0,773 [0,750–0,797], consolidation 0,792 [0,770–0,815]. AUC interne (`-all`, optimiste, RSNA vu à l'entraînement) : 0,877 / 0,827 / 0,854. Écart F/H ≤ 0,02 ; 18-40 ans meilleurs (+0,03 à +0,04) |
 
-Constats pour la fiche du modèle : plusieurs scores se regroupent autour de 0,50 (seuil de calibration) ; le Grad-CAM porte parfois sur les bords de l'image ou le cou (raccourcis appris), d'où la légende obligatoire.
+Constats pour la fiche du modèle : au seuil 0,50, le score « Lung Opacity » est très sensible et peu spécifique (interne : Se 0,96, Sp 0,55), le score « Pneumonia » l'inverse (Se 0,59, Sp 0,87) ; plusieurs scores se regroupent autour de 0,50 (seuil de calibration) ; le Grad-CAM porte parfois sur les bords de l'image ou le cou (raccourcis appris), d'où la légende obligatoire.
 
 Tests : 125 tests backend verts (faux modèle pour les tests d'API, vrai modèle testé si ses poids sont présents).
 
