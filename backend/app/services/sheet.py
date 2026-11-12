@@ -69,7 +69,8 @@ ENV.filters.update(
 )
 
 
-def render_html(db: Session, ref: Referential, patient: Patient, facts: dict, generated_at: dt.datetime) -> str:
+def render_html(db: Session, ref: Referential, patient: Patient, facts: dict, generated_at: dt.datetime,
+                synthesis: str | None = None, assisted_failed: bool = False) -> str:
     ids: dict[str, int] = {}
 
     def cite(*doc_ids: str | None) -> Markup:
@@ -101,7 +102,8 @@ def render_html(db: Session, ref: Referential, patient: Patient, facts: dict, ge
 
     latest = facts["latest_values"]
     return ENV.get_template("sheet.html").render(
-        f=facts, name=f"{patient.first_name} {patient.last_name[:1]}.", generated_at=generated_at,
+        f=facts, synthesis=synthesis, assisted_failed=assisted_failed,
+        name=f"{patient.first_name} {patient.last_name[:1]}.", generated_at=generated_at,
         recent=[v for v in latest if v["days_old"] <= RECENT_DAYS],
         old=[v for v in latest if v["days_old"] > RECENT_DAYS],
         ref=cite, sources=sources, trend=trend, ctx=lambda c: CONTEXTS.get(c, ref.contexts.get(c, c)),

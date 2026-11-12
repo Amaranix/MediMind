@@ -1,14 +1,19 @@
 {#- Fiche pré-consultation (F-E1), gabarit déterministe. Ne cite que le dossier de faits ; ref() numérote les sources. -#}
 <h1>Fiche pré-consultation : {{ name }}</h1>
 <p class="meta">Données au {{ f.as_of | d }}{% if f.last_data_date %} (dernière donnée le {{ f.last_data_date | d }}){% endif %}.
-Générée le {{ generated_at.strftime("%d/%m/%Y à %H:%M") }}.</p>
+Générée le {{ generated_at.strftime("%d/%m/%Y à %H:%M") }}{% if synthesis %}, synthèse rédigée par le LLM local puis vérifiée{% elif assisted_failed %}. Rédaction assistée indisponible : fiche par gabarit{% endif %}.</p>
 <div class="warn">Aide à la décision. Aucun diagnostic. Chaque chiffre provient d'une donnée validée par le médecin ;
 le petit numéro renvoie au document source.</div>
 
+{% if synthesis %}
+<h2>Synthèse (rédaction assistée, nombres et dates vérifiés)</h2>
+<p>{{ synthesis }}</p>
+{% else %}
 <h2>Motif et contexte</h2>
 <p>{{ f.reason }}. {{ f.patient.age }} ans, {{ "homme" if f.patient.sex == "M" else "femme" }}
 {%- if f.patient.pack_years %}, {{ f.patient.pack_years | n }} paquets-années{% endif %}.
 {%- for e in f.events %} {{ event_label(e.type) }} {% if e.end_date and e.end_date != e.date %}du {{ e.date | d }} au {{ e.end_date | d }}{% else %}le {{ e.date | d }}{% endif %}{{ ref(e.document_id) }}{{ ";" if not loop.last else "." }}{% endfor %}</p>
+{% endif %}
 
 {% if recent %}
 <h2>Évolution depuis la mesure précédente</h2>

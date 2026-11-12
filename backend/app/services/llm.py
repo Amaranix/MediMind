@@ -32,6 +32,29 @@ def generate_json(prompt: str, schema: dict, system: str) -> dict | None:
         return None
 
 
+def generate_text(prompt: str, system: str, max_tokens: int = 300) -> str | None:
+    """Texte libre (sans format JSON imposé : avec un petit modèle, la grammaire JSON peut boucler sans fin)."""
+    s = get_settings()
+    if not s.llm_enabled:
+        return None
+    try:
+        # 20 à 75 s mesurés par essai sur le poste cible (CPU) : délai propre, plus long que la classification
+        r = httpx.post(f"{s.ollama_url}/api/chat", timeout=max(s.llm_timeout_s, 90.0), json={
+            "model": s.ollama_model, "stream": False,
+            "options": {"temperature": 0, "num_ctx": 4096, "num_predict": max_tokens},
+            "messages": [{"role": "system", "content": system}, {"role": "user", "content": prompt}],
+        })
+        r.raise_for_status()
+        return r.json()["message"]["content"].strip() or None
+    except Exception as exc:  # noqa: BLE001 - la rédaction assistée est optionnelle, jamais bloquante
+        log.warning(f"LLM indisponible : {type(exc).__name__}")
+        return None
+
+
+def model_name() -> str:
+    return get_settings().ollama_model
+
+
 DOC_TYPES = ["bilan_bio", "efr", "compte_rendu", "ordonnance", "inconnu"]
 
 

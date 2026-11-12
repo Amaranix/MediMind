@@ -288,4 +288,8 @@ export async function fetchBlobUrl(path: string): Promise<string> {
 }
 
 // ---------------------------------------------------------------- fiche pré-consultation
-export type Sheet = { id: string; created_at: string; mode: "template" | "llm"; html: string; pages: number; as_of: string };
+export type SheetAttempt = { ok: boolean; issues: string[]; checked: number; seconds: number };
+export type Sheet = {
+  id: string; created_at: string; mode: "template" | "llm"; html: string; pages: number; as_of: string;
+  assisted: boolean; seconds: number | null; attempts: SheetAttempt[];
+};
