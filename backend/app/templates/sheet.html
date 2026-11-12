@@ -44,6 +44,7 @@ le petit numéro renvoie au document source.</div>
 <p>R{{ r["count"] - 1 }} du {{ a.date | d }}{{ ref(a.document_id) }} et R{{ r["count"] }} du {{ b.date | d }}{{ ref(b.document_id) }} :
 {% for c in r.comparisons %}score {{ pathology(c.pathology) }} {{ c.before | n }} ± {{ c.uncertainty_before | n }} puis {{ c.after | n }} ± {{ c.uncertainty_after | n }}, {{ "variation dans la marge d'incertitude" if c.within_margin else "variation au-delà de la marge d'incertitude" }}{{ "; " if not loop.last else "." }}{% endfor %}
  <span class="dim">Scores indicatifs d'un modèle de recherche ({{ b.model_name }}, {{ b.model_version }}), non diagnostiques.</span>
+{% if r.doctor_qualification %} <b>Évolution jugée par le médecin : {{ qualification(r.doctor_qualification.qualification) }}</b>{% if r.doctor_qualification.comment %} ({{ r.doctor_qualification.comment }}){% endif %}.{% endif %}
 {% if b.doctor_assessment %} Lecture du médecin : {{ b.doctor_assessment }}{% endif %}</p>
 {% endif %}
 

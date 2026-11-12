@@ -271,6 +271,7 @@ export type ImagingItem = {
   model_name: string | null;
   model_version: string | null;
   doctor_assessment: string | null;
+  annotations: Annotation[];
 };
 export type ImagingList = { pathologies: string[]; model_name: string; items: ImagingItem[] };
 
@@ -301,3 +302,10 @@ export type LatestValue = {
   previous: { date: string; value: number; delta: number; document_id: string | null } | null;
 };
 export type Facts = { as_of: string; latest_values: LatestValue[]; trends: (Trend & { name: string })[] };
+
+// ---------------------------------------------------------------- radiographies : outils du médecin (F-C6, F-C7)
+export type Annotation = { type: "arrow" | "text"; x1: number; y1: number; x2?: number; y2?: number; text?: string };
+export type RadioComparison = {
+  document_a_id: string; document_b_id: string; qualification: "amelioration" | "stable" | "aggravation" | "non_evaluable";
+  comment: string | null; updated_at: string;
+};

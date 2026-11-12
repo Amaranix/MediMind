@@ -30,6 +30,7 @@ from app.db.models import (
     Imaging,
     Measurement,
     Patient,
+    RadiographComparison,
     Treatment,
     ValidationStatus,
 )
@@ -144,7 +145,13 @@ def _radiographs(db: Session, patient: Patient) -> dict | None:
                                     "uncertainty_before": ua, "uncertainty_after": ub,
                                     "delta": round(b.scores[p] - a.scores[p], 4),
                                     "within_margin": within_margin(a.scores[p], ua, b.scores[p], ub)})
-    return {"count": len(face), "items": items, "comparisons": comparisons}
+    doctor = None
+    if len(face) > 1:
+        c = db.scalar(select(RadiographComparison).where(RadiographComparison.document_a_id == face[-2][0].id,
+                                                         RadiographComparison.document_b_id == face[-1][0].id))
+        if c:
+            doctor = {"qualification": c.qualification, "comment": c.comment}
+    return {"count": len(face), "items": items, "comparisons": comparisons, "doctor_qualification": doctor}
 
 
 def build_facts(db: Session, ref: Referential, patient: Patient, as_of: dt.date | None = None) -> dict:

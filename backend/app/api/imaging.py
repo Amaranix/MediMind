@@ -1,5 +1,6 @@
-"""Imagerie thoracique (F-C1 à F-C5) : liste chronologique, scores par pathologie avec incertitude, Grad-CAM,
-vue déclarée et commentaire du médecin. Les scores sont ceux d'un modèle de recherche : aucun diagnostic."""
+"""Imagerie thoracique (F-C1 à F-C7) : liste chronologique, scores par pathologie avec incertitude, Grad-CAM,
+vue déclarée et commentaire du médecin, annotations (F-C7), qualification de l'évolution entre deux clichés par le
+médecin (F-C6). Les scores sont ceux d'un modèle de recherche : aucun diagnostic, aucun verdict d'évolution."""
 from __future__ import annotations
 
 import uuid
@@ -12,7 +13,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_patient_for_doctor, require_doctor
-from app.db.models import Document, DocumentType, Imaging, Patient, User
+from app.db.models import Document, DocumentType, Imaging, Patient, RadiographComparison, User, utcnow
 from app.db.session import get_db
 from app.services import imaging as imaging_service
 from app.services import storage
@@ -38,7 +39,8 @@ def _out(doc: Document, im: Imaging | None) -> dict:
             "quality_flags": [f for f in (im.quality_flag or "").split(",") if f] if im else [],
             "view": im.view if im else None, "model_name": im.model_name if im else None,
             "model_version": im.model_version if im else None,
-            "doctor_assessment": im.doctor_assessment if im else None}
+            "doctor_assessment": im.doctor_assessment if im else None,
+            "annotations": (im.annotations or []) if im else []}
 
 
 @router.get("/patients/{patient_id}/imaging")
@@ -74,9 +76,20 @@ def gradcam(document_id: uuid.UUID, pathology: str = Query(...), user: User = De
     return Response(cache.read_bytes(), media_type="image/png", headers={"Cache-Control": "private, max-age=3600"})
 
 
+class Annotation(BaseModel):
+    """Flèche (x1, y1 -> x2, y2) ou texte (x1, y1), coordonnées normalisées dans l'image (0 à 1)."""
+    type: Literal["arrow", "text"]
+    x1: float = Field(ge=0, le=1)
+    y1: float = Field(ge=0, le=1)
+    x2: float | None = Field(default=None, ge=0, le=1)
+    y2: float | None = Field(default=None, ge=0, le=1)
+    text: str | None = Field(default=None, max_length=200)
+
+
 class ImagingUpdate(BaseModel):
     view: Literal["face", "profil"] | None = None
     doctor_assessment: str | None = Field(default=None, max_length=2000)
+    annotations: list[Annotation] | None = Field(default=None, max_length=50)
 
 
 @router.patch("/documents/{document_id}/imaging")
@@ -91,6 +104,55 @@ def update_imaging(document_id: uuid.UUID, body: ImagingUpdate, user: User = Dep
         im.view = body.view
     if body.doctor_assessment is not None:
         im.doctor_assessment = body.doctor_assessment.strip() or None
+    if body.annotations is not None:
+        bad = [a for a in body.annotations if (a.type == "arrow" and (a.x2 is None or a.y2 is None))
+               or (a.type == "text" and not (a.text or "").strip())]
+        if bad:
+            raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Annotation incomplète (flèche sans fin ou texte vide).")
+        im.annotations = [a.model_dump(exclude_none=True) for a in body.annotations]
     db.commit()
     audit(db, user.id, "imaging_update", "document", doc.id, body.model_dump(exclude_none=True))
     return _out(doc, im)
+
+
+# ---------------------------------------------------------------- F-C6 : qualification par le médecin
+
+
+def _cmp_out(c: RadiographComparison) -> dict:
+    return {"document_a_id": str(c.document_a_id), "document_b_id": str(c.document_b_id),
+            "qualification": c.qualification, "comment": c.comment, "updated_at": c.updated_at}
+
+
+@router.get("/patients/{patient_id}/radiograph-comparisons")
+def list_comparisons(patient: Patient = Depends(get_patient_for_doctor), db: Session = Depends(get_db)) -> list[dict]:
+    rows = db.scalars(select(RadiographComparison).where(RadiographComparison.patient_id == patient.id)
+                      .order_by(RadiographComparison.updated_at.desc()))
+    return [_cmp_out(c) for c in rows]
+
+
+class ComparisonIn(BaseModel):
+    document_a_id: uuid.UUID
+    document_b_id: uuid.UUID
+    qualification: Literal["amelioration", "stable", "aggravation", "non_evaluable"]
+    comment: str | None = Field(default=None, max_length=2000)
+
+
+@router.put("/radiograph-comparisons")
+def save_comparison(body: ComparisonIn, user: User = Depends(require_doctor), db: Session = Depends(get_db)) -> dict:
+    """Le médecin qualifie l'évolution entre deux clichés du même patient (ordre chronologique imposé)."""
+    a, b = _owned_doc(db, body.document_a_id, user), _owned_doc(db, body.document_b_id, user)
+    if a.id == b.id or a.patient_id != b.patient_id:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Deux radiographies différentes du même patient.")
+    if (a.exam_date or a.created_at.date()) > (b.exam_date or b.created_at.date()):
+        a, b = b, a
+    c = db.scalar(select(RadiographComparison).where(RadiographComparison.document_a_id == a.id,
+                                                     RadiographComparison.document_b_id == b.id))
+    if c is None:
+        c = RadiographComparison(patient_id=a.patient_id, document_a_id=a.id, document_b_id=b.id, created_by=user.id)
+        db.add(c)
+    c.qualification, c.comment, c.updated_at = body.qualification, (body.comment or "").strip() or None, utcnow()
+    c.created_by = user.id
+    db.commit()
+    audit(db, user.id, "radiograph_comparison", "patient", a.patient_id,
+          {"a": str(a.id), "b": str(b.id), "qualification": c.qualification})
+    return _cmp_out(c)

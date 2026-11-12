@@ -9,7 +9,21 @@ import datetime as dt
 import enum
 import uuid
 
-from sqlalchemy import JSON, Boolean, Date, DateTime, Enum, Float, ForeignKey, Index, Integer, String, Text, Uuid
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Date,
+    DateTime,
+    Enum,
+    Float,
+    ForeignKey,
+    Index,
+    Integer,
+    String,
+    Text,
+    UniqueConstraint,
+    Uuid,
+)
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -221,6 +235,22 @@ class Imaging(Base):
     model_name: Mapped[str | None] = mapped_column(String(80))
     model_version: Mapped[str | None] = mapped_column(String(40))
     doctor_assessment: Mapped[str | None] = mapped_column(Text)
+    # F-C7 : annotations du médecin, coordonnées normalisées 0..1 ({type: arrow|text, x1, y1, x2, y2, text})
+    annotations: Mapped[list] = mapped_column(JsonType, default=list)
+
+
+class RadiographComparison(Base):
+    """F-C6 : qualification par le médecin de l'évolution entre deux radiographies (l'IA n'en produit aucune, D5)."""
+    __tablename__ = "radiograph_comparisons"
+    __table_args__ = (UniqueConstraint("document_a_id", "document_b_id"),)
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    patient_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("patients.id", ondelete="CASCADE"), index=True)
+    document_a_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("documents.id", ondelete="CASCADE"))
+    document_b_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("documents.id", ondelete="CASCADE"))
+    qualification: Mapped[str] = mapped_column(String(20))  # amelioration | stable | aggravation | non_evaluable
+    comment: Mapped[str | None] = mapped_column(Text)
+    created_by: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
+    updated_at: Mapped[dt.datetime] = mapped_column(DateTime(timezone=True), default=utcnow)
 
 
 class Alert(Base):

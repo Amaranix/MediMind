@@ -32,6 +32,8 @@ EVENTS = {"exacerbation": "Exacerbation", "hospitalisation": "Hospitalisation", 
 PATHOLOGIES = {"Emphysema": "d'emphysème", "Fibrosis": "de fibrose", "Consolidation": "de consolidation"}
 CONTEXTS = {"pre_bd": "pré-BD", "post_bd": "post-BD", "rest": "repos", "exercise": "effort",
             "room_air": "air ambiant", "oxygen": "sous O2"}
+QUALIFICATIONS = {"amelioration": "amélioration", "stable": "stabilité", "aggravation": "aggravation",
+                  "non_evaluable": "non évaluable"}
 TRENDS = {"improving": "Amélioration", "worsening": "Dégradation", "stable": "Stable"}
 
 CSS = """
@@ -107,7 +109,8 @@ def render_html(db: Session, ref: Referential, patient: Patient, facts: dict, ge
         recent=[v for v in latest if v["days_old"] <= RECENT_DAYS],
         old=[v for v in latest if v["days_old"] > RECENT_DAYS],
         ref=cite, sources=sources, trend=trend, ctx=lambda c: CONTEXTS.get(c, ref.contexts.get(c, c)),
-        event_label=lambda t: EVENTS.get(t, "Événement"), pathology=lambda p: PATHOLOGIES.get(p, p),
+        event_label=lambda t: EVENTS.get(t, "Événement"), qualification=lambda q: QUALIFICATIONS.get(q, q),
+        pathology=lambda p: PATHOLOGIES.get(p, p),
     )
 
 

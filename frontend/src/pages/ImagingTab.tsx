@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import { api, fetchBlobUrl, patch, type ImagingItem, type ImagingList } from "../api/client";
 import { DEFAULT_SCORE, fmtDate, PATHOLOGIES, QUALITY } from "../labels";
 import { usePatient } from "./PatientPage";
+import { AnnotationEditor, AnnotationLayer, ComparisonQualification } from "./RadioDoctorTools";
 
 /*
  * Radiographies (F-C1 à F-C4) : liste chronologique, visionneuse comparative (côte à côte ou superposition,
@@ -60,8 +61,32 @@ function Pane({ item, other, mode, opacity, view, cam, tag, slot }: {
         {top && <img src={top} alt="" className="absolute inset-0 h-full w-full object-contain" style={{ opacity }} draggable={false} />}
         {camTop && <img src={camTop} alt="" className="absolute inset-0 h-full w-full object-contain" style={{ opacity }} draggable={false} />}
       </div>
+      {mode === "side" && item.annotations.length > 0 && <FittedNotes item={item} view={view} />}
       <span className="absolute top-2 left-2 rounded bg-black/60 px-2 py-0.5 text-[13px] text-[#E6ECEE]"
         style={{ boxShadow: `inset 3px 0 0 ${slot === "L" ? "#7FC8C2" : "#E8B84A"}` }}>{tag}</span>
+    </div>
+  );
+}
+
+/** Annotations du médecin posées sur l'image affichée en « object-contain » (boîte calculée à partir des proportions). */
+function FittedNotes({ item, view }: { item: ImagingItem; view: View }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [box, setBox] = useState<{ l: number; t: number; w: number; h: number } | null>(null);
+  const src = useBlob(`/documents/${item.document_id}/pages/0?width=300`);
+  useEffect(() => {
+    if (!src || !ref.current) return;
+    const img = new Image();
+    img.onload = () => {
+      const pane = ref.current!.getBoundingClientRect();
+      const k = Math.min(pane.width / img.width, pane.height / img.height);
+      const w = img.width * k, h = img.height * k;
+      setBox({ l: (pane.width - w) / 2, t: (pane.height - h) / 2, w, h });
+    };
+    img.src = src;
+  }, [src]);
+  return (
+    <div ref={ref} className="pointer-events-none absolute inset-0" style={{ transform: `translate(${view.x}px, ${view.y}px) scale(${view.zoom})`, transformOrigin: "0 0" }}>
+      {box && <div className="absolute" style={{ left: box.l, top: box.t, width: box.w, height: box.h }}><AnnotationLayer notes={item.annotations} /></div>}
     </div>
   );
 }
@@ -95,6 +120,10 @@ function Assessment({ item, patientId }: { item: ImagingItem; patientId: string 
         placeholder="Votre interprétation (facultatif)" />
       <button type="button" className="btn mt-2" disabled={save.isPending || text === (item.doctor_assessment ?? "")}
         onClick={() => save.mutate({ doctor_assessment: text })}>Enregistrer la lecture</button>
+      <details className="mt-3">
+        <summary className="cursor-pointer text-sm font-semibold text-teal-ink">Annoter la radiographie ({item.annotations.length})</summary>
+        <AnnotationEditor key={JSON.stringify(item.annotations)} item={item} patientId={patientId} />
+      </details>
     </div>
   );
 }
@@ -236,6 +265,7 @@ export function ImagingTab() {
         l'image ; 0,50 correspond au seuil de fonctionnement du modèle. La variation est indicative : l'interprétation de l'évolution
         revient au médecin.
       </p>
+      {left && right && left !== right && <ComparisonQualification key={left.document_id + right.document_id} patientId={patientId} a={left} b={right} />}
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         {[left, right].filter(Boolean).map((it) => <Assessment key={it!.document_id + (it!.doctor_assessment ?? "")} item={it!} patientId={patientId} />)}
       </div>

@@ -96,8 +96,8 @@ Tests : 133 tests backend verts.
 |---|---|---|
 | 7.1 Dernière / précédente / variation (F-B6) | ✅ | Tableau du tableau de bord (dossier de faits) : chaque valeur renvoie à son document, valeurs anciennes signalées, hors zone en rouge |
 | 7.2 Export du graphique (F-B7) | ✅ | PNG (canevas redessiné à partir des SVG, titre, avertissement, date) ; PDF par la boîte d'impression du navigateur (A4 paysage) |
-| 7.3 Variation des scores et qualification du médecin (F-C6) | ⬜ | |
-| 7.4 Annotation de la radio (F-C7) | ⬜ | |
+| 7.3 Variation des scores et qualification du médecin (F-C6) | ✅ | Variation ± marge (déjà en 5.4) ; jugement du médecin (amélioration, stabilité, aggravation, non évaluable + commentaire) par paire de clichés, table `radiograph_comparisons` (migration 0005), repris dans les faits et sur la fiche |
+| 7.4 Annotation de la radio (F-C7) | ✅ | Flèches et textes en coordonnées normalisées (JSON `imaging.annotations`, 50 au plus, validées), éditeur par cliché, affichage dans la visionneuse côte à côte |
 | 7.5 Comparaison de deux périodes (F-B8) | ⬜ | |
 | 7.6 Assistant (F-E4) | ⬜ | |
 | 7.7 Recalage et carte de différence (F-C8) | ⬜ | |

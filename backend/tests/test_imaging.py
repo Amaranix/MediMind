@@ -131,3 +131,40 @@ def test_real_model_scores_and_gradcam():
     over = Image.open(io.BytesIO(png))
     assert over.mode == "RGBA" and over.size == Image.open(NIH[0]).size
     assert np.asarray(over)[..., 3].max() > 0  # la carte n'est pas vide
+
+
+def test_annotations_are_validated_and_stored(client, db, fake_model):
+    h, pid = setup(client, db)
+    doc_id = upload_xray(client, h, pid, xray_png())
+    notes = [{"type": "arrow", "x1": 0.2, "y1": 0.3, "x2": 0.4, "y2": 0.5},
+             {"type": "text", "x1": 0.5, "y1": 0.5, "text": "Opacité ?"}]
+    r = client.patch(f"/api/documents/{doc_id}/imaging", headers=h, json={"annotations": notes})
+    assert r.status_code == 200 and r.json()["annotations"] == notes
+    assert client.patch(f"/api/documents/{doc_id}/imaging", headers=h,
+                        json={"annotations": [{"type": "arrow", "x1": 0.2, "y1": 0.3}]}).status_code == 422
+    assert client.patch(f"/api/documents/{doc_id}/imaging", headers=h,
+                        json={"annotations": [{"type": "text", "x1": 1.5, "y1": 0.3, "text": "x"}]}).status_code == 422
+    items = client.get(f"/api/patients/{pid}/imaging", headers=h).json()["items"]
+    assert items[0]["annotations"] == notes
+
+
+def test_doctor_qualifies_comparison_and_sheet_shows_it(client, db, fake_model):
+    h, pid = setup(client, db)
+    old = upload_xray(client, h, pid, xray_png(), "r1.png", "2026-02-11")
+    new = upload_xray(client, h, pid, xray_png((820, 800)), "r2.png", "2026-05-15")  # autre image (pas de doublon)
+    # ordre inversé à l'envoi : le serveur remet les clichés dans l'ordre chronologique
+    r = client.put("/api/radiograph-comparisons", headers=h,
+                   json={"document_a_id": new, "document_b_id": old, "qualification": "amelioration",
+                         "comment": "Nette régression"})
+    assert r.status_code == 200 and r.json()["document_a_id"] == old
+    r = client.put("/api/radiograph-comparisons", headers=h,
+                   json={"document_a_id": old, "document_b_id": new, "qualification": "stable"})
+    assert r.json()["qualification"] == "stable"
+    assert len(client.get(f"/api/patients/{pid}/radiograph-comparisons", headers=h).json()) == 1
+    f = client.get(f"/api/patients/{pid}/facts?as_of=2026-06-01", headers=h).json()
+    assert f["radiographs"]["doctor_qualification"]["qualification"] == "stable"
+    sheet = client.post(f"/api/patients/{pid}/sheets?as_of=2026-06-01", headers=h).json()
+    assert "Évolution jugée par le médecin : stabilité" in sheet["html"]
+    make_user(db, "x@demo.ma")
+    assert client.put("/api/radiograph-comparisons", headers=login(client, "x@demo.ma"),
+                      json={"document_a_id": old, "document_b_id": new, "qualification": "stable"}).status_code == 404
