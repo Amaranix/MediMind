@@ -24,7 +24,7 @@ from app.db.models import (
     Treatment,
     ValidationStatus,
 )
-from app.services import storage
+from app.services import llm, storage
 from app.services.ingestion.pipeline import ingest_file
 from app.services.jobs import register
 from app.services.referential import get_referential
@@ -105,6 +105,11 @@ def ingest_document(db: Session, job: Job) -> None:
                                  confidence=e.confidence, bbox=e.bbox))
     if doc.type in (DocumentType.bilan_bio, DocumentType.efr, DocumentType.compte_rendu) and not values:
         warnings.append("Aucune valeur reconnue dans ce document.")
+    # Sortie IA : le modèle utilisé reste attaché au document (règle « version du modèle stockée »)
+    if res.type_method == "llm" and forced_type is None:
+        warnings.append(f"Type proposé par le LLM local ({llm.model_name()}) : à confirmer.")
+    if any("llm" in (v.flags or []) for v in values):
+        warnings.append(f"Valeurs proposées par le LLM local ({llm.model_name()}), présentes mot pour mot dans le texte.")
     doc.warnings = warnings
     if doc.type == DocumentType.radiographie:
         try:

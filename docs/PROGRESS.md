@@ -85,10 +85,10 @@ Tests : 125 tests backend verts (faux modèle pour les tests d'API, vrai modèle
 | 6.1 Dossier de faits | ✅ | `services/facts.py`, `GET /api/patients/{id}/facts` : dernières valeurs (ancienneté, variation depuis la mesure précédente), tendances 12 mois, alertes actuelles, traitements en cours et dernier changement, 2 dernières radios de face (variation ± marge T29), points à aborder. Chaque fait cite mesure / document. JSON d'A01 relu contre `demo-scenario.md` : concordant |
 | 6.2 Fiche gabarit et PDF | ✅ | Gabarit Jinja2 (`app/templates/sheet.html`) -> PDF A4 par le moteur HTML de PyMuPDF (T32) ; sources numérotées dans l'ordre de citation, bandeau, date, versions ; onglet « Fiche » (aperçu isolé, téléchargement), fiche conservée (`consultation_sheets`, faits + HTML + PDF). Une page pour A01, B01 et C01 ; vérifié dans le navigateur |
 | 6.3 Reformulation LLM et vérificateur | ✅ | Option « rédaction assistée (expérimental) », gabarit par défaut. Entrée du LLM : faits saillants en phrases (sans nom ni identifiant). Vérificateur : nombres (arrondi à la précision écrite), unités, dates, tendances et position par rapport à la norme concordantes, radios dans la marge non décrites comme une évolution, sigles développés, texte tronqué, mots interdits, maladies absentes ; 2 échecs => gabarit. 100 % des fiches livrées vérifiées ou par gabarit. Mesure (llama3.2:3b, CPU, 3 patients × 2 séries) : 1/6 puis 0/6 synthèses acceptées, 17 à 75 s par essai, 37 à 129 s par fiche (budget D10 : 60 s) ; erreurs du modèle : « souffre de », sigles mal développés, tendances contraires, « augmentation » radiographique dans la marge. Décision T34 : option conservée en expérimental, gabarit par défaut |
-| 6.4 Garde-fous | ⬜ | |
+| 6.4 Garde-fous | ✅ | Revue des écrans dans le navigateur : bandeau présent sur les 9 écrans (connexion, patients, évolution, radiographies, documents, à valider, validation, fiche, 404) ; mentions propres à chaque sortie IA (carte d'attention, scores radio avec modèle et version, courbe « indicatif, non diagnostique », fiche). Journal : table d'audit (lectures, décisions, générations de fiche avec mode), essais du LLM conservés avec la fiche, modèle LLM noté sur le document quand il propose un type ou des valeurs. Questions libres : aucune entrée de texte vers le LLM (3 points d'entrée : classification, extraction de secours, fiche) ; le refus hors dossier s'appliquera à l'assistant F-E4 (phase 7) |
 | 6.5 Tableau de bord unique | ⬜ | |
 
-Tests : 132 tests backend verts.
+Tests : 133 tests backend verts.
 
 ## Phases 7 à 10
 

@@ -1,7 +1,7 @@
 """Rédaction assistée : vérificateur déterministe et repli sur le gabarit (LLM simulé)."""
 from app.services import assist, llm
 from tests.test_clinical_api import bilan, validate_all
-from tests.test_documents_api import setup, upload
+from tests.test_documents_api import lab_pdf, setup, upload
 
 SOURCE = """Patient : 64 ans, homme, tabagisme 40 paquets-années. Suivi : BPCO.
 Exacerbation le 10/02/2026.
@@ -68,3 +68,13 @@ def test_assisted_sheet_falls_back_to_template_after_two_failures(client, db, mo
     assert s["mode"] == "template" and len(s["attempts"]) == 2
     assert "Rédaction assistée indisponible" in s["html"] and "diagnostic" not in s["html"].split("Aucun diagnostic")[1]
     assert "Motif et contexte" in s["html"]
+
+
+def test_llm_classification_keeps_model_name_on_document(client, db, monkeypatch):
+    monkeypatch.setattr(llm, "classify_document", lambda text: ("ordonnance", 0.9))
+    h, pid = setup(client, db)
+    pdf = lab_pdf(["Note manuscrite du 12/03/2026", "Texte sans structure reconnue"])
+    doc_id = upload(client, h, pid, pdf).json()[0]["document_id"]
+    doc = client.get(f"/api/documents/{doc_id}", headers=h).json()
+    assert doc["type"] == "ordonnance" and doc["type_source"] == "llm"
+    assert any(llm.model_name() in w for w in doc["warnings"])
