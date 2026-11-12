@@ -41,3 +41,21 @@ def test_facts_use_validated_data_and_cite_sources(client, db):
 
     make_user(db, "b@demo.ma")
     assert client.get(f"/api/patients/{pid}/facts", headers=login(client, "b@demo.ma")).status_code == 404
+
+
+def test_sheet_template_pdf_one_page_with_sources(client, db):
+    h, pid = setup(client, db)
+    d1 = upload(client, h, pid, bilan("15/01/2026", "4")).json()[0]["document_id"]
+    d2 = upload(client, h, pid, bilan("10/02/2026", "86")).json()[0]["document_id"]
+    validate_all(client, h, d1)
+    validate_all(client, h, d2)
+    s = client.post(f"/api/patients/{pid}/sheets?as_of=2026-02-12", headers=h)
+    assert s.status_code == 201, s.text
+    s = s.json()
+    assert s["mode"] == "template" and s["pages"] == 1
+    assert "86 mg/L" in s["html"] and "+82 mg/L" in s["html"] and "<sup>1</sup>" in s["html"]
+    assert "Aucun diagnostic" in s["html"] and "Bilan biologique du 10/02/2026" in s["html"]
+    pdf = client.get(f"/api/sheets/{s['id']}/pdf", headers=h)
+    assert pdf.status_code == 200 and pdf.content.startswith(b"%PDF") and pdf.headers["content-type"] == "application/pdf"
+    make_user(db, "c@demo.ma")
+    assert client.get(f"/api/sheets/{s['id']}/pdf", headers=login(client, "c@demo.ma")).status_code == 404

@@ -14,6 +14,7 @@ httpx==0.28.1
 pyyaml==6.0.2
 python-multipart==0.0.19
 pymupdf==1.25.1
+jinja2==3.1.6
 pytesseract==0.3.13
 pillow==11.0.0
 numpy==2.2.0

@@ -122,6 +122,7 @@ export function PatientPage() {
               <span className="ml-1.5 rounded-full bg-warn-soft px-1.5 text-[12.5px] font-bold text-warn">{pending.measurements}</span>
             )}
           </NavLink>
+          <NavLink to={`/patients/${patientId}/fiche`} className={tab}>Fiche</NavLink>
         </nav>
         <Outlet />
       </div>

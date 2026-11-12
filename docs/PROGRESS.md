@@ -83,12 +83,12 @@ Tests : 125 tests backend verts (faux modèle pour les tests d'API, vrai modèle
 | Étape | Statut | Notes |
 |---|---|---|
 | 6.1 Dossier de faits | ✅ | `services/facts.py`, `GET /api/patients/{id}/facts` : dernières valeurs (ancienneté, variation depuis la mesure précédente), tendances 12 mois, alertes actuelles, traitements en cours et dernier changement, 2 dernières radios de face (variation ± marge T29), points à aborder. Chaque fait cite mesure / document. JSON d'A01 relu contre `demo-scenario.md` : concordant |
-| 6.2 Fiche gabarit et PDF | ⬜ | |
+| 6.2 Fiche gabarit et PDF | ✅ | Gabarit Jinja2 (`app/templates/sheet.html`) -> PDF A4 par le moteur HTML de PyMuPDF (T32) ; sources numérotées dans l'ordre de citation, bandeau, date, versions ; onglet « Fiche » (aperçu isolé, téléchargement), fiche conservée (`consultation_sheets`, faits + HTML + PDF). Une page pour A01, B01 et C01 ; vérifié dans le navigateur |
 | 6.3 Reformulation LLM et vérificateur | ⬜ | |
 | 6.4 Garde-fous | ⬜ | |
 | 6.5 Tableau de bord unique | ⬜ | |
 
-Tests : 127 tests backend verts.
+Tests : 128 tests backend verts.
 
 ## Phases 7 à 10
 

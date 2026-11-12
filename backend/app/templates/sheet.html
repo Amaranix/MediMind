@@ -1,0 +1,60 @@
+{#- Fiche pré-consultation (F-E1), gabarit déterministe. Ne cite que le dossier de faits ; ref() numérote les sources. -#}
+<h1>Fiche pré-consultation : {{ name }}</h1>
+<p class="meta">Données au {{ f.as_of | d }}{% if f.last_data_date %} (dernière donnée le {{ f.last_data_date | d }}){% endif %}.
+Générée le {{ generated_at.strftime("%d/%m/%Y à %H:%M") }}.</p>
+<div class="warn">Aide à la décision. Aucun diagnostic. Chaque chiffre provient d'une donnée validée par le médecin ;
+le petit numéro renvoie au document source.</div>
+
+<h2>Motif et contexte</h2>
+<p>{{ f.reason }}. {{ f.patient.age }} ans, {{ "homme" if f.patient.sex == "M" else "femme" }}
+{%- if f.patient.pack_years %}, {{ f.patient.pack_years | n }} paquets-années{% endif %}.
+{%- for e in f.events %} {{ event_label(e.type) }} {% if e.end_date and e.end_date != e.date %}du {{ e.date | d }} au {{ e.end_date | d }}{% else %}le {{ e.date | d }}{% endif %}{{ ref(e.document_id) }}{{ ";" if not loop.last else "." }}{% endfor %}</p>
+
+{% if recent %}
+<h2>Évolution depuis la mesure précédente</h2>
+<table>
+<tr><th class="c1">Paramètre</th><th class="num">Précédente</th><th class="num">Dernière</th><th class="num">Variation</th><th>Tendance sur 12 mois</th></tr>
+{% for v in recent %}
+<tr><td>{{ v.name }}{% for c in v.context %} <span class="dim">{{ ctx(c) }}</span>{% endfor %}</td>
+<td class="num">{% if v.previous %}{{ v.previous.value | n }}{{ v.unit | u }} <span class="dim">{{ v.previous.date | d }}</span>{{ ref(v.previous.document_id) }}{% else %}<span class="dim">aucune</span>{% endif %}</td>
+<td class="num">{% if v.out_of_range %}<b>{{ v.value | n }}{{ v.unit | u }}</b>{% else %}{{ v.value | n }}{{ v.unit | u }}{% endif %} <span class="dim">{{ v.date | d }}</span>{{ ref(v.document_id) }}</td>
+<td class="num">{% if v.previous %}{{ v.previous.delta | s }}{{ v.unit | du }}{% endif %}</td>
+<td>{{ trend(v.param) }}</td></tr>
+{% endfor %}
+</table>
+<p class="dim">En gras : hors de la zone de référence.{% if old %} Valeurs de plus de 6 mois :
+{% for v in old %}{{ v.name }} {{ v.value | n }}{{ v.unit | u }} ({{ v.date | d }}){{ ref(v.document_id) }}{{ ", " if not loop.last else "." }}{% endfor %}{% endif %}</p>
+{% endif %}
+
+<h2>Alertes</h2>
+{% if f.alerts %}<ul>
+{% for a in f.alerts %}<li>{{ a.label }} : {{ a.message }} (règle {{ a.rule_id }}, {{ a.source }}){{ ref(*(a["values"][-2:] | map(attribute="document_id"))) }}{% if a.state == "acknowledged" %} <span class="dim">(acquittée)</span>{% endif %}.</li>
+{% endfor %}</ul>{% else %}<p>Aucune alerte sur les données les plus récentes.</p>{% endif %}
+
+<h2>Radiographies comparées</h2>
+{% set r = f.radiographs %}
+{% if not r %}<p>Aucune radiographie de face analysée.</p>
+{% elif r["count"] < 2 %}<p>Une seule radiographie de face, le {{ r["items"][0].date | d }}{{ ref(r["items"][0].document_id) }} : pas de comparaison possible.</p>
+{% else %}{% set a, b = r["items"][0], r["items"][1] %}
+<p>R{{ r["count"] - 1 }} du {{ a.date | d }}{{ ref(a.document_id) }} et R{{ r["count"] }} du {{ b.date | d }}{{ ref(b.document_id) }} :
+{% for c in r.comparisons %}score {{ pathology(c.pathology) }} {{ c.before | n }} ± {{ c.uncertainty_before | n }} puis {{ c.after | n }} ± {{ c.uncertainty_after | n }}, {{ "variation dans la marge d'incertitude" if c.within_margin else "variation au-delà de la marge d'incertitude" }}{{ "; " if not loop.last else "." }}{% endfor %}
+ <span class="dim">Scores indicatifs d'un modèle de recherche ({{ b.model_name }}, {{ b.model_version }}), non diagnostiques.</span>
+{% if b.doctor_assessment %} Lecture du médecin : {{ b.doctor_assessment }}{% endif %}</p>
+{% endif %}
+
+<h2>Traitements en cours</h2>
+{% if f.treatments.current %}<ul>
+{% for t in f.treatments.current %}<li>{{ t.molecule | capitalize }}{% if t.dosage %} {{ t.dosage }}{% endif %}, depuis le {{ t.start | d }}{% if not t.long_term and t.end %} jusqu'au {{ t.end | d }}{% endif %}{{ ref(t.document_ids[-1] if t.document_ids else None) }}.</li>
+{% endfor %}</ul>{% else %}<p>Aucun traitement en cours enregistré.</p>{% endif %}
+{% set ch = f.treatments.last_change %}
+{% if ch %}<p>Dernier changement du traitement de fond le {{ ch.date | d }} :
+{%- if ch.added %} ajout de {{ ch.added | join(", ") }}{% endif %}{% if ch.added and ch.stopped %} ;{% endif %}
+{%- if ch.stopped %} arrêt de {{ ch.stopped | join(", ") }}{% endif %}.</p>{% endif %}
+
+<h2>Points à aborder</h2>
+{% if f.points_to_discuss %}<ul>
+{% for p in f.points_to_discuss %}<li>{{ p.label ~ " (alerte non acquittée)" if p.kind == "alert" else p.text }}.</li>
+{% endfor %}</ul>{% else %}<p>Aucun point signalé par les règles.</p>{% endif %}
+
+<div class="sources"><b>Sources.</b> {% for s in sources() %}<b>{{ loop.index }}</b> {{ s }}{{ " ; " if not loop.last else "." }} {% endfor %}
+<br>Référentiel clinique v{{ f.ruleset_version }}. Démonstrateur de recherche, non dispositif médical.</div>

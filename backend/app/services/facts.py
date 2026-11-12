@@ -7,6 +7,7 @@ sa référence (mesure, document). La fiche (gabarit ou reformulation LLM) ne pe
   précédente ; une valeur ancienne (gaz du sang d'une hospitalisation...) reste listée, à la fiche de la situer.
 - Tendances : sur les 12 mois précédant la dernière donnée (Theil-Sen, qualification du référentiel).
 - Alertes : celles qui portent sur la donnée la plus récente ; une alerte non acquittée devient un point à aborder.
+- Événements : exacerbations, hospitalisations... validés des 12 derniers mois.
 - Traitements : en cours à la date de la fiche, et dernier changement de traitement de fond.
 - Radiographies : les deux dernières vues de face analysées ; variation des scores et marge d'incertitude (T29),
   sans verdict d'évolution (D5).
@@ -23,6 +24,7 @@ from sqlalchemy.orm import Session
 from app.db.models import (
     Alert,
     AlertState,
+    ClinicalEvent,
     Document,
     DocumentType,
     Imaging,
@@ -110,6 +112,16 @@ def _treatments(db: Session, patient_id: uuid.UUID, as_of: dt.date) -> tuple[lis
     return current, (past[-1] if past else None)
 
 
+def _events(db: Session, patient_id: uuid.UUID, as_of: dt.date) -> list[dict]:
+    since = as_of - dt.timedelta(days=TREND_WINDOW_DAYS)
+    rows = db.scalars(select(ClinicalEvent).where(ClinicalEvent.patient_id == patient_id,
+                                                  ClinicalEvent.validation_status.in_(VALIDATED),
+                                                  ClinicalEvent.date >= since, ClinicalEvent.date <= as_of)
+                      .order_by(ClinicalEvent.date))
+    return [{"type": e.type, "date": e.date, "end_date": e.end_date, "note": e.note,
+             "document_id": str(e.source_document_id) if e.source_document_id else None} for e in rows]
+
+
 def _radiographs(db: Session, patient: Patient) -> dict | None:
     rows = db.execute(select(Document, Imaging).join(Imaging, Imaging.document_id == Document.id)
                       .where(Document.patient_id == patient.id, Document.type == DocumentType.radiographie,
@@ -145,7 +157,7 @@ def build_facts(db: Session, ref: Referential, patient: Patient, as_of: dt.date 
         Measurement.validation_status.in_((ValidationStatus.pending, ValidationStatus.suspect)))) or 0
     last_data = max((pts[-1].date for pts in series.values()), default=None)
 
-    points = [{"kind": "alert", "text": f"{a['label']} : {a['message']}", "alert_id": a["id"],
+    points = [{"kind": "alert", "text": f"{a['label']} : {a['message']}", "label": a["label"], "alert_id": a["id"],
                "values": a["values"]} for a in alerts if a["state"] == AlertState.open.value]
     if pending:
         points.append({"kind": "pending", "text": f"{pending} valeur(s) en attente de validation, non prises en compte",
@@ -164,6 +176,7 @@ def build_facts(db: Session, ref: Referential, patient: Patient, as_of: dt.date 
         "latest_values": _latest_values(ref, series, as_of),
         "trends": _trends(ref, series),
         "alerts": alerts,
+        "events": _events(db, patient.id, as_of),
         "treatments": {"current": current_rx, "last_change": last_change},
         "radiographs": _radiographs(db, patient),
         "points_to_discuss": points,

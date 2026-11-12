@@ -286,3 +286,6 @@ export async function fetchBlobUrl(path: string): Promise<string> {
   if (!r.ok) throw new ApiError(r.status, "Image indisponible");
   return URL.createObjectURL(await r.blob());
 }
+
+// ---------------------------------------------------------------- fiche pré-consultation
+export type Sheet = { id: string; created_at: string; mode: "template" | "llm"; html: string; pages: number; as_of: string };
