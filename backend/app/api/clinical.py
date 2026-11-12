@@ -27,6 +27,7 @@ from app.db.models import (
 from app.db.session import get_db
 from app.services import alerts as alert_engine
 from app.services.audit import audit
+from app.services.facts import build_facts
 from app.services.ingestion.job import refresh_document_status
 from app.services.referential import get_referential
 from app.services.timeline import Rx, build_bars
@@ -80,6 +81,15 @@ def patient_trends(date_from: dt.date | None = Query(None, alias="from"), date_t
     window = {k: [p for p in v if (not date_from or p.date >= date_from) and (not date_to or p.date <= date_to)]
               for k, v in data.items()}
     return trends(get_referential(), window)
+
+
+# ---------------------------------------------------------------- dossier de faits (fiche pré-consultation)
+@router.get("/patients/{patient_id}/facts")
+def patient_facts(as_of: dt.date | None = Query(None), patient: Patient = Depends(get_patient_for_doctor),
+                  user: User = Depends(require_doctor), db: Session = Depends(get_db)) -> dict:
+    facts = build_facts(db, get_referential(), patient, as_of)
+    audit(db, user.id, "facts_read", "patient", patient.id)
+    return facts
 
 
 # ---------------------------------------------------------------- frise

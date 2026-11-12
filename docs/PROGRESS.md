@@ -78,7 +78,19 @@ Constats pour la fiche du modèle : au seuil 0,50, le score « Lung Opacity » e
 
 Tests : 125 tests backend verts (faux modèle pour les tests d'API, vrai modèle testé si ses poids sont présents).
 
-## Phases 6 à 10
+## Phase 6 : Module E, fiche pré-consultation et intégration
+
+| Étape | Statut | Notes |
+|---|---|---|
+| 6.1 Dossier de faits | ✅ | `services/facts.py`, `GET /api/patients/{id}/facts` : dernières valeurs (ancienneté, variation depuis la mesure précédente), tendances 12 mois, alertes actuelles, traitements en cours et dernier changement, 2 dernières radios de face (variation ± marge T29), points à aborder. Chaque fait cite mesure / document. JSON d'A01 relu contre `demo-scenario.md` : concordant |
+| 6.2 Fiche gabarit et PDF | ⬜ | |
+| 6.3 Reformulation LLM et vérificateur | ⬜ | |
+| 6.4 Garde-fous | ⬜ | |
+| 6.5 Tableau de bord unique | ⬜ | |
+
+Tests : 127 tests backend verts.
+
+## Phases 7 à 10
 
 ⬜ Non commencées.
 
