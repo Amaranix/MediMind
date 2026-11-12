@@ -61,11 +61,15 @@ export function AssistantTab() {
   });
   const ask = useMutation({
     mutationFn: (q: string) => post<AssistantMessage>(`/patients/${patientId}/assistant`, { question: q }),
-    onSuccess: () => { setQuestion(""); qc.invalidateQueries({ queryKey: ["assistant", patientId] }); },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["assistant", patientId] }),
+    onError: (_e, q) => setQuestion(q),  // la question n'est pas perdue en cas d'erreur
   });
   function submit(e: FormEvent) {
     e.preventDefault();
-    if (question.trim()) ask.mutate(question.trim());
+    const q = question.trim();
+    if (!q) return;
+    setQuestion("");
+    ask.mutate(q);
   }
   return (
     <div className="max-w-[860px]">

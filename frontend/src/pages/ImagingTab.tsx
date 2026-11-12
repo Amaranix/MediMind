@@ -240,6 +240,7 @@ export function ImagingTab() {
             <button type="button" className="rounded border border-[#3A444A] bg-[#1F2529] px-3 py-1.5"
               onClick={() => setView(view.zoom / 1.25 <= 1 ? { zoom: 1, x: 0, y: 0 } : { ...view, zoom: view.zoom / 1.25 })}>Zoom −</button>
             <button type="button" className="rounded border border-[#3A444A] bg-[#1F2529] px-3 py-1.5" onClick={() => setView({ zoom: 1, x: 0, y: 0 })}>Recentrer</button>
+            {mode !== "diff" && <>
             <label className="flex items-center gap-1.5 text-[13.5px]">
               <input type="checkbox" checked={camOn} onChange={(e) => setCamOn(e.target.checked)} /> Zone d'attention du modèle
             </label>
@@ -247,6 +248,7 @@ export function ImagingTab() {
               value={camPath ?? defaultCam} onChange={(e) => { setCamPath(e.target.value); setCamOn(true); }}>
               {paths.map((p) => <option key={p} value={p}>{PATHOLOGIES[p] ?? p}</option>)}
             </select>
+            </>}
           </div>
           <div className={`grid gap-2.5 ${mode === "side" ? "md:grid-cols-2" : ""} cursor-grab touch-none`}
             onWheel={onWheel} onPointerDown={onDown} onPointerMove={onMoveDrag} onPointerUp={() => (drag.current = null)}>
@@ -256,10 +258,10 @@ export function ImagingTab() {
             </div>}
             {mode === "side" && <div data-pane><Pane item={right} mode="side" opacity={1} view={view} cam={cam} tag={fmtDate(right.date)} slot="R" /></div>}
           </div>
-          <p className="mt-2 text-[12.5px] text-[#AEB9BD]">
+          {mode !== "diff" && <p className="mt-2 text-[12.5px] text-[#AEB9BD]">
             Zoom et déplacement synchronisés (molette et glisser). La zone colorée montre où le modèle a porté son attention pour la
             pathologie choisie : ce n'est pas une localisation de lésion.
-          </p>
+          </p>}
         </div>
       )}
 
