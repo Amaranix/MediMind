@@ -6,6 +6,7 @@ import { DEFAULT_PARAMS, DEFAULT_SCORE, EVENT_TYPES, fmtDate, fmtValue, PATHOLOG
 import { exportPdf, exportPng } from "../chartExport";
 import { RadiosSummary } from "./ImagingTab";
 import { LatestTable } from "./LatestTable";
+import { PeriodsCompare } from "./PeriodsCompare";
 import { usePatient } from "./PatientPage";
 import { SheetTab } from "./SheetTab";
 
@@ -438,6 +439,7 @@ export function EvolutionTab() {
 
       {/* Tableau de bord unique (6.5) : radiographies et fiche sans quitter l'écran */}
       <div className="mt-5"><LatestTable patientId={patientId} /></div>
+      <div className="mt-5"><PeriodsCompare patientId={patientId} /></div>
       <div className="mt-5"><RadiosSummary patientId={patientId} /></div>
       <section className="mt-5" aria-label="Fiche pré-consultation">
         <h2 className="mb-2 text-[15px] font-bold">Fiche pré-consultation</h2>

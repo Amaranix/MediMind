@@ -147,3 +147,21 @@ def test_messages_use_points_for_percentage_changes_and_no_unit_for_ratio():
     assert fvc[-1].message.endswith("(-7 points)")
     ratio = fired("OBS_FEV1_FVC", pts(("2026-01-01", 0.55), ctx=["post_bd"]))
     assert ratio[0].message == "0,55 le 01/01/2026"
+
+
+def test_compare_two_periods():
+    from app.services.periods import compare_periods
+    from app.services.referential import get_referential
+    from app.services.trends import Point
+
+    d = dt.date.fromisoformat
+    series = {"FEV1": [Point(d("2026-01-10"), 1.80), Point(d("2026-02-10"), 1.70), Point(d("2026-07-10"), 1.55),
+                       Point(d("2026-08-10"), 1.50)],
+              "CRP": [Point(d("2026-01-15"), 4.0), Point(d("2026-07-15"), 4.5)],
+              "EOS": [Point(d("2026-01-15"), 0.3)]}
+    rows = {r["param"]: r for r in compare_periods(get_referential(), series, (d("2026-01-01"), d("2026-03-31")),
+                                                   (d("2026-06-01"), d("2026-09-30")))}
+    fev1 = rows["FEV1"]
+    assert fev1["a"]["n"] == 2 and abs(fev1["diff"] - (-0.225)) < 1e-9 and fev1["qualification"] == "worsening"
+    assert rows["CRP"]["qualification"] == "stable"  # 0,5 mg/L sous le seuil significatif
+    assert rows["EOS"]["b"] is None and rows["EOS"]["qualification"] == "insufficient"

@@ -98,7 +98,7 @@ Tests : 133 tests backend verts.
 | 7.2 Export du graphique (F-B7) | ✅ | PNG (canevas redessiné à partir des SVG, titre, avertissement, date) ; PDF par la boîte d'impression du navigateur (A4 paysage) |
 | 7.3 Variation des scores et qualification du médecin (F-C6) | ✅ | Variation ± marge (déjà en 5.4) ; jugement du médecin (amélioration, stabilité, aggravation, non évaluable + commentaire) par paire de clichés, table `radiograph_comparisons` (migration 0005), repris dans les faits et sur la fiche |
 | 7.4 Annotation de la radio (F-C7) | ✅ | Flèches et textes en coordonnées normalisées (JSON `imaging.annotations`, 50 au plus, validées), éditeur par cliché, affichage dans la visionneuse côte à côte |
-| 7.5 Comparaison de deux périodes (F-B8) | ⬜ | |
+| 7.5 Comparaison de deux périodes (F-B8) | ✅ | `GET /api/patients/{id}/periods` : par paramètre et période, nombre, moyenne, min, max, dernière valeur, tendance ; écart des moyennes qualifié par le mcid et le sens d'amélioration du référentiel. Bloc du tableau de bord (6 derniers mois contre les 6 précédents par défaut) |
 | 7.6 Assistant (F-E4) | ⬜ | |
 | 7.7 Recalage et carte de différence (F-C8) | ⬜ | |
 

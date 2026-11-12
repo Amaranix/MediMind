@@ -309,3 +309,11 @@ export type RadioComparison = {
   document_a_id: string; document_b_id: string; qualification: "amelioration" | "stable" | "aggravation" | "non_evaluable";
   comment: string | null; updated_at: string;
 };
+
+// ---------------------------------------------------------------- F-B8 : deux périodes
+type PeriodStats = { n: number; mean: number; min: number; max: number; last: number; last_date: string; document_ids: string[] };
+export type PeriodRow = {
+  param: string; name: string; unit: string; a: PeriodStats | null; b: PeriodStats | null;
+  trend_a: Trend["qualification"] | null; trend_b: Trend["qualification"] | null; diff: number | null;
+  qualification: Trend["qualification"];
+};

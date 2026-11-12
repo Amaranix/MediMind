@@ -29,6 +29,7 @@ from app.services import alerts as alert_engine
 from app.services.audit import audit
 from app.services.facts import build_facts
 from app.services.ingestion.job import refresh_document_status
+from app.services.periods import compare_periods
 from app.services.referential import get_referential
 from app.services.timeline import Rx, build_bars
 from app.services.trends import in_series, trends
@@ -90,6 +91,15 @@ def patient_facts(as_of: dt.date | None = Query(None), patient: Patient = Depend
     facts = build_facts(db, get_referential(), patient, as_of)
     audit(db, user.id, "facts_read", "patient", patient.id)
     return facts
+
+
+@router.get("/patients/{patient_id}/periods")
+def periods(a_from: dt.date, a_to: dt.date, b_from: dt.date, b_to: dt.date,
+            patient: Patient = Depends(get_patient_for_doctor), db: Session = Depends(get_db)) -> list[dict]:
+    """F-B8 : comparaison de deux périodes (mesures validées)."""
+    if a_from > a_to or b_from > b_to:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Chaque période doit commencer avant de finir.")
+    return compare_periods(get_referential(), alert_engine.load_series(db, patient.id), (a_from, a_to), (b_from, b_to))
 
 
 # ---------------------------------------------------------------- frise
