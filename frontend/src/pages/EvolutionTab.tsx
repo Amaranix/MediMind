@@ -3,7 +3,9 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState, type FormEvent
 import { useNavigate, useParams } from "react-router-dom";
 import { api, ApiError, post, type ImagingList, type Series, type SeriesPoint, type Timeline, type Trend } from "../api/client";
 import { DEFAULT_PARAMS, DEFAULT_SCORE, EVENT_TYPES, fmtDate, fmtValue, PATHOLOGIES, TREND, unitLabel } from "../labels";
+import { RadiosSummary } from "./ImagingTab";
 import { usePatient } from "./PatientPage";
+import { SheetTab } from "./SheetTab";
 
 /*
  * Écran d'évolution (F-B1 à F-B4, F-D2) : toutes les courbes, la frise des traitements et les radiographies
@@ -418,6 +420,13 @@ export function EvolutionTab() {
         <span className="inline-flex items-center gap-1.5"><svg width="18" height="12"><line x1="0" y1="6" x2="18" y2="6" stroke={C.info} strokeWidth="2" strokeDasharray="5 3" /></svg>Score IA ± incertitude</span>
       </div>
       {adding && <EventForm patientId={patientId} onDone={() => setAdding(false)} />}
+
+      {/* Tableau de bord unique (6.5) : radiographies et fiche sans quitter l'écran */}
+      <div className="mt-5"><RadiosSummary patientId={patientId} /></div>
+      <section className="mt-5" aria-label="Fiche pré-consultation">
+        <h2 className="mb-2 text-[15px] font-bold">Fiche pré-consultation</h2>
+        <SheetTab />
+      </section>
     </>
   );
 }

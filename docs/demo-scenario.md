@@ -42,8 +42,10 @@ Chargement du patient pour la démo : `backend/.venv/Scripts/python scripts/load
 4. **Validation** : ouvrir le bilan scanné du 10/02/2026, montrer la confiance OCR et la conversion d'unité, corriger si besoin, valider. Puis valider les documents du 05/11.
 5. **Évolution** : période 6 mois puis 1 an ; lire les valeurs avec le curseur ; montrer les deux pics de CRP alignés sur les exacerbations, l'hospitalisation et l'ajout de salmétérol/fluticasone sur la frise.
 6. **Alertes** : ouvrir FEV1_DECLINE (règle, source ERS/ATS 2022, valeurs déclenchantes) puis l'acquitter.
-7. **Radiographies** : comparer R4 (21/08/2026) et R5 (05/11/2026) côte à côte puis en superposition ; activer la zone d'attention ; lire la variation des scores avec l'incertitude.
-8. **Fiche pré-consultation** : générer, montrer le panneau de contrôle (nombres vérifiés), télécharger le PDF.
+7. **Radiographies** : sur le tableau de bord, lire la comparaison R4 / R5 (score d'emphysème, dans la marge d'incertitude) ; si le temps le permet, « Ouvrir la visionneuse » pour comparer R4 (21/08/2026) et R5 (05/11/2026) côte à côte puis en superposition ; activer la zone d'attention ; lire la variation des scores avec l'incertitude.
+8. **Fiche pré-consultation** : en bas du tableau de bord, générer, montrer le panneau de contrôle (nombres vérifiés), télécharger le PDF.
+
+Changements de page : tableau de bord -> dépôt et validation (1) -> retour au tableau de bord (2) ; courbes, alertes, radiographies comparées et fiche sont sur le même écran.
 
 ## Plan B
 

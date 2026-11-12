@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState, type PointerEvent, type WheelEvent } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { api, fetchBlobUrl, patch, type ImagingItem, type ImagingList } from "../api/client";
 import { DEFAULT_SCORE, fmtDate, PATHOLOGIES, QUALITY } from "../labels";
 import { usePatient } from "./PatientPage";
@@ -240,5 +240,63 @@ export function ImagingTab() {
         {[left, right].filter(Boolean).map((it) => <Assessment key={it!.document_id + (it!.doctor_assessment ?? "")} item={it!} patientId={patientId} />)}
       </div>
     </>
+  );
+}
+
+function Mini({ item, label }: { item: ImagingItem; label: string }) {
+  const url = useBlob(`/documents/${item.document_id}/pages/0?width=300`);
+  return (
+    <figure className="w-[104px] flex-none">
+      <div className="aspect-square overflow-hidden rounded bg-black">
+        {url && <img src={url} alt={`Radiographie ${label} du ${fmtDate(item.date)}`} className="h-full w-full object-cover" />}
+      </div>
+      <figcaption className="mt-0.5 text-xs text-ink-2"><b>{label}</b> {fmtDate(item.date)}</figcaption>
+    </figure>
+  );
+}
+
+/** Tableau de bord : les deux dernières radiographies de face et la variation du score suivi (T28, T29). */
+export function RadiosSummary({ patientId }: { patientId: string }) {
+  const { data: patient } = usePatient(patientId);
+  const { data } = useQuery({ queryKey: ["imaging", patientId], queryFn: () => api<ImagingList>(`/patients/${patientId}/imaging`) });
+  const faces = (data?.items ?? []).filter((i) => i.analyzed && i.view !== "profil");
+  const paths = [...new Set((patient?.conditions ?? []).map((c) => DEFAULT_SCORE[c]).filter(Boolean))];
+  if (!paths.length) paths.push("Consolidation");
+  const [a, b] = faces.slice(-2);
+  return (
+    <section className="panel p-4" aria-label="Radiographies comparées">
+      <div className="mb-2 flex items-baseline justify-between gap-3">
+        <h2 className="text-[15px] font-bold">Radiographies comparées</h2>
+        <Link to={`/patients/${patientId}/radiographies`} className="text-[13px] text-teal-ink underline">Ouvrir la visionneuse</Link>
+      </div>
+      {faces.length < 2 ? (
+        <p className="text-sm text-ink-2">{faces.length ? "Une seule radiographie de face analysée." : "Aucune radiographie analysée."}</p>
+      ) : (
+        <div className="flex flex-wrap gap-4">
+          <div className="flex gap-2">
+            <Mini item={a} label={`R${faces.length - 1}`} />
+            <Mini item={b} label={`R${faces.length}`} />
+          </div>
+          <ul className="min-w-[200px] flex-1 space-y-1.5 text-sm">
+            {paths.map((p) => {
+              const sa = a.scores?.[p], sb = b.scores?.[p];
+              const ua = a.uncertainty?.[p] ?? 0, ub = b.uncertainty?.[p] ?? 0;
+              if (sa == null || sb == null) return null;
+              const d = sb - sa;
+              const within = Math.abs(d) <= 2 * Math.hypot(ua, ub) + 0.02;
+              return (
+                <li key={p}>
+                  Score {PATHOLOGIES[p] ?? p} : {fmt(sa)} ± {fmt(ua)} puis <b>{fmt(sb)}</b> ± {fmt(ub)}
+                  <div className="text-[13px] text-ink-2">
+                    {within ? "Variation dans la marge d'incertitude" : `Variation ${d > 0 ? "+" : ""}${fmt(d)}, au-delà de la marge`}
+                  </div>
+                </li>
+              );
+            })}
+            <li className="text-[12.5px] text-ink-3">Scores indicatifs d'un modèle de recherche, non diagnostiques.</li>
+          </ul>
+        </div>
+      )}
+    </section>
   );
 }
