@@ -1,0 +1,178 @@
+{
+ "split": "test",
+ "questions": 10,
+ "accuracy": 1.0,
+ "citations": 1.0,
+ "by_type": {
+  "comptage_evenements": "1/1",
+  "normalisation": "3/3",
+  "traitement": "1/1",
+  "valeur_a_date": "3/3",
+  "variation": "2/2"
+ },
+ "rows": [
+  {
+   "id": "Q06",
+   "type": "valeur_a_date",
+   "question": "Quel était le VEMS post-bronchodilatateur le 24/03/2026 ?",
+   "expected": "1,87 L",
+   "answer": "VEMS : 1,87 L le 24/03/2026.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A06-D018"
+   ],
+   "expected_sources": [
+    "A06-D018"
+   ]
+  },
+  {
+   "id": "Q11",
+   "type": "valeur_a_date",
+   "question": "Quel était le VEMS post-bronchodilatateur le 23/03/2026 ?",
+   "expected": "0,90 L",
+   "answer": "VEMS : 0,9 L le 23/03/2026.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A11-D013"
+   ],
+   "expected_sources": [
+    "A11-D013"
+   ]
+  },
+  {
+   "id": "Q18",
+   "type": "comptage_evenements",
+   "question": "Combien d'exacerbations le patient a-t-il présentées sur la période suivie ?",
+   "expected": "2",
+   "answer": "2 exacerbations : 19/11/2025, 11/12/2025.",
+   "kind": "count",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A06-D003",
+    "A06-D008"
+   ],
+   "expected_sources": []
+  },
+  {
+   "id": "Q26",
+   "type": "normalisation",
+   "question": "La CRP s'est-elle normalisée (< 5 mg/L) après l'antibiotique débuté le 29/10/2025 ? Si oui, à quelle date ?",
+   "expected": "Oui, le 12/11/2025 (1,4 mg/L)",
+   "answer": "Oui, le 12/11/2025 (1,4 mg/L), première valeur sous 5 mg/L après le 29/10/2025.",
+   "kind": "normalisation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B06-D007"
+   ],
+   "expected_sources": [
+    "B06-D007"
+   ]
+  },
+  {
+   "id": "Q30",
+   "type": "normalisation",
+   "question": "La CRP s'est-elle normalisée (< 5 mg/L) après l'antibiotique débuté le 23/12/2025 ? Si oui, à quelle date ?",
+   "expected": "Oui, le 06/01/2026 (2,3 mg/L)",
+   "answer": "Oui, le 06/01/2026 (2,3 mg/L), première valeur sous 5 mg/L après le 23/12/2025.",
+   "kind": "normalisation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B10-D007"
+   ],
+   "expected_sources": [
+    "B10-D007"
+   ]
+  },
+  {
+   "id": "Q38",
+   "type": "normalisation",
+   "question": "La CRP s'est-elle normalisée (< 5 mg/L) après l'antibiotique débuté le 29/10/2025 ? Si oui, à quelle date ?",
+   "expected": "Oui, le 12/11/2025 (1,4 mg/L)",
+   "answer": "Oui, le 12/11/2025 (1,4 mg/L), première valeur sous 5 mg/L après le 29/10/2025.",
+   "kind": "normalisation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B06-D007"
+   ],
+   "expected_sources": [
+    "B06-D007"
+   ]
+  },
+  {
+   "id": "Q42",
+   "type": "variation",
+   "question": "Quelle est la variation absolue de la CVF (% prédit) entre le 12/07/2025 et le 05/09/2026 ?",
+   "expected": "-10 points",
+   "answer": "CVF (% prédit) : −10 points (73 % le 12/07/2025, 63 % le 05/09/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C02-D002",
+    "C02-D015"
+   ],
+   "expected_sources": [
+    "C02-D002",
+    "C02-D015"
+   ]
+  },
+  {
+   "id": "Q46",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CVF en pourcentage de la valeur prédite le 15/12/2025 ?",
+   "expected": "76 %",
+   "answer": "CVF (% prédit) : 76 % le 15/12/2025.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C06-D005"
+   ],
+   "expected_sources": [
+    "C06-D005"
+   ]
+  },
+  {
+   "id": "Q54",
+   "type": "traitement",
+   "question": "Quel traitement antifibrosant a été introduit, et à quelle date ?",
+   "expected": "pirfénidone, le 30/10/2025",
+   "answer": "pirfénidone, le 30/10/2025.",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C02-D008"
+   ],
+   "expected_sources": [
+    "C02-D008"
+   ]
+  },
+  {
+   "id": "Q58",
+   "type": "variation",
+   "question": "Quelle est la variation absolue de la DLCO (% prédit) entre le 27/08/2025 et le 21/10/2026 ?",
+   "expected": "-18 points",
+   "answer": "DLCO (% prédit) : −18 points (53 % le 27/08/2025, 35 % le 21/10/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C06-D002",
+    "C06-D015"
+   ],
+   "expected_sources": [
+    "C06-D002",
+    "C06-D015"
+   ]
+  }
+ ]
+}

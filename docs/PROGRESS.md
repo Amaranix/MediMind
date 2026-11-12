@@ -112,9 +112,30 @@ Tests : 144 tests backend verts.
 | 8.2 Tests | ✅ | 146 tests backend, couverture des services 91 % (seuil 80 % exigé en CI) ; e2e Playwright du parcours A (`e2e/`) ; budgets de performance (`scripts/perf.py`) : courbes 0,05 s, PDF natif 1,6 s, scan 3,2 s, radiographie 3,2 s, fiche 0,06 s, tous sous les budgets ; CI : job e2e (pile complète + seed + Playwright) |
 | 8.3 Reproductibilité | ✅ | `scripts/seed_demo.py` (138 s) ; patients de démo versionnés ; test sur clone neuf depuis GitHub dans une pile séparée (port 9443) en suivant le README : seed et e2e réussis. Défauts trouvés et corrigés : port HTTPS configurable inopérant, épuisement du pool de connexions sous charge, liste « à valider » et radiographies non rafraîchies après lecture, chemins Windows de la vérité terrain. Reste : essai sur la machine du binôme |
 
-## Phases 9 et 10
+## Phase 9 : Évaluation finale (`docs/evaluation-report.md`)
 
-⬜ Non commencées.
+| Étape | Statut | Notes |
+|---|---|---|
+| 9.1 Extraction | ✅ | Test (137 documents) : F1 0,974 ; natif 1,000 ; scans 0,880 ; photos 0,941 ; gabarit T4 tenu à l'écart 0,957 ; type et date 100 % |
+| 9.2 Normalisation et alertes | ✅ | Normalisation 98,3 % ; 24 / 24 cas de référence |
+| 9.3 Imagerie | ✅ | AUC pneumonie externe 0,773 [0,750 ; 0,797] (cible 0,75), interne 0,827 ; sous-groupes par sexe et âge |
+| 9.4 Fiche | ✅ | Gabarit 100 % ; ablation : LLM sur documents bruts 21 % de nombres justifiés, LLM sur faits 100 % mais 0 / 6 textes acceptés |
+| 9.5 Ablation extraction | ✅ | Règles 0,978 ; hybride 0,978 ; LLM seul 0,082 (62 s par document) |
+| 9.6 Assistant | ✅ | 60 / 60 réponses justes et citées (50 dev + 10 test) |
+| 9.7 Utilité | 🟨 | Protocole écrit (`docs/usability-protocol.md`) ; séance à organiser par le binôme |
+| 9.8 Fiche des modèles | ✅ | `docs/model-card.md` |
+| 9.9 Rapport d'évaluation | ✅ | Cibles et résultats ; section utilité à compléter après la séance |
+
+## Phase 10 : Livrables et soutenance
+
+| Étape | Statut | Notes |
+|---|---|---|
+| 10.1 Gel des fonctionnalités | ✅ | Tag `v1.0-rc` ; désormais corrections uniquement |
+| 10.2 Documentation technique | ✅ | README (aperçu, captures, démarrage, résultats, attributions), `docs/dossier-conception.md`, `docs/architecture.md` à jour, `docs/captures/` |
+| 10.3 Rapport final | 🟨 | Brouillon `docs/rapport/rapport-final.md` ; état de l'art, conclusion et relecture : binôme et encadrant |
+| 10.4 Vidéo | 🟨 | Script `docs/soutenance/script-video.md` ; enregistrement : binôme |
+| 10.5 Soutenance | 🟨 | Plan des diapositives et questions du jury dans `docs/soutenance/` ; diapositives à produire, répétitions : binôme |
+| 10.6 Checklist finale | ⬜ | Machine de soutenance, vidéo de secours, tag `v1.0` |
 
 ## Blocages
 

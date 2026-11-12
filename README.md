@@ -4,6 +4,23 @@ Application web d'**aide à la décision** pour pneumologues : suivi longitudina
 
 > **Démonstrateur de recherche (PFA 5IIR IA & Data, EMSI), non dispositif médical.** Données publiques ou synthétiques uniquement. Les résultats de l'IA ne constituent pas un diagnostic.
 
+## Aperçu
+
+**Principe** : l'IA lit et cherche, le code calcule, le médecin décide. Aucune valeur n'entre dans le dossier sans validation du médecin, aucun chiffre n'est rédigé par un modèle de langage, chaque sortie cite sa source.
+
+| | |
+|---|---|
+| ![Tableau de bord](docs/captures/03-tableau-de-bord.png) | ![Validation d'un bilan scanné](docs/captures/09-validation.png) |
+| **Tableau de bord** : alertes sourcées, courbes des valeurs validées sur un axe du temps commun, frise des traitements | **Validation** : chaque valeur lue (ici par OCR sur un scan) est montrée sur le document, avec sa confiance |
+| ![Radiographies](docs/captures/07-visionneuse-grad-cam.png) | ![Fiche pré-consultation](docs/captures/10-fiche.png) |
+| **Radiographies** : comparaison, zone d'attention du modèle, scores indicatifs ± incertitude | **Fiche** d'une page, chaque chiffre renvoyant à son document |
+
+Autres écrans : [`docs/captures/`](docs/captures/) (assistant cité, comparaison de deux périodes, carte de différence...).
+
+**Fonctionnalités** : dépôt de PDF, scans, photos et radiographies ; OCR et extraction des valeurs, traitements et événements ; validation par le médecin ; courbes, tendances (Theil-Sen), alertes fondées sur des recommandations publiées ; tableau dernière / précédente / variation, comparaison de deux périodes, export ; analyse des radiographies (TorchXRayVision : scores, incertitude, Grad-CAM), comparaison, annotations, jugement d'évolution par le médecin, carte de différence ; fiche pré-consultation PDF ; assistant de questions cité ; audit, isolation des dossiers, suppression en cascade.
+
+**Résultats** (patients de test jamais utilisés, détails dans [`docs/evaluation-report.md`](docs/evaluation-report.md)) : extraction F1 0,974 (PDF natifs 1,000, scans 0,880) ; AUC pneumonie 0,773 en externe sur 1 500 radiographies RSNA ; assistant 60 / 60 réponses justes et citées ; budgets de performance tous respectés.
+
 ## Démarrage rapide
 
 Prérequis : **Docker Desktop** (≈ 5 Go d'espace disque pour les images) et **Python 3.11** pour le script de démonstration. [Ollama](https://ollama.com) avec `llama3.2:3b` est facultatif : il ne sert qu'en repli quand les règles ne reconnaissent pas un document.
@@ -53,7 +70,17 @@ La CI (GitHub Actions) enchaîne lint, tests et couverture, build du frontend, p
 | [`docs/data-sources.md`](docs/data-sources.md) | Jeux de données, licences, citations, régénération |
 | [`docs/demo-scenario.md`](docs/demo-scenario.md) | Scénario de démonstration (patient A01) |
 | [`docs/security-checklist.md`](docs/security-checklist.md) | Checklist sécurité et limites assumées |
+| [`docs/dossier-conception.md`](docs/dossier-conception.md) | Dossier de conception : besoins, UML, modèle de données, API, choix techniques |
+| [`docs/architecture.md`](docs/architecture.md) | Composants, découpage du backend, flux de données |
+| [`docs/evaluation-report.md`](docs/evaluation-report.md) | Évaluation finale : cibles et résultats, ablations, limites |
+| [`docs/model-card.md`](docs/model-card.md) | Fiche des modèles d'IA : usage prévu et interdit, performances, biais |
+| [`docs/usability-protocol.md`](docs/usability-protocol.md) | Protocole du test d'utilité (temps et SUS) |
 
-## Données et attributions
+## Données, modèles et attributions
 
-Radiographies : NIH ChestX-ray14 (Wang et al., CVPR 2017, NIH Clinical Center) et RSNA Pneumonia Detection Challenge (Shih et al., Radiol AI 2019). Dossiers cliniques : générateur synthétique du projet. Voir [`docs/data-sources.md`](docs/data-sources.md).
+- **Radiographies** : NIH ChestX-ray14 (Wang et al., CVPR 2017 ; remerciements au NIH Clinical Center ; CC0) et RSNA Pneumonia Detection Challenge (Shih et al., Radiology: AI 2019 ; règles de la compétition Kaggle). Les images des 3 patients de démonstration sont versionnées dans `synthetic/out/`.
+- **Dossiers cliniques** : entièrement fictifs, produits par le générateur du projet (`synthetic/`) ; toute ressemblance avec une personne réelle est fortuite.
+- **Modèles** : TorchXRayVision (Cohen et al., MIDL 2022) ; `intfloat/multilingual-e5-small` (Wang et al., 2024) ; `llama3.2:3b` (Meta, licence Llama 3.2) via Ollama.
+- **Code** : travail académique (PFA EMSI) ; licence de réutilisation à définir par les auteurs.
+
+Voir [`docs/data-sources.md`](docs/data-sources.md).

@@ -1,74 +1,76 @@
 # Architecture
 
-> Détail des choix : `docs/PLAN.md` §7 et `docs/DECISIONS.md`. Diagrammes UML : `docs/uml/` (PlantUML, rendu via l'extension VS Code PlantUML ou https://www.plantuml.com).
+> État livré (v1.0-rc). Détail des choix : `docs/PLAN.md` §7 et `docs/DECISIONS.md`. Diagrammes UML : `docs/uml/` (PlantUML). Dossier de conception complet : `docs/dossier-conception.md`.
 
 ## 1. Composants
 
 ```mermaid
 flowchart LR
   subgraph Client
-    B[Navigateur<br/>React + TS]
+    B[Navigateur<br/>React + TypeScript]
   end
   subgraph Docker Compose
-    P[Caddy<br/>TLS, proxy]
-    FE[frontend<br/>Vite build statique]
-    API[backend<br/>FastAPI]
-    DB[(PostgreSQL 16)]
-    FS[(volume storage<br/>fichiers, Grad-CAM, PDF)]
-    VEC[(ChromaDB embarqué<br/>T3)]
+    P[proxy : Caddy<br/>HTTPS, en-têtes, CSP]
+    FE[frontend<br/>build statique Vite]
+    API[backend : FastAPI<br/>modèles d'imagerie et de recherche intégrés]
+    DB[(db : PostgreSQL 16<br/>données, audit, passages indexés)]
+    FS[(volume storage<br/>fichiers, cartes, PDF)]
   end
-  subgraph Hôte Windows
-    OL[Ollama<br/>llama3.2:3b]
+  subgraph Hôte
+    OL[Ollama<br/>llama3.2:3b, repli de lecture]
   end
-  B -- HTTPS --> P
+  B -- HTTPS :8443 --> P
   P --> FE
   P -- /api --> API
   API --> DB
   API --> FS
-  API --> VEC
   API -- host.docker.internal:11434 --> OL
 ```
+
+Seul le proxy publie un port. Les poids TorchXRayVision et le modèle `multilingual-e5-small` sont intégrés à l'image du backend (`HF_HUB_OFFLINE=1`) : aucune donnée ne sort de la machine.
 
 ## 2. Découpage du backend
 
 | Couche | Rôle |
 |---|---|
-| `api/` | Routes REST, contrôle d'accès (`current_user`, `require_role`, `get_patient_for_doctor`) |
-| `schemas/` | Modèles Pydantic d'entrée/sortie |
-| `services/ingestion` | Texte/OCR, classification, extraction, orchestration des jobs |
-| `services/normalize` | Synonymes, unités, contexte, plausibilité, dédoublonnage |
-| `services/trends`, `services/alerts` | Theil-Sen, qualification, moteur de règles YAML |
-| `services/imaging` | Prétraitement, inférence TorchXRayVision, Grad-CAM, augmentation à l'inférence |
-| `services/summary` | Faits, gabarit, LLM, vérificateur, PDF |
-| `services/llm` | Client Ollama unique (timeouts, schéma JSON, journalisation) |
-| `services/rag` | Index, recherche, réponse citée (T3) |
-| `core/` | Configuration, sécurité (JWT, bcrypt), journalisation, audit |
-| `db/` | Modèles SQLAlchemy, session, migrations Alembic |
+| `api/` | Routes REST sous `/api` : `auth`, `users`, `patients`, `documents`, `clinical` (séries, tendances, alertes, frise, faits, périodes), `imaging` (scores, Grad-CAM, annotations, jugement d'évolution, carte de différence), `sheets` (fiche), `assistant`, `system` ; contrôle d'accès par `current_user`, `require_role`, `get_patient_for_doctor` |
+| `schemas/` | Modèles Pydantic d'entrée et de sortie |
+| `services/ingestion/` | Texte et OCR (`text`), classification (`classify`), extraction (`extract`, `clinical`), normalisation (`normalize`), orchestration (`pipeline`, `job`) |
+| `services/trends`, `alerts`, `periods`, `timeline` | Séries validées, Theil-Sen et qualification, moteur de règles du référentiel, comparaison de périodes, frise des traitements |
+| `services/imaging`, `registration` | Inférence TorchXRayVision, incertitude, Grad-CAM, contrôles de qualité ; recalage et carte de différence |
+| `services/facts`, `sheet`, `assist` | Dossier de faits, fiche par gabarit (Jinja2 → PDF PyMuPDF) ; rédaction assistée et vérificateur (évaluation seulement, T35) |
+| `services/assistant`, `search` | Assistant du dossier : questions résolues en base, recherche sémantique de passages (e5) |
+| `services/llm` | Client unique vers Ollama (délais, repli) |
+| `core/` | Configuration, sécurité (JWT, bcrypt), limitation des connexions, journalisation |
+| `db/` | Modèles SQLAlchemy, session (pool de 40 connexions, T38), migrations Alembic 0001 à 0006 |
 
 ## 3. Flux de données principal
 
 ```mermaid
 flowchart TD
-  U[Dépôt PDF / scan / radio] --> J[Job en file]
-  J --> T{Type de fichier}
+  U[Dépôt PDF / scan / photo / radiographie] --> J[Tâche de fond]
+  J --> T{Type réel du fichier}
   T -- PDF natif --> X1[PyMuPDF : texte + boîtes]
-  T -- scan --> X2[Prétraitement + Tesseract fra]
-  T -- radio --> R1[Contrôles : adulte, vue frontale, qualité]
-  X1 & X2 --> C[Classification règles → LLM en repli]
-  C --> E[Extraction parseurs/regex → LLM en repli]
-  E --> N[Normalisation]
+  T -- scan ou photo --> X2[Redressement + médian + Otsu + Tesseract fra]
+  T -- radiographie --> R1[Contrôles de qualité]
+  X1 & X2 --> C[Classification : règles, LLM local en repli]
+  C --> E[Extraction : gabarits et expressions, LLM en repli filtré]
+  E --> N[Normalisation : synonymes, unités, contexte, plausibilité]
   N --> V[Validation par le médecin]
-  V --> M[(Mesures validées)]
-  R1 --> R2[Scores + Grad-CAM + incertitude]
+  V --> M[(Mesures, traitements, événements validés)]
+  R1 --> R2[Scores ± incertitude, Grad-CAM]
   R2 --> I[(Imagerie)]
-  M --> TR[Tendances] --> AL[Alertes]
-  M & I & AL --> D[Tableau de bord : courbes, frise, radios]
-  M & I & AL --> F[Faits → gabarit → LLM optionnel → vérificateur → PDF]
+  M --> TR[Tendances] --> AL[Alertes sourcées]
+  M & I & AL --> D[Tableau de bord : courbes, frise, tableau, périodes, radiographies]
+  M & I & AL --> F[Faits → fiche par gabarit → PDF]
+  M & I --> A[Assistant : requêtes en base + passages cités]
 ```
 
 ## 4. Principes transverses
 
-- **Isolation** : toute requête patient passe par `get_patient_for_doctor` ; l'admin n'a pas accès aux données patient.
-- **Traçabilité** : chaque sortie IA stocke la version du modèle et du référentiel ; chaque action est journalisée.
-- **Asynchrone simple** : BackgroundTasks FastAPI + table `jobs` ; pas de Celery ni de Redis.
-- **LLM local** : un seul client `services/llm`, aucun autre chemin réseau sortant.
+- **Isolation** : toute route patient passe par `get_patient_for_doctor` (documents : `get_document_for_doctor`) ; l'administrateur n'a aucun accès aux dossiers.
+- **Validation humaine** : courbes, alertes, faits, fiche et assistant ne lisent que les données validées ou corrigées.
+- **Aucun chiffre généré par un LLM** : valeurs lues dans les documents, calculs par le code, sources citées.
+- **Traçabilité** : version du modèle et du référentiel stockées avec chaque sortie d'IA ; journal d'audit de toutes les actions sensibles.
+- **Asynchrone simple** : BackgroundTasks FastAPI + table `jobs` (relance, remise en échec au redémarrage) ; pas de Celery ni de Redis.
+- **Local** : un seul chemin réseau sortant possible, vers Ollama sur l'hôte.

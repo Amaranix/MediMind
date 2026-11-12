@@ -1,0 +1,241 @@
+{
+ "summary": {
+  "gabarit": {
+   "textes": 3,
+   "acceptés": 3,
+   "nombres_dates_vérifiés": 10,
+   "non_justifiés": 0,
+   "part_justifiée": 1.0,
+   "autres_erreurs": 0,
+   "secondes_moyennes": 0.0
+  },
+  "llm_brut": {
+   "textes": 6,
+   "acceptés": 0,
+   "nombres_dates_vérifiés": 33,
+   "non_justifiés": 26,
+   "part_justifiée": 0.212,
+   "autres_erreurs": 7,
+   "secondes_moyennes": 80.3
+  },
+  "llm_faits": {
+   "textes": 6,
+   "acceptés": 0,
+   "nombres_dates_vérifiés": 44,
+   "non_justifiés": 0,
+   "part_justifiée": 1.0,
+   "autres_erreurs": 16,
+   "secondes_moyennes": 42.5
+  }
+ },
+ "rows": [
+  {
+   "patient": "A01",
+   "condition": "gabarit",
+   "run": 0,
+   "ok": true,
+   "issues": [],
+   "checked": 6,
+   "seconds": 0.0
+  },
+  {
+   "patient": "B01",
+   "condition": "gabarit",
+   "run": 0,
+   "ok": true,
+   "issues": [],
+   "checked": 2,
+   "seconds": 0.0
+  },
+  {
+   "patient": "C01",
+   "condition": "gabarit",
+   "run": 0,
+   "ok": true,
+   "issues": [],
+   "checked": 2,
+   "seconds": 0.0
+  },
+  {
+   "patient": "A01",
+   "condition": "llm_brut",
+   "run": 0,
+   "ok": false,
+   "issues": [
+    "vide"
+   ],
+   "checked": 0,
+   "text": "",
+   "seconds": 92.4
+  },
+  {
+   "patient": "A01",
+   "condition": "llm_faits",
+   "run": 0,
+   "ok": false,
+   "issues": [
+    "formulation interdite : souffre",
+    "pathologie absente des faits : bronchite",
+    "sigle développé (source d'erreur) : bpco (",
+    "texte tronqué"
+   ],
+   "checked": 20,
+   "text": "Voici la synthèse de la fiche de pré-consultation pour un pneumologue :\n\nLe patient, un homme de 64 ans, souffre de BPCO (bronchite chronique obstructive) et a un historique de tabagisme important. Il a connu une exacerbation en février 2026, suivie d'une hospitalisation. Une autre exacerbation est survenue en août 2026. Les résultats de la VEMS (volumen de gaz respiratoire) post-BD (bronchoscopie) sont dégradants, passant de 1,54 L à 1,5 L sur 12 mois, avec une tendance de dégradation de −0,125 L par an. La VEMS (% prédit) est stable, passant de 51 % à 49 % sur 12 mois. La CVF (capacité vitale forçée) post-BD est également dégradante, passant de 3,2 L à 3,04 L sur 12 mois, avec une tendance de dégradation de −0,404 L par an. Le rapport VEMS/CVF post-BD est stable, passant de 0,48 à 0,49 sur 12 mois. Les SpO2 repos air ambiant sont stables, passant de 94 % à 94 % sur 12 mois. La procalciton",
+   "seconds": 91.1
+  },
+  {
+   "patient": "A01",
+   "condition": "llm_brut",
+   "run": 1,
+   "ok": false,
+   "issues": [
+    "date absente des faits : 14/03/1962",
+    "nombre absent des faits : 6,5",
+    "nombre absent des faits : 3,6",
+    "nombre absent des faits : 15,1 g/dl",
+    "nombre absent des faits : 239",
+    "nombre absent des faits : 0,36",
+    "nombre absent des faits : 0,84",
+    "nombre absent des faits : 3,05",
+    "nombre absent des faits : 3,90",
+    "nombre absent des faits : 50",
+    "nombre absent des faits : 8,6",
+    "nombre absent des faits : 5,4",
+    "nombre absent des faits : 1",
+    "texte tronqué"
+   ],
+   "checked": 17,
+   "text": "Voici la synthèse de la fiche de pré-consultation pour un pneumologue :\n\nLe patient, M. Alaoui Karim, né(e) le 14/03/1962, présente une dyspnée stable. Les résultats des prélèvements sanguins effectués le 05/11/2026, sont les suivants : Globules blancs 6,5 10³/µL, Neutrophiles 3,6 10³/µL, Lymphocytes 1,5 10³/µL, Éosinophiles 0,34 10³/µL, Hémoglobine 15,1 g/dL, Plaquettes 239 10³/µL, C-réactive protéine 0,36 mg/dL, Créatinine 0,84 mg/dL. Les résultats des explorations fonctionnelles respiratoires effectuées le 05/11/2026, sont les suivants : VEMS 3,05, CVF 3,90, VEMS/CVF 50. Les résultats des prélèvements sanguins effectués le 17/09/2026, sont les suivants : Globules blancs 8,6 10³/µL, Neutrophiles 5,4 10³/µL, Lymphocytes 1,",
+   "seconds": 83.8
+  },
+  {
+   "patient": "A01",
+   "condition": "llm_faits",
+   "run": 1,
+   "ok": false,
+   "issues": [
+    "formulation interdite : souffre",
+    "pathologie absente des faits : bronchite",
+    "tendance contraire aux faits : rapport vems/cvf",
+    "sigle développé (source d'erreur) : bpco ("
+   ],
+   "checked": 8,
+   "text": "Voici la synthèse de la fiche de pré-consultation :\n\nLe patient, un homme de 64 ans, souffre de BPCO (bronchite chronique obstructive) et a un historique de tabagisme important. Il a connu une exacerbation en février 2026, suivie d'une hospitalisation. Une autre exacerbation est survenue en août 2026. Les résultats de la VEMS (volumen de gaz respiratoire) et de la CVF (capacité vitale forçée) ont montré une tendance de dégradation sur 12 mois, avec une baisse de 0,125 L par an pour la VEMS et de 0,404 L par an pour la CVF. Le rapport VEMS/CVF est stable. Les résultats de la polynucléaires éosinophiles sont stables. Les alertes pour déclin du VEMS et rapport VEMS/CVF inférieur à 0,70 sont activées. Les radiographies ont montré une variation dans le score indicatif d'emphysème. Le patient est actuellement traité avec salbutamol, tiotropium et salmétérol/fluticasone, dont le traitement a été modifié en mars 2026.",
+   "seconds": 42.3
+  },
+  {
+   "patient": "B01",
+   "condition": "llm_brut",
+   "run": 0,
+   "ok": false,
+   "issues": [
+    "vide"
+   ],
+   "checked": 0,
+   "text": "",
+   "seconds": 92.6
+  },
+  {
+   "patient": "B01",
+   "condition": "llm_faits",
+   "run": 0,
+   "ok": false,
+   "issues": [
+    "formulation interdite : souffre",
+    "formulation interdite : significative"
+   ],
+   "checked": 5,
+   "text": "Voici la synthèse de la fiche de pré-consultation :\n\nLe patient, un homme de 28 ans, souffre de pneumonie et a un historique de tabagisme important. Les radiographies effectuées le 15 janvier 2026 et le 15 avril 2026 ont montré une consolidation de score 0,543 et 0,409 respectivement, avec une variation significative au-delà de la marge d'incertitude.",
+   "seconds": 17.3
+  },
+  {
+   "patient": "B01",
+   "condition": "llm_brut",
+   "run": 1,
+   "ok": false,
+   "issues": [
+    "date absente des faits : 05/02/1998",
+    "nombre absent des faits : 95 %",
+    "nombre absent des faits : 5",
+    "nombre absent des faits : 3",
+    "nombre absent des faits : 1",
+    "nombre absent des faits : 14,5 g/dl",
+    "nombre absent des faits : 272",
+    "nombre absent des faits : 1,5 mg/l",
+    "nombre absent des faits : 0,17 ng/ml",
+    "nombre absent des faits : 8 jours"
+   ],
+   "checked": 11,
+   "text": "Voici la synthèse de la fiche de pré-consultation pour un pneumologue :\n\nLe patient KETTANI Driss, né(e) le 05/02/1998, a été consulté le 15/04/2026 pour un contrôle après pneumonie. Il présente une apyrexie et une amélioration clinique, avec un SpO2 à 95 % au repos en air ambiant. Les résultats des analyses sanguines sont les suivants : leucocytes à 5 800/mm³, poly. neutrophiles à 3 520/mm³, lymphocytes à 1 410/mm³, poly. éosinophiles à 100/mm³, hémoglobine à 14,5 g/dL, plaquettes à 272 000/mm³, protéine C réactive à 1,5 mg/L et procalcitonine à 0,17 ng/mL. Il a été traité par une ordonnance d'amoxicilline-acide clavulanique pendant 8 jours. Les résultats des analyses sanguines ont montré une amélioration des paramètres sanguins, avec une augmentation des leucocytes, des poly. neutrophiles, des lymphocytes et des plaquettes.",
+   "seconds": 62.9
+  },
+  {
+   "patient": "B01",
+   "condition": "llm_faits",
+   "run": 1,
+   "ok": false,
+   "issues": [
+    "formulation interdite : souffre",
+    "formulation interdite : significative"
+   ],
+   "checked": 5,
+   "text": "Voici la synthèse de la fiche de pré-consultation :\n\nLe patient, un homme de 28 ans, souffre de pneumonie et a un historique de tabagisme important. Les radiographies effectuées le 15 janvier 2026 et le 15 avril 2026 ont montré une consolidation de score 0,543 et 0,409 respectivement, avec une variation significative au-delà de la marge d'incertitude.",
+   "seconds": 15.5
+  },
+  {
+   "patient": "C01",
+   "condition": "llm_brut",
+   "run": 0,
+   "ok": false,
+   "issues": [
+    "vide"
+   ],
+   "checked": 0,
+   "text": "",
+   "seconds": 92.4
+  },
+  {
+   "patient": "C01",
+   "condition": "llm_faits",
+   "run": 0,
+   "ok": false,
+   "issues": [
+    "formulation interdite : souffre",
+    "évolution radiographique non établie : augmentation"
+   ],
+   "checked": 1,
+   "text": "Voici la synthèse de la fiche de pré-consultation :\n\nLe patient, un homme de 47 ans, souffre de fibrose pulmonaire et de pneumopathie interstitielle fibrosante. Les résultats de ses derniers examens montrent une tendance de dégradation de ses volumes de ventilation et de capacité pulmonaire, ainsi qu'une baisse de sa DLCO. Les niveaux de SpO2 repos air ambiant sont également en baisse. Les radiographies récentes ont montré une légère augmentation du score indicatif de fibrose. Le patient est actuellement en traitement avec salbutamol et nintédanib, dont le dosage a été modifié récemment.",
+   "seconds": 58.5
+  },
+  {
+   "patient": "C01",
+   "condition": "llm_brut",
+   "run": 1,
+   "ok": false,
+   "issues": [
+    "date absente des faits : 01/12/1978",
+    "nombre absent des faits : 3,28",
+    "nombre absent des faits : 86 %",
+    "tendance contraire aux faits : spo2",
+    "tendance contraire aux faits : vems",
+    "tendance contraire aux faits : cvf"
+   ],
+   "checked": 5,
+   "text": "Voici la synthèse de la fiche de pré-consultation pour un pneumologue :\n\nLe patient ALAOUI Omar, né(e) le 01/12/1978, est suivi de pneumopathie interstitielle fibrosante. Les dernières consultations ont montré une amélioration de son état, avec une SpO2 à 91 % au repos en air ambiant et des crépitants velcro aux deux bases. Les paramètres de l'exploration fonctionnelle respiratoire ont montré une amélioration, avec un VEMS de 3,28 et un CVF de 4,00. Le transfert du CO est à 86 % de la valeur théorique. Les résultats des bilans biologiques précédents ont montré une dégradation, avec une leucocytose élevée et une protéine C réactive élevée. Cependant, les dernières consultations ont montré une stabilisation de son état, avec une amélioration des paramètres de l'exploration fonctionnelle respiratoire et des résultats des bilans biologiques.",
+   "seconds": 57.5
+  },
+  {
+   "patient": "C01",
+   "condition": "llm_faits",
+   "run": 1,
+   "ok": false,
+   "issues": [
+    "formulation interdite : souffre",
+    "évolution radiographique non établie : augmentation"
+   ],
+   "checked": 5,
+   "text": "Voici la synthèse de la fiche de pré-consultation :\n\nLe patient, un homme de 47 ans, souffre de fibrose pulmonaire et de pneumopathie interstitielle fibrosante. Les résultats de ses derniers examens montrent une tendance de dégradation de ses volumes de pouls (VEMS) et de ses capacités de gazage (CVF) sur les 12 derniers mois. La dégradation de ses paramètres de prédiction (VEMS et CVF) est également constante. Les résultats de ses radiographies du 03/03/2026 et du 21/06/2026 indiquent une augmentation légère du score indicatif de fibrose. Le patient est actuellement en traitement avec salbutamol et nintédanib, dont le dosage a été modifié le 13/11/2025.",
+   "seconds": 30.2
+  }
+ ]
+}
