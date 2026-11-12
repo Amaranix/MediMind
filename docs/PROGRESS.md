@@ -88,7 +88,7 @@ Tests : 125 tests backend verts (faux modèle pour les tests d'API, vrai modèle
 | 6.4 Garde-fous | ⬜ | |
 | 6.5 Tableau de bord unique | ⬜ | |
 
-Tests : 0 tests backend verts.
+Tests :  tests backend verts.
 
 ## Phases 7 à 10
 
