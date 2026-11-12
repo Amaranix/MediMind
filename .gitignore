@@ -2,10 +2,14 @@
 .env
 kaggle.json
 
-# Data & weights (never commit images or real data)
+# Data & weights (no real data; images only for the 3 demo patients below)
 data/
 ml/weights/
-synthetic/out/
+synthetic/out/*
+# Patients de démonstration versionnés (12 Mo) : la démo fonctionne après un simple clone (scripts/seed_demo.py)
+!synthetic/out/A01/
+!synthetic/out/B01/
+!synthetic/out/C01/
 storage/
 *.dcm
 

@@ -17,7 +17,7 @@ if "TESSERACT_CMD" not in os.environ and os.path.exists(_WIN_TESSERACT):
 
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, event
 from sqlalchemy.pool import StaticPool
 
 from app.core.security import hash_password
@@ -32,6 +32,8 @@ PASSWORD = "motdepasse-solide-42"
 @pytest.fixture()
 def db_engine():
     engine = create_engine("sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool)
+    # SQLite n'applique les clés étrangères (et donc les cascades) qu'à la demande, comme PostgreSQL le fait toujours
+    event.listen(engine, "connect", lambda conn, _: conn.execute("PRAGMA foreign_keys=ON"))
     Base.metadata.create_all(engine)
     set_engine(engine)
     with SessionLocal() as db:
@@ -48,6 +50,8 @@ def db(db_engine):
 
 @pytest.fixture()
 def client(db_engine):
+    from app.core import ratelimit
+    ratelimit.reset()  # compteur de tentatives partagé par le processus : repartir de zéro à chaque test
     return TestClient(create_app(run_bootstrap=False))
 
 

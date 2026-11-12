@@ -82,3 +82,13 @@ def test_internal_domain_email_is_accepted(client, db):
 def test_malformed_email_is_rejected(client):
     r = client.post("/api/auth/login", json={"email": "pas-un-email", "password": "x"})
     assert r.status_code == 422
+
+
+def test_login_attempts_are_limited(client, db):
+    from tests.conftest import PASSWORD, make_user
+    make_user(db, "rl@demo.ma")
+    for _ in range(5):
+        assert client.post("/api/auth/login", json={"email": "rl@demo.ma", "password": "mauvais"}).status_code == 401
+    r = client.post("/api/auth/login", json={"email": "rl@demo.ma", "password": PASSWORD})
+    assert r.status_code == 429 and int(r.headers["Retry-After"]) > 0  # même le bon mot de passe est refusé
+    assert "Trop de tentatives" in r.json()["detail"]

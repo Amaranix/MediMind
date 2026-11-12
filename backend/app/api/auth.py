@@ -8,11 +8,12 @@ from __future__ import annotations
 import uuid
 
 import jwt
-from fastapi import APIRouter, Cookie, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Cookie, Depends, HTTPException, Request, Response, status
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.deps import current_user
+from app.core import ratelimit
 from app.core.config import get_settings
 from app.core.security import create_token, decode_token, verify_password
 from app.db.models import User
@@ -34,11 +35,20 @@ def _issue(response: Response, user: User) -> TokenOut:
 
 
 @router.post("/login", response_model=TokenOut)
-def login(body: LoginIn, response: Response, db: Session = Depends(get_db)) -> TokenOut:
-    user = db.scalar(select(User).where(User.email == body.email.lower()))
+def login(body: LoginIn, request: Request, response: Response, db: Session = Depends(get_db)) -> TokenOut:
+    email = body.email.lower()
+    keys = (f"email:{email}", f"ip:{request.client.host if request.client else '?'}")
+    if wait := ratelimit.retry_after(*keys):
+        audit(db, None, "login_blocked", "user", details={"email": email})
+        raise HTTPException(status.HTTP_429_TOO_MANY_REQUESTS,
+                            f"Trop de tentatives de connexion. Réessayez dans {wait // 60 + 1} minute(s).",
+                            headers={"Retry-After": str(wait)})
+    user = db.scalar(select(User).where(User.email == email))
     if user is None or not user.is_active or not verify_password(body.password, user.password_hash):
-        audit(db, user.id if user else None, "login_failed", "user", details={"email": body.email.lower()})
+        ratelimit.failed(*keys)
+        audit(db, user.id if user else None, "login_failed", "user", details={"email": email})
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Adresse e-mail ou mot de passe incorrect.")
+    ratelimit.succeeded(keys[0])
     audit(db, user.id, "login", "user", user.id)
     return _issue(response, user)
 

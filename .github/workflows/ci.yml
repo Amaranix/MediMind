@@ -23,8 +23,8 @@ jobs:
       - run: pip install -r requirements-dev.txt
       - name: Lint (ruff)
         run: ruff check .
-      - name: Tests (pytest)
-        run: pytest
+      - name: Tests (pytest) et couverture des services (au moins 80 %)
+        run: pytest --cov=app/services --cov-report=term --cov-fail-under=80
 
   frontend:
     runs-on: ubuntu-latest

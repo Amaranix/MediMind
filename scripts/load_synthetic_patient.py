@@ -62,7 +62,9 @@ def wait_idle(api: Client, pid: str, timeout: int = 600) -> list[dict]:
         time.sleep(1.5)
 
 
-def load(api: Client, code: str, validate: bool) -> Counter:
+def load(api: Client, code: str, validate: bool, skip: frozenset[str] = frozenset(),
+         keep_pending: frozenset[str] = frozenset()) -> Counter:
+    """skip : fichiers non déposés ; keep_pending : fichiers déposés mais laissés « à valider » (démo)."""
     gt = json.loads((ROOT / "synthetic" / "ground_truth" / f"{code}.json").read_text(encoding="utf-8"))
     p = gt["patient"]
     stats: Counter = Counter()
@@ -80,7 +82,7 @@ def load(api: Client, code: str, validate: bool) -> Counter:
             "antecedents": {"A": "BPCO", "B": "Pneumonie communautaire", "C": "Pneumopathie interstitielle fibrosante"}[
                 p["parcours"]]})["id"]
     by_name = {Path(d["file"]).name: d for d in gt["documents"]}
-    files = sorted(by_name)
+    files = sorted(n for n in by_name if n not in skip)
     for i in range(0, len(files), 8):
         batch = []
         for name in files[i:i + 8]:
@@ -95,7 +97,7 @@ def load(api: Client, code: str, validate: bool) -> Counter:
     # Type et date : corrigés comme le ferait le médecin
     for d in docs:
         g = by_name.get(d["original_name"])
-        if not g:
+        if not g or d["original_name"] in keep_pending:
             continue
         body = {}
         if d["type"] != g["type"]:
@@ -110,7 +112,7 @@ def load(api: Client, code: str, validate: bool) -> Counter:
 
     for d in docs:
         g = by_name.get(d["original_name"])
-        if not g:
+        if not g or d["original_name"] in keep_pending:
             continue
         expected = list(g["printed"])
         for m in api.get(f"/documents/{d['id']}/measurements"):
@@ -160,7 +162,8 @@ def load(api: Client, code: str, validate: bool) -> Counter:
     # Événements absents des documents (ex. exacerbation non décrite) : saisis à la main par le médecin
     present = {(e["type"], e["date"]) for e in api.get(f"/patients/{pid}/timeline")["events"]}
     for e in gt["events"]:
-        if e["type"] in ("exacerbation", "hospitalisation", "pneumonie") and (e["type"], e["date"]) not in present:
+        later = any(n.startswith(e["date"]) for n in skip)  # événement d'une visite non déposée (démo en direct)
+        if e["type"] in ("exacerbation", "hospitalisation", "pneumonie") and (e["type"], e["date"]) not in present and not later:
             api.send("POST", f"/patients/{pid}/events", json={"type": e["type"], "date": e["date"],
                                                               "end_date": e["end"], "note": e["note"]})
             stats["événement_saisi_à_la_main"] += 1

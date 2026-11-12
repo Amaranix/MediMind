@@ -87,3 +87,32 @@ def test_health_reports_each_dependency(client):
     assert body["database"] == "ok"
     assert body["ollama"] == "injoignable"
     assert body["referential_version"] == "0.2.0"
+
+
+def test_patient_deletion_cascades_to_data_and_files(client, db):
+    import uuid
+
+    from sqlalchemy import func, select
+
+    from app.db.models import AuditLog, ConsultationSheet, Conversation, Document, Measurement
+    from app.services import storage
+    from tests.test_clinical_api import bilan, validate_all
+    from tests.test_documents_api import setup, upload
+
+    h, pid = setup(client, db)
+    doc = upload(client, h, pid, bilan("10/02/2026", "86")).json()[0]["document_id"]
+    validate_all(client, h, doc)
+    client.post(f"/api/patients/{pid}/sheets", headers=h)
+    client.post(f"/api/patients/{pid}/assistant", headers=h, json={"question": "CRP ?"})
+    folder = storage.root() / pid
+    assert folder.exists()
+    make_user(db, "z@demo.ma")
+    assert client.delete(f"/api/patients/{pid}", headers=login(client, "z@demo.ma")).status_code == 404
+    assert client.delete(f"/api/patients/{pid}", headers=h).status_code == 204
+    assert client.get(f"/api/patients/{pid}", headers=h).status_code == 404
+    db.expire_all()
+    puid = uuid.UUID(pid)
+    for model in (Document, Measurement, ConsultationSheet, Conversation):
+        assert db.scalar(select(func.count()).select_from(model).where(model.patient_id == puid)) == 0, model
+    assert not folder.exists()
+    assert db.scalar(select(AuditLog).where(AuditLog.action == "patient_delete")) is not None

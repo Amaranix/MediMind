@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Link, NavLink, Outlet, useParams } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
 import { api, post, type AlertItem, type Patient, type Referential } from "../api/client";
 import { fmtDate } from "../labels";
 
@@ -72,6 +72,34 @@ function AlertsPanel({ patientId }: { patientId: string }) {
   );
 }
 
+/** Suppression définitive du dossier : le médecin retape le nom du patient pour confirmer. */
+function DeletePatient({ p }: { p: Patient }) {
+  const qc = useQueryClient();
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [typed, setTyped] = useState("");
+  const del = useMutation({
+    mutationFn: () => api(`/patients/${p.id}`, { method: "DELETE" }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ["patients"] }); navigate("/patients"); },
+  });
+  if (!open)
+    return <button type="button" className="mt-6 text-[13px] text-alert underline" onClick={() => setOpen(true)}>Supprimer le dossier</button>;
+  return (
+    <div className="mt-6 rounded border border-alert bg-alert-soft p-3 text-sm">
+      <p className="mb-2">Suppression définitive : documents, mesures, radiographies, fiches et conversations de ce patient.
+        Tapez <b>{p.last_name.toUpperCase()}</b> pour confirmer.</p>
+      <label htmlFor="confirm-delete" className="sr-only">Nom du patient</label>
+      <input id="confirm-delete" className="field" value={typed} onChange={(e) => setTyped(e.target.value)} autoComplete="off" />
+      <div className="mt-2 flex gap-2">
+        <button type="button" className="btn border-alert text-alert" disabled={typed.trim().toUpperCase() !== p.last_name.toUpperCase() || del.isPending}
+          onClick={() => del.mutate()}>Supprimer définitivement</button>
+        <button type="button" className="btn" onClick={() => { setOpen(false); setTyped(""); }}>Annuler</button>
+      </div>
+      {del.error && <p role="alert" className="mt-1 text-alert">{del.error.message}</p>}
+    </div>
+  );
+}
+
 function PatientRail({ p }: { p: Patient }) {
   const { data: ref } = useReferential();
   const rows: [string, string][] = [
@@ -94,6 +122,7 @@ function PatientRail({ p }: { p: Patient }) {
         ))}
       </dl>
       <AlertsPanel patientId={p.id} />
+      <DeletePatient p={p} />
     </aside>
   );
 }
