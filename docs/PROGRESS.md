@@ -90,7 +90,19 @@ Tests : 125 tests backend verts (faux modèle pour les tests d'API, vrai modèle
 
 Tests : 133 tests backend verts.
 
-## Phases 7 à 10
+## Phase 7 : Compléments T3
+
+| Étape | Statut | Notes |
+|---|---|---|
+| 7.1 Dernière / précédente / variation (F-B6) | ✅ | Tableau du tableau de bord (dossier de faits) : chaque valeur renvoie à son document, valeurs anciennes signalées, hors zone en rouge |
+| 7.2 Export du graphique (F-B7) | ✅ | PNG (canevas redessiné à partir des SVG, titre, avertissement, date) ; PDF par la boîte d'impression du navigateur (A4 paysage) |
+| 7.3 Variation des scores et qualification du médecin (F-C6) | ⬜ | |
+| 7.4 Annotation de la radio (F-C7) | ⬜ | |
+| 7.5 Comparaison de deux périodes (F-B8) | ⬜ | |
+| 7.6 Assistant (F-E4) | ⬜ | |
+| 7.7 Recalage et carte de différence (F-C8) | ⬜ | |
+
+## Phases 8 à 10
 
 ⬜ Non commencées.
 

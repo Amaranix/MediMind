@@ -3,7 +3,9 @@ import { useCallback, useLayoutEffect, useMemo, useRef, useState, type FormEvent
 import { useNavigate, useParams } from "react-router-dom";
 import { api, ApiError, post, type ImagingList, type Series, type SeriesPoint, type Timeline, type Trend } from "../api/client";
 import { DEFAULT_PARAMS, DEFAULT_SCORE, EVENT_TYPES, fmtDate, fmtValue, PATHOLOGIES, TREND, unitLabel } from "../labels";
+import { exportPdf, exportPng } from "../chartExport";
 import { RadiosSummary } from "./ImagingTab";
+import { LatestTable } from "./LatestTable";
 import { usePatient } from "./PatientPage";
 import { SheetTab } from "./SheetTab";
 
@@ -272,6 +274,8 @@ export function EvolutionTab() {
   const [chosen, setChosen] = useState<string[] | null>(null);
   const [cursor, setCursor] = useState<{ x: number; date: Date } | null>(null);
   const [adding, setAdding] = useState(false);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const [exportError, setExportError] = useState<string | null>(null);
   const [plotRef, plotW, plotEl] = useWidth<HTMLDivElement>();
   // Scores IA par pathologie : séries « IA:<pathologie> » sur le même axe que la biologie (F-C5).
   // Les vues de profil sont exclues. Incertitude = écart-type sur les variantes de l'image.
@@ -350,9 +354,20 @@ export function EvolutionTab() {
             );
           })}
         </div>
+        <div className="ml-auto flex gap-1.5" aria-label="Exporter le graphique">
+          {(["PNG", "PDF"] as const).map((fmt) => (
+            <button key={fmt} type="button" className="btn text-[13px]" onClick={() => {
+              const title = `Évolution de ${patient ? `${patient.first_name} ${patient.last_name[0]}.` : "patient"} (${PERIODS.find((p) => p.months === months)?.label ?? ""})`;
+              setExportError(null);
+              (fmt === "PNG" ? exportPng(panelRef.current!, title, "evolution.png") : exportPdf(panelRef.current!, title))
+                .catch((e: Error) => setExportError(e.message));
+            }}>Exporter {fmt}</button>
+          ))}
+        </div>
       </div>
+      {exportError && <p role="alert" className="mb-2 text-sm text-alert">{exportError}</p>}
 
-      <div className="panel relative overflow-hidden" onPointerMove={onMove} onPointerLeave={() => setCursor(null)}>
+      <div ref={panelRef} className="panel relative overflow-hidden" onPointerMove={onMove} onPointerLeave={() => setCursor(null)}>
         {shown.map((code) => {
           const s = all[code];
           const lv = lastAt(s, cursor?.date ?? null);
@@ -364,7 +379,7 @@ export function EvolutionTab() {
               <div className="border-r border-grid px-3.5 py-3">
                 <div className="font-semibold">{s.name}</div>
                 <div className="text-[26px] leading-tight font-bold">
-                  {lv ? fmtValue(lv.value, s.unit) : "–"}
+                  {lv ? fmtValue(lv.value, s.unit) : "–"}{" "}
                   <small className="ml-1 text-[13px] font-medium text-ink-2">{unitLabel(s.unit)}</small>
                 </div>
                 <div className="text-[12.5px] text-ink-3">
@@ -422,6 +437,7 @@ export function EvolutionTab() {
       {adding && <EventForm patientId={patientId} onDone={() => setAdding(false)} />}
 
       {/* Tableau de bord unique (6.5) : radiographies et fiche sans quitter l'écran */}
+      <div className="mt-5"><LatestTable patientId={patientId} /></div>
       <div className="mt-5"><RadiosSummary patientId={patientId} /></div>
       <section className="mt-5" aria-label="Fiche pré-consultation">
         <h2 className="mb-2 text-[15px] font-bold">Fiche pré-consultation</h2>

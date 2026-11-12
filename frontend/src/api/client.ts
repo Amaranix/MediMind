@@ -293,3 +293,11 @@ export type Sheet = {
   id: string; created_at: string; mode: "template" | "llm"; html: string; pages: number; as_of: string;
   assisted: boolean; seconds: number | null; attempts: SheetAttempt[];
 };
+
+// ---------------------------------------------------------------- dossier de faits (F-B6 : dernière / précédente / variation)
+export type LatestValue = {
+  param: string; name: string; unit: string; date: string; value: number; days_old: number; context: string[];
+  measurement_id: string; document_id: string | null; out_of_range: boolean;
+  previous: { date: string; value: number; delta: number; document_id: string | null } | null;
+};
+export type Facts = { as_of: string; latest_values: LatestValue[]; trends: (Trend & { name: string })[] };
