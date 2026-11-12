@@ -32,7 +32,7 @@ def close(a: float, b: float) -> bool:
 
 def run_one(args: tuple[dict, bool]) -> dict:
     d, use_llm = args
-    path = ROOT / "synthetic" / "out" / d["file"]
+    path = ROOT / "synthetic" / "out" / d["file"].replace("\\", "/")
     res = ingest_file(path, MIME[path.suffix], get_referential(), use_llm=use_llm)
     preds = [{"param": v.param, "context": sorted(v.context), "value": v.value, "conf": v.confidence,
               "flags": v.flags} for v in res.values]

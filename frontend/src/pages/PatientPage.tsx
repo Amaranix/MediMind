@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, Outlet, useNavigate, useParams } from "react-router-dom";
-import { api, post, type AlertItem, type Patient, type Referential } from "../api/client";
+import { api, post, type AlertItem, type MedDocument, type Patient, type Referential } from "../api/client";
 import { fmtDate } from "../labels";
 
 export function useReferential() {
@@ -17,6 +17,29 @@ export function usePending(id: string) {
     queryKey: ["pending", id],
     queryFn: () => api<{ measurements: number; documents: number }>(`/patients/${id}/pending-count`),
   });
+}
+
+const DEPENDENT = ["imaging", "facts", "series", "trends", "timeline", "alerts", "pending", "periods"];
+const reading = (d: MedDocument) => d.status === "uploaded" || d.status === "processing";
+
+/**
+ * Suit la lecture des documents déposés (toutes les 2 s tant qu'il y en a) et, dès qu'un document est lu,
+ * rafraîchit ce qui en dépend : sans cela, une radiographie ou des valeurs nouvelles n'apparaissaient qu'au
+ * rechargement de la page (données gardées 15 s en cache, puis plus de nouvelle demande).
+ */
+function useReadingWatcher(patientId: string) {
+  const qc = useQueryClient();
+  const { data } = useQuery({
+    queryKey: ["documents", patientId],
+    queryFn: () => api<MedDocument[]>(`/patients/${patientId}/documents`),
+    refetchInterval: (q) => (q.state.data?.some(reading) ? 2000 : false),
+  });
+  const busy = data?.filter(reading).length ?? 0;
+  const previous = useRef(busy);
+  useEffect(() => {
+    if (busy < previous.current) DEPENDENT.forEach((k) => qc.invalidateQueries({ queryKey: [k, patientId] }));
+    previous.current = busy;
+  }, [busy, patientId, qc]);
 }
 
 /** Alertes actuelles non acquittées : règle, source, valeurs déclenchantes (F-B5). */
@@ -134,6 +157,7 @@ export function PatientPage() {
   const { patientId = "" } = useParams();
   const { data: p, error } = usePatient(patientId);
   const { data: pending } = usePending(patientId);
+  useReadingWatcher(patientId);
   if (error) return <p role="alert" className="mt-6 text-alert">{error.message}</p>;
   if (!p) return <p className="mt-6 text-ink-2">Chargement du dossier…</p>;
   return (

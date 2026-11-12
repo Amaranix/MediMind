@@ -16,7 +16,11 @@ SessionLocal = sessionmaker(autoflush=False, expire_on_commit=False)
 def get_engine() -> Engine:
     global _engine
     if _engine is None:
-        _engine = create_engine(get_settings().database_url, pool_pre_ping=True)
+        # Autant de connexions que de fils d'exécution de FastAPI (40) : sinon, sous charge (tâches OCR en fond +
+        # requêtes de l'interface), des requêtes gardent une connexion en attendant un fil pendant que tous les fils
+        # attendent une connexion (blocage observé au test de bout en bout, 15 connexions « idle in transaction »).
+        _engine = create_engine(get_settings().database_url, pool_pre_ping=True, pool_size=10, max_overflow=30,
+                                pool_timeout=15)
         SessionLocal.configure(bind=_engine)
     return _engine
 

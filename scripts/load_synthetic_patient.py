@@ -81,12 +81,12 @@ def load(api: Client, code: str, validate: bool, skip: frozenset[str] = frozense
             "height_cm": p["height_cm"], "pack_years": p["pack_years"], "conditions": conditions,
             "antecedents": {"A": "BPCO", "B": "Pneumonie communautaire", "C": "Pneumopathie interstitielle fibrosante"}[
                 p["parcours"]]})["id"]
-    by_name = {Path(d["file"]).name: d for d in gt["documents"]}
+    by_name = {Path(d["file"].replace("\\", "/")).name: d for d in gt["documents"]}
     files = sorted(n for n in by_name if n not in skip)
     for i in range(0, len(files), 8):
         batch = []
         for name in files[i:i + 8]:
-            path = ROOT / "synthetic" / "out" / by_name[name]["file"]
+            path = ROOT / "synthetic" / "out" / by_name[name]["file"].replace("\\", "/")  # vérité terrain écrite sous Windows
             batch.append(("files", (name, path.read_bytes(), MIME[path.suffix])))
         for r in api.send("POST", f"/patients/{pid}/documents", files=batch):
             stats[f"dépôt_{r['status']}"] += 1

@@ -47,7 +47,7 @@ services:
     environment:
       SITE_ADDRESS: ${SITE_ADDRESS:-localhost:8443}
     ports:
-      - "${HTTPS_PORT:-8443}:8443"
+      - "${HTTPS_PORT:-8443}:${HTTPS_PORT:-8443}"  # Caddy écoute sur le port de SITE_ADDRESS : les deux doivent concorder
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
       - caddy_data:/data

@@ -44,12 +44,39 @@ jobs:
       - name: Typage et build
         run: npm run build
 
-  docker:
+  e2e:
+    # Pile complète (images construites comme en production), jeu de démo, scénario du parcours A dans Chromium
     runs-on: ubuntu-latest
     needs: [backend, frontend]
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
-      - name: Construction des images
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Fichier .env de test (secrets aléatoires)
         run: |
-          docker build -f backend/Dockerfile -t medimind-backend .
-          docker build -t medimind-frontend frontend
+          python - <<'PY'
+          import secrets
+          s = open(".env.example", encoding="utf-8").read()
+          for key in ("POSTGRES_PASSWORD", "ADMIN_PASSWORD"):
+              s = s.replace(f"{key}=a-changer", f"{key}={secrets.token_urlsafe(24)}")
+          s = s.replace("JWT_SECRET=a-changer", f"JWT_SECRET={secrets.token_urlsafe(48)}")
+          open(".env", "w", encoding="utf-8").write(s)
+          PY
+      - name: Construction et démarrage de la pile
+        run: docker compose up -d --build --wait
+      - name: Outils de test
+        run: |
+          pip install httpx -r e2e/requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: Jeu de démonstration
+        run: python scripts/seed_demo.py
+      - name: Scénario de démonstration (Playwright)
+        run: pytest e2e -v
+      - name: Budgets de performance (indicatif sur la machine de CI)
+        continue-on-error: true
+        run: python scripts/perf.py
+      - name: Journaux en cas d'échec
+        if: failure()
+        run: docker compose logs --tail=200

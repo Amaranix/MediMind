@@ -104,7 +104,15 @@ Tests : 133 tests backend verts.
 
 Tests : 144 tests backend verts.
 
-## Phases 8 à 10
+## Phase 8 : Qualité et sécurité
+
+| Étape | Statut | Notes |
+|---|---|---|
+| 8.1 Sécurité | ✅ | `docs/security-checklist.md` entièrement cochée : limitation des connexions (5 échecs / 15 min, 429), CSP stricte vérifiée sans violation, suppression d'un patient (cascade base, fichiers, tâches, audit), gitleaks sur tout l'historique (2 faux positifs consignés, jeton Kaggle absent), seul le port 8443 publié |
+| 8.2 Tests | ✅ | 146 tests backend, couverture des services 91 % (seuil 80 % exigé en CI) ; e2e Playwright du parcours A (`e2e/`) ; budgets de performance (`scripts/perf.py`) : courbes 0,05 s, PDF natif 1,6 s, scan 3,2 s, radiographie 3,2 s, fiche 0,06 s, tous sous les budgets ; CI : job e2e (pile complète + seed + Playwright) |
+| 8.3 Reproductibilité | ✅ | `scripts/seed_demo.py` (138 s) ; patients de démo versionnés ; test sur clone neuf depuis GitHub dans une pile séparée (port 9443) en suivant le README : seed et e2e réussis. Défauts trouvés et corrigés : port HTTPS configurable inopérant, épuisement du pool de connexions sous charge, liste « à valider » et radiographies non rafraîchies après lecture, chemins Windows de la vérité terrain. Reste : essai sur la machine du binôme |
+
+## Phases 9 et 10
 
 ⬜ Non commencées.
 

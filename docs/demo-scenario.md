@@ -38,7 +38,7 @@ Chargement du patient pour la démo : `backend/.venv/Scripts/python scripts/load
 
 1. **Connexion** avec le compte de démonstration (créé par `scripts/seed_demo.py`, phase 8).
 2. **Liste des patients** : Karim Alaoui apparaît avec ses alertes ouvertes.
-3. **Dépôt** des documents du 05/11/2026 (EFR, bilan, compte rendu, radio R5). Les documents antérieurs sont déjà chargés et validés par le seed, sauf le **bilan scanné du 10/02/2026**, laissé « à valider ».
+3. **Dépôt** des documents du 05/11/2026 (EFR, bilan, compte rendu, radio R5), en saisissant la date d'examen 05/11/2026 (une radiographie PNG ne porte pas de date lisible). Les documents antérieurs sont déjà chargés et validés par le seed, sauf le **bilan scanné du 10/02/2026**, laissé « à valider ».
 4. **Validation** : ouvrir le bilan scanné du 10/02/2026, montrer la confiance OCR et la conversion d'unité, corriger si besoin, valider. Puis valider les documents du 05/11.
 5. **Évolution** : période 6 mois puis 1 an ; lire les valeurs avec le curseur ; montrer les deux pics de CRP alignés sur les exacerbations, l'hospitalisation et l'ajout de salmétérol/fluticasone sur la frise.
 6. **Alertes** : ouvrir FEV1_DECLINE (règle, source ERS/ATS 2022, valeurs déclenchantes) puis l'acquitter.
