@@ -91,6 +91,47 @@ function FittedNotes({ item, view }: { item: ImagingItem; view: View }) {
   );
 }
 
+type DiffInfo = { older: string; newer: string; angle: number; scale: number; ncc_before: number; ncc_after: number; reliable: boolean };
+
+/** F-C8 : cliché ancien recalé, avec la différence du cliché récent (rouge : plus dense, bleu : moins dense). */
+function DiffView({ a, b, view }: { a: ImagingItem; b: ImagingItem; view: View }) {
+  const { data: info, isLoading, error } = useQuery({
+    queryKey: ["difference", a.document_id, b.document_id],
+    queryFn: () => api<DiffInfo>(`/documents/${a.document_id}/difference/${b.document_id}`),
+    staleTime: Infinity,
+  });
+  const img = useBlob(info ? `/documents/${a.document_id}/difference/${b.document_id}/image` : null);
+  const style = { transform: `translate(${view.x}px, ${view.y}px) scale(${view.zoom})`, transformOrigin: "0 0" };
+  const n = (v: number) => v.toLocaleString("fr-FR");
+  return (
+    <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_260px]">
+      <div data-pane className="relative h-[min(520px,70vw)] overflow-hidden rounded-sm bg-black">
+        {isLoading && <p className="p-3 text-sm">Recalage en cours (quelques secondes)…</p>}
+        {error && <p className="p-3 text-sm text-[#F4A3A3]">Recalage impossible.</p>}
+        <div className="absolute inset-0" style={style}>
+          {img && <img src={img} alt={`Carte de différence entre le ${fmtDate(a.date)} et le ${fmtDate(b.date)}`} className="absolute inset-0 h-full w-full object-contain" draggable={false} />}
+        </div>
+      </div>
+      <div className="text-[13px] text-[#C9D3D6]">
+        <p className="mb-1.5"><b className="text-[#E6ECEE]">Carte de différence</b> : cliché du {fmtDate(b.date)} recalé sur celui du {fmtDate(a.date)}.</p>
+        <p className="flex items-center gap-1.5"><i className="inline-block h-3 w-3 rounded-sm bg-[#E63C3C]" /> plus dense sur le cliché récent</p>
+        <p className="mb-2 flex items-center gap-1.5"><i className="inline-block h-3 w-3 rounded-sm bg-[#2878EB]" /> moins dense sur le cliché récent</p>
+        {info && (
+          <>
+            <p>Alignement : corrélation {n(info.ncc_before)} → <b>{n(info.ncc_after)}</b> (rotation {n(info.angle)}°, échelle {n(info.scale)}).</p>
+            {!info.reliable && (
+              <p className="mt-1.5 rounded bg-[#4A3A10] px-2 py-1 text-[#F3D58A]">
+                Alignement insuffisant : la carte reflète surtout des différences de positionnement, d'inspiration ou d'exposition.
+              </p>
+            )}
+          </>
+        )}
+        <p className="mt-2 text-[12.5px] text-[#AEB9BD]">Recalage automatique (rotation, échelle, translation). Une zone colorée n'est pas une lésion.</p>
+      </div>
+    </div>
+  );
+}
+
 function fmt(v: number | undefined) {
   return v == null ? "–" : v.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
@@ -135,7 +176,7 @@ export function ImagingTab() {
   const items = useMemo(() => (data?.items ?? []).filter((i) => i.analyzed), [data]);
   const faces = items.filter((i) => i.view !== "profil");
   const [pick, setPick] = useState<{ L: string | null; R: string | null }>({ L: null, R: null });
-  const [mode, setMode] = useState<"side" | "overlay">("side");
+  const [mode, setMode] = useState<"side" | "overlay" | "diff">("side");
   const [opacity, setOpacity] = useState(0.5);
   const [view, setView] = useState<View>({ zoom: 1, x: 0, y: 0 });
   const defaultCam = DEFAULT_SCORE[patient?.conditions?.[0] ?? ""] ?? "Consolidation";
@@ -182,10 +223,10 @@ export function ImagingTab() {
         <div className="rounded-lg bg-lightbox p-3 text-[#E6ECEE]">
           <div className="mb-2.5 flex flex-wrap items-center gap-2.5">
             <div className="inline-flex overflow-hidden rounded-lg border border-[#3A444A] bg-[#1F2529]" role="group" aria-label="Mode de comparaison">
-              {(["side", "overlay"] as const).map((m, i) => (
+              {(["side", "overlay", "diff"] as const).map((m, i) => (
                 <button key={m} type="button" aria-pressed={mode === m} onClick={() => setMode(m)}
                   className={`px-3 py-1.5 ${i ? "border-l border-[#3A444A]" : ""} ${mode === m ? "bg-[#2E7F7A] text-white" : "text-[#C9D3D6]"}`}>
-                  {m === "side" ? "Côte à côte" : "Superposition"}
+                  {m === "side" ? "Côte à côte" : m === "overlay" ? "Superposition" : "Carte de différence"}
                 </button>
               ))}
             </div>
@@ -209,10 +250,10 @@ export function ImagingTab() {
           </div>
           <div className={`grid gap-2.5 ${mode === "side" ? "md:grid-cols-2" : ""} cursor-grab touch-none`}
             onWheel={onWheel} onPointerDown={onDown} onPointerMove={onMoveDrag} onPointerUp={() => (drag.current = null)}>
-            <div data-pane>
+            {mode === "diff" ? <DiffView a={left} b={right} view={view} /> : <div data-pane>
               <Pane item={left} other={right} mode={mode} opacity={opacity} view={view} cam={cam} slot="L"
                 tag={mode === "overlay" ? `${fmtDate(left.date)} sous ${fmtDate(right.date)} (${Math.round(opacity * 100)} %)` : fmtDate(left.date)} />
-            </div>
+            </div>}
             {mode === "side" && <div data-pane><Pane item={right} mode="side" opacity={1} view={view} cam={cam} tag={fmtDate(right.date)} slot="R" /></div>}
           </div>
           <p className="mt-2 text-[12.5px] text-[#AEB9BD]">

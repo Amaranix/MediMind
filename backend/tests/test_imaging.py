@@ -168,3 +168,31 @@ def test_doctor_qualifies_comparison_and_sheet_shows_it(client, db, fake_model):
     make_user(db, "x@demo.ma")
     assert client.put("/api/radiograph-comparisons", headers=login(client, "x@demo.ma"),
                       json={"document_a_id": old, "document_b_id": new, "qualification": "stable"}).status_code == 404
+
+
+def test_registration_recovers_a_known_rotation(tmp_path):
+    from app.services import registration
+
+    rng = np.random.default_rng(0)
+    base = np.zeros((600, 600), np.uint8)
+    base[100:500, 80:270] = 160   # deux « champs pulmonaires » et du bruit de texture
+    base[100:500, 330:520] = 160
+    base = np.clip(base + rng.normal(0, 25, base.shape), 0, 255).astype(np.uint8)
+    a = Image.fromarray(base)
+    b = a.rotate(5, resample=Image.BILINEAR, translate=(12, -8))
+    a.save(tmp_path / "a.png")
+    b.save(tmp_path / "b.png")
+    r = registration.register(tmp_path / "a.png", tmp_path / "b.png")
+    assert abs(abs(r.angle) - 5) <= 0.5 and r.ncc_after > r.ncc_before and r.png.startswith(b"\x89PNG")
+
+
+def test_difference_map_endpoint_is_cached_and_isolated(client, db, fake_model):
+    h, pid = setup(client, db)
+    old = upload_xray(client, h, pid, xray_png(), "r1.png", "2026-02-11")
+    new = upload_xray(client, h, pid, xray_png((820, 800)), "r2.png", "2026-05-15")
+    info = client.get(f"/api/documents/{new}/difference/{old}", headers=h).json()
+    assert info["older"] == old and info["newer"] == new and "reliable" in info  # ordre chronologique rétabli
+    img = client.get(f"/api/documents/{old}/difference/{new}/image", headers=h)
+    assert img.status_code == 200 and img.content.startswith(b"\x89PNG")
+    make_user(db, "y@demo.ma")
+    assert client.get(f"/api/documents/{old}/difference/{new}", headers=login(client, "y@demo.ma")).status_code == 404

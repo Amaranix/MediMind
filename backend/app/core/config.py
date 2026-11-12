@@ -45,6 +45,7 @@ class Settings(BaseSettings):
     llm_timeout_s: float = 60.0
     llm_enabled: bool = True
     imaging_preload: bool = True
+    assistant_search: bool = True  # recherche sémantique de l'assistant (modèle e5, F-E4)
 
 
 @lru_cache

@@ -1,0 +1,828 @@
+{
+ "split": "dev",
+ "questions": 50,
+ "accuracy": 1.0,
+ "citations": 1.0,
+ "by_type": {
+  "comptage_evenements": "3/3",
+  "normalisation": "2/2",
+  "traitement": "17/17",
+  "valeur_a_date": "18/18",
+  "variation": "10/10"
+ },
+ "rows": [
+  {
+   "id": "Q01",
+   "type": "valeur_a_date",
+   "question": "Quel était le VEMS post-bronchodilatateur le 15/05/2026 ?",
+   "expected": "1,51 L",
+   "answer": "VEMS : 1,51 L le 15/05/2026.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A01-D018"
+   ],
+   "expected_sources": [
+    "A01-D018"
+   ]
+  },
+  {
+   "id": "Q02",
+   "type": "variation",
+   "question": "De combien le VEMS post-bronchodilatateur a-t-il varié entre le 01/09/2025 et le 25/08/2026 ?",
+   "expected": "-190 mL",
+   "answer": "VEMS : −190 mL (2,12 L le 01/09/2025, 1,93 L le 25/08/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A02-D012",
+    "A02-D024"
+   ],
+   "expected_sources": [
+    "A02-D012",
+    "A02-D024"
+   ]
+  },
+  {
+   "id": "Q03",
+   "type": "comptage_evenements",
+   "question": "Combien d'exacerbations le patient a-t-il présentées sur la période suivie ?",
+   "expected": "3",
+   "answer": "3 exacerbations : 11/12/2025, 16/01/2026, 09/08/2026.",
+   "kind": "count",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A03-D003",
+    "A03-D009",
+    "A03-D014"
+   ],
+   "expected_sources": []
+  },
+  {
+   "id": "Q04",
+   "type": "traitement",
+   "question": "À quelle date le traitement de fond a-t-il été renforcé par salmétérol/fluticasone ?",
+   "expected": "17/06/2026",
+   "answer": "salmétérol/fluticasone : première prescription le 17/06/2026 (50/500 µg, 1 inhalation matin et soir).",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A04-D006"
+   ],
+   "expected_sources": [
+    "A04-D006"
+   ]
+  },
+  {
+   "id": "Q05",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CRP lors de l'exacerbation du 19/02/2026 ?",
+   "expected": "98,1 mg/L",
+   "answer": "CRP : 98,1 mg/L le 19/02/2026.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A05-D002"
+   ],
+   "expected_sources": [
+    "A05-D002"
+   ]
+  },
+  {
+   "id": "Q07",
+   "type": "variation",
+   "question": "De combien le VEMS post-bronchodilatateur a-t-il varié entre le 24/08/2025 et le 13/08/2026 ?",
+   "expected": "-70 mL",
+   "answer": "VEMS : −70 mL (1,66 L le 24/08/2025, 1,59 L le 13/08/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A07-D017",
+    "A07-D029"
+   ],
+   "expected_sources": [
+    "A07-D017",
+    "A07-D029"
+   ]
+  },
+  {
+   "id": "Q08",
+   "type": "comptage_evenements",
+   "question": "Combien d'exacerbations le patient a-t-il présentées sur la période suivie ?",
+   "expected": "1",
+   "answer": "1 exacerbation : 20/04/2026.",
+   "kind": "count",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A08-D003"
+   ],
+   "expected_sources": []
+  },
+  {
+   "id": "Q09",
+   "type": "traitement",
+   "question": "À quelle date le traitement de fond a-t-il été renforcé par salmétérol/fluticasone ?",
+   "expected": "05/01/2026",
+   "answer": "salmétérol/fluticasone : première prescription le 05/01/2026 (50/500 µg, 1 inhalation matin et soir).",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A09-D007"
+   ],
+   "expected_sources": [
+    "A09-D007"
+   ]
+  },
+  {
+   "id": "Q10",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CRP lors de l'exacerbation du 15/04/2026 ?",
+   "expected": "41,4 mg/L",
+   "answer": "CRP : 41,4 mg/L le 15/04/2026.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A10-D002"
+   ],
+   "expected_sources": [
+    "A10-D002"
+   ]
+  },
+  {
+   "id": "Q12",
+   "type": "variation",
+   "question": "De combien le VEMS post-bronchodilatateur a-t-il varié entre le 04/11/2025 et le 20/10/2026 ?",
+   "expected": "-100 mL",
+   "answer": "VEMS : −100 mL (1,6 L le 04/11/2025, 1,5 L le 20/10/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A12-D007",
+    "A12-D019"
+   ],
+   "expected_sources": [
+    "A12-D007",
+    "A12-D019"
+   ]
+  },
+  {
+   "id": "Q13",
+   "type": "comptage_evenements",
+   "question": "Combien d'exacerbations le patient a-t-il présentées sur la période suivie ?",
+   "expected": "2",
+   "answer": "2 exacerbations : 10/02/2026, 20/08/2026.",
+   "kind": "count",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A01-D003",
+    "A01-D009"
+   ],
+   "expected_sources": []
+  },
+  {
+   "id": "Q14",
+   "type": "traitement",
+   "question": "À quelle date le traitement de fond a-t-il été renforcé par salmétérol/fluticasone ?",
+   "expected": "12/07/2026",
+   "answer": "salmétérol/fluticasone : première prescription le 12/07/2026 (50/500 µg, 1 inhalation matin et soir).",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A02-D006"
+   ],
+   "expected_sources": [
+    "A02-D006"
+   ]
+  },
+  {
+   "id": "Q15",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CRP lors de l'exacerbation du 11/12/2025 ?",
+   "expected": "108,5 mg/L",
+   "answer": "CRP : 108,5 mg/L le 11/12/2025.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A03-D002"
+   ],
+   "expected_sources": [
+    "A03-D002"
+   ]
+  },
+  {
+   "id": "Q16",
+   "type": "valeur_a_date",
+   "question": "Quel était le VEMS post-bronchodilatateur le 17/04/2026 ?",
+   "expected": "1,69 L",
+   "answer": "VEMS : 1,69 L le 17/04/2026.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A04-D013"
+   ],
+   "expected_sources": [
+    "A04-D013"
+   ]
+  },
+  {
+   "id": "Q17",
+   "type": "variation",
+   "question": "De combien le VEMS post-bronchodilatateur a-t-il varié entre le 31/10/2025 et le 16/10/2026 ?",
+   "expected": "-100 mL",
+   "answer": "VEMS : −100 mL (2,37 L le 31/10/2025, 2,27 L le 16/10/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A05-D016",
+    "A05-D028"
+   ],
+   "expected_sources": [
+    "A05-D016",
+    "A05-D028"
+   ]
+  },
+  {
+   "id": "Q19",
+   "type": "traitement",
+   "question": "À quelle date le traitement de fond a-t-il été renforcé par salmétérol/fluticasone ?",
+   "expected": "12/12/2025",
+   "answer": "salmétérol/fluticasone : première prescription le 12/12/2025 (50/500 µg, 1 inhalation matin et soir).",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A07-D007"
+   ],
+   "expected_sources": [
+    "A07-D007"
+   ]
+  },
+  {
+   "id": "Q20",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CRP lors de l'exacerbation du 20/04/2026 ?",
+   "expected": "64,1 mg/L",
+   "answer": "CRP : 64,1 mg/L le 20/04/2026.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "A08-D002"
+   ],
+   "expected_sources": [
+    "A08-D002"
+   ]
+  },
+  {
+   "id": "Q21",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CRP au diagnostic de la pneumonie ?",
+   "expected": "173,4 mg/L",
+   "answer": "CRP : 173,4 mg/L le 17/10/2025.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B01-D002"
+   ],
+   "expected_sources": [
+    "B01-D002"
+   ]
+  },
+  {
+   "id": "Q22",
+   "type": "normalisation",
+   "question": "La CRP s'est-elle normalisée (< 5 mg/L) après l'antibiotique débuté le 30/10/2025 ? Si oui, à quelle date ?",
+   "expected": "Oui, le 13/11/2025 (3,4 mg/L)",
+   "answer": "Oui, le 13/11/2025 (3,4 mg/L), première valeur sous 5 mg/L après le 30/10/2025.",
+   "kind": "normalisation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B02-D008"
+   ],
+   "expected_sources": [
+    "B02-D008"
+   ]
+  },
+  {
+   "id": "Q23",
+   "type": "traitement",
+   "question": "Un relais antibiotique a-t-il été nécessaire ? Si oui, par quelle molécule ?",
+   "expected": "Non",
+   "answer": "Non : aucun relais antibiotique enregistré.",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B03-D004"
+   ],
+   "expected_sources": []
+  },
+  {
+   "id": "Q24",
+   "type": "traitement",
+   "question": "Quelle antibiothérapie a été prescrite au diagnostic, et pour combien de jours ?",
+   "expected": "amoxicilline-acide clavulanique, 8 jours",
+   "answer": "amoxicilline-acide clavulanique, 8 jours (débutée le 15/10/2025).",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B04-D004"
+   ],
+   "expected_sources": [
+    "B04-D004"
+   ]
+  },
+  {
+   "id": "Q25",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CRP au diagnostic de la pneumonie ?",
+   "expected": "185,8 mg/L",
+   "answer": "CRP : 185,8 mg/L le 18/11/2025.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B05-D004"
+   ],
+   "expected_sources": [
+    "B05-D004"
+   ]
+  },
+  {
+   "id": "Q27",
+   "type": "traitement",
+   "question": "Un relais antibiotique a-t-il été nécessaire ? Si oui, par quelle molécule ?",
+   "expected": "Non",
+   "answer": "Non : aucun relais antibiotique enregistré.",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B07-D005"
+   ],
+   "expected_sources": []
+  },
+  {
+   "id": "Q28",
+   "type": "traitement",
+   "question": "Quelle antibiothérapie a été prescrite au diagnostic, et pour combien de jours ?",
+   "expected": "amoxicilline-acide clavulanique, 8 jours",
+   "answer": "amoxicilline-acide clavulanique, 8 jours (débutée le 06/11/2025).",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B08-D005"
+   ],
+   "expected_sources": [
+    "B08-D005"
+   ]
+  },
+  {
+   "id": "Q29",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CRP au diagnostic de la pneumonie ?",
+   "expected": "109,2 mg/L",
+   "answer": "CRP : 109,2 mg/L le 19/11/2025.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B09-D001"
+   ],
+   "expected_sources": [
+    "B09-D001"
+   ]
+  },
+  {
+   "id": "Q31",
+   "type": "traitement",
+   "question": "Un relais antibiotique a-t-il été nécessaire ? Si oui, par quelle molécule ?",
+   "expected": "Oui, lévofloxacine le 05/12/2025",
+   "answer": "Oui, lévofloxacine le 05/12/2025.",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B11-D008"
+   ],
+   "expected_sources": [
+    "B11-D008"
+   ]
+  },
+  {
+   "id": "Q32",
+   "type": "traitement",
+   "question": "Quelle antibiothérapie a été prescrite au diagnostic, et pour combien de jours ?",
+   "expected": "amoxicilline-acide clavulanique, 8 jours",
+   "answer": "amoxicilline-acide clavulanique, 8 jours (débutée le 08/12/2025).",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B12-D004"
+   ],
+   "expected_sources": [
+    "B12-D004"
+   ]
+  },
+  {
+   "id": "Q33",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CRP au diagnostic de la pneumonie ?",
+   "expected": "173,4 mg/L",
+   "answer": "CRP : 173,4 mg/L le 17/10/2025.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B01-D002"
+   ],
+   "expected_sources": [
+    "B01-D002"
+   ]
+  },
+  {
+   "id": "Q34",
+   "type": "normalisation",
+   "question": "La CRP s'est-elle normalisée (< 5 mg/L) après l'antibiotique débuté le 30/10/2025 ? Si oui, à quelle date ?",
+   "expected": "Oui, le 13/11/2025 (3,4 mg/L)",
+   "answer": "Oui, le 13/11/2025 (3,4 mg/L), première valeur sous 5 mg/L après le 30/10/2025.",
+   "kind": "normalisation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B02-D008"
+   ],
+   "expected_sources": [
+    "B02-D008"
+   ]
+  },
+  {
+   "id": "Q35",
+   "type": "traitement",
+   "question": "Un relais antibiotique a-t-il été nécessaire ? Si oui, par quelle molécule ?",
+   "expected": "Non",
+   "answer": "Non : aucun relais antibiotique enregistré.",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B03-D004"
+   ],
+   "expected_sources": []
+  },
+  {
+   "id": "Q36",
+   "type": "traitement",
+   "question": "Quelle antibiothérapie a été prescrite au diagnostic, et pour combien de jours ?",
+   "expected": "amoxicilline-acide clavulanique, 8 jours",
+   "answer": "amoxicilline-acide clavulanique, 8 jours (débutée le 15/10/2025).",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B04-D004"
+   ],
+   "expected_sources": [
+    "B04-D004"
+   ]
+  },
+  {
+   "id": "Q37",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CRP au diagnostic de la pneumonie ?",
+   "expected": "185,8 mg/L",
+   "answer": "CRP : 185,8 mg/L le 18/11/2025.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B05-D004"
+   ],
+   "expected_sources": [
+    "B05-D004"
+   ]
+  },
+  {
+   "id": "Q39",
+   "type": "traitement",
+   "question": "Un relais antibiotique a-t-il été nécessaire ? Si oui, par quelle molécule ?",
+   "expected": "Non",
+   "answer": "Non : aucun relais antibiotique enregistré.",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B07-D005"
+   ],
+   "expected_sources": []
+  },
+  {
+   "id": "Q40",
+   "type": "traitement",
+   "question": "Quelle antibiothérapie a été prescrite au diagnostic, et pour combien de jours ?",
+   "expected": "amoxicilline-acide clavulanique, 8 jours",
+   "answer": "amoxicilline-acide clavulanique, 8 jours (débutée le 06/11/2025).",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "B08-D005"
+   ],
+   "expected_sources": [
+    "B08-D005"
+   ]
+  },
+  {
+   "id": "Q41",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CVF en pourcentage de la valeur prédite le 13/11/2025 ?",
+   "expected": "71 %",
+   "answer": "CVF (% prédit) : 71 % le 13/11/2025.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C01-D005"
+   ],
+   "expected_sources": [
+    "C01-D005"
+   ]
+  },
+  {
+   "id": "Q43",
+   "type": "variation",
+   "question": "Quelle est la variation absolue de la DLCO (% prédit) entre le 29/06/2025 et le 23/08/2026 ?",
+   "expected": "-13 points",
+   "answer": "DLCO (% prédit) : −13 points (54 % le 29/06/2025, 41 % le 23/08/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C03-D002",
+    "C03-D015"
+   ],
+   "expected_sources": [
+    "C03-D002",
+    "C03-D015"
+   ]
+  },
+  {
+   "id": "Q44",
+   "type": "traitement",
+   "question": "Quel traitement antifibrosant a été introduit, et à quelle date ?",
+   "expected": "nintédanib, le 26/11/2025",
+   "answer": "nintédanib, le 26/11/2025.",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C04-D008"
+   ],
+   "expected_sources": [
+    "C04-D008"
+   ]
+  },
+  {
+   "id": "Q45",
+   "type": "valeur_a_date",
+   "question": "Quelle est la dernière SpO2 au repos en air ambiant ?",
+   "expected": "90 % le 16/09/2026",
+   "answer": "Dernière valeur de SpO2 : 90 % le 16/09/2026 (précédente : 91 % le 18/06/2026).",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C05-D017",
+    "C05-D014"
+   ],
+   "expected_sources": [
+    "C05-D017"
+   ]
+  },
+  {
+   "id": "Q47",
+   "type": "variation",
+   "question": "Quelle est la variation absolue de la CVF (% prédit) entre le 15/08/2025 et le 09/10/2026 ?",
+   "expected": "-13 points",
+   "answer": "CVF (% prédit) : −13 points (60 % le 15/08/2025, 47 % le 09/10/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C07-D002",
+    "C07-D015"
+   ],
+   "expected_sources": [
+    "C07-D002",
+    "C07-D015"
+   ]
+  },
+  {
+   "id": "Q48",
+   "type": "variation",
+   "question": "Quelle est la variation absolue de la DLCO (% prédit) entre le 08/08/2025 et le 02/10/2026 ?",
+   "expected": "-16 points",
+   "answer": "DLCO (% prédit) : −16 points (43 % le 08/08/2025, 27 % le 02/10/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C08-D002",
+    "C08-D015"
+   ],
+   "expected_sources": [
+    "C08-D002",
+    "C08-D015"
+   ]
+  },
+  {
+   "id": "Q49",
+   "type": "traitement",
+   "question": "Quel traitement antifibrosant a été introduit, et à quelle date ?",
+   "expected": "nintédanib, le 26/10/2025",
+   "answer": "nintédanib, le 26/10/2025.",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C09-D008"
+   ],
+   "expected_sources": [
+    "C09-D008"
+   ]
+  },
+  {
+   "id": "Q50",
+   "type": "valeur_a_date",
+   "question": "Quelle est la dernière SpO2 au repos en air ambiant ?",
+   "expected": "94 % le 01/11/2026",
+   "answer": "Dernière valeur de SpO2 : 94 % le 01/11/2026 (précédente : 94 % le 03/08/2026).",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C10-D017",
+    "C10-D014"
+   ],
+   "expected_sources": [
+    "C10-D017"
+   ]
+  },
+  {
+   "id": "Q51",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CVF en pourcentage de la valeur prédite le 11/10/2025 ?",
+   "expected": "66 %",
+   "answer": "CVF (% prédit) : 66 % le 11/10/2025.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C11-D005"
+   ],
+   "expected_sources": [
+    "C11-D005"
+   ]
+  },
+  {
+   "id": "Q52",
+   "type": "variation",
+   "question": "Quelle est la variation absolue de la CVF (% prédit) entre le 08/09/2025 et le 02/11/2026 ?",
+   "expected": "-1 points",
+   "answer": "CVF (% prédit) : −1 points (80 % le 08/09/2025, 79 % le 02/11/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C12-D002",
+    "C12-D015"
+   ],
+   "expected_sources": [
+    "C12-D002",
+    "C12-D015"
+   ]
+  },
+  {
+   "id": "Q53",
+   "type": "variation",
+   "question": "Quelle est la variation absolue de la DLCO (% prédit) entre le 26/07/2025 et le 19/09/2026 ?",
+   "expected": "-18 points",
+   "answer": "DLCO (% prédit) : −18 points (60 % le 26/07/2025, 42 % le 19/09/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C01-D002",
+    "C01-D015"
+   ],
+   "expected_sources": [
+    "C01-D002",
+    "C01-D015"
+   ]
+  },
+  {
+   "id": "Q55",
+   "type": "valeur_a_date",
+   "question": "Quelle est la dernière SpO2 au repos en air ambiant ?",
+   "expected": "91 % le 23/08/2026",
+   "answer": "Dernière valeur de SpO2 : 91 % le 23/08/2026 (précédente : 91 % le 25/05/2026).",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C03-D017",
+    "C03-D014"
+   ],
+   "expected_sources": [
+    "C03-D017"
+   ]
+  },
+  {
+   "id": "Q56",
+   "type": "valeur_a_date",
+   "question": "Quelle était la CVF en pourcentage de la valeur prédite le 26/11/2025 ?",
+   "expected": "69 %",
+   "answer": "CVF (% prédit) : 69 % le 26/11/2025.",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C04-D005"
+   ],
+   "expected_sources": [
+    "C04-D005"
+   ]
+  },
+  {
+   "id": "Q57",
+   "type": "variation",
+   "question": "Quelle est la variation absolue de la CVF (% prédit) entre le 23/07/2025 et le 16/09/2026 ?",
+   "expected": "-8 points",
+   "answer": "CVF (% prédit) : −8 points (66 % le 23/07/2025, 58 % le 16/09/2026).",
+   "kind": "variation",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C05-D002",
+    "C05-D015"
+   ],
+   "expected_sources": [
+    "C05-D002",
+    "C05-D015"
+   ]
+  },
+  {
+   "id": "Q59",
+   "type": "traitement",
+   "question": "Quel traitement antifibrosant a été introduit, et à quelle date ?",
+   "expected": "nintédanib, le 03/12/2025",
+   "answer": "nintédanib, le 03/12/2025.",
+   "kind": "treatment",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C07-D008"
+   ],
+   "expected_sources": [
+    "C07-D008"
+   ]
+  },
+  {
+   "id": "Q60",
+   "type": "valeur_a_date",
+   "question": "Quelle est la dernière SpO2 au repos en air ambiant ?",
+   "expected": "89 % le 02/10/2026",
+   "answer": "Dernière valeur de SpO2 : 89 % le 02/10/2026 (précédente : 92 % le 04/07/2026).",
+   "kind": "value",
+   "correct": true,
+   "citations_ok": true,
+   "citations": [
+    "C08-D017",
+    "C08-D014"
+   ],
+   "expected_sources": [
+    "C08-D017"
+   ]
+  }
+ ]
+}

@@ -14,6 +14,7 @@ import { PatientPage } from "./pages/PatientPage";
 import { PatientsPage } from "./pages/PatientsPage";
 import { PendingTab } from "./pages/PendingTab";
 import { SheetTab } from "./pages/SheetTab";
+import { AssistantTab } from "./pages/AssistantTab";
 import { ValidationPage } from "./pages/ValidationPage";
 import { UsersPage } from "./pages/UsersPage";
 
@@ -60,6 +61,7 @@ createRoot(document.getElementById("root")!).render(
                 <Route path="documents" element={<DocumentsTab />} />
                 <Route path="a-valider" element={<PendingTab />} />
                 <Route path="fiche" element={<SheetTab />} />
+                <Route path="assistant" element={<AssistantTab />} />
                 <Route path="documents/:docId" element={<ValidationPage />} />
               </Route>
               <Route path="/admin/comptes" element={<RequireRole role="admin"><UsersPage /></RequireRole>} />

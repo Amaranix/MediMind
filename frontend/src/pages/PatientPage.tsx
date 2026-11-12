@@ -123,6 +123,7 @@ export function PatientPage() {
             )}
           </NavLink>
           <NavLink to={`/patients/${patientId}/fiche`} className={tab}>Fiche</NavLink>
+          <NavLink to={`/patients/${patientId}/assistant`} className={tab}>Assistant</NavLink>
         </nav>
         <Outlet />
       </div>

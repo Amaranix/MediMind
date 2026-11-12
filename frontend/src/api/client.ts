@@ -317,3 +317,11 @@ export type PeriodRow = {
   trend_a: Trend["qualification"] | null; trend_b: Trend["qualification"] | null; diff: number | null;
   qualification: Trend["qualification"];
 };
+
+// ---------------------------------------------------------------- assistant du dossier (F-E4)
+export type AssistantCitation = { document_id: string; type: string; date: string | null; name: string };
+export type AssistantMessage = {
+  at: string; question: string; text: string; citations: AssistantCitation[];
+  kind: "value" | "variation" | "count" | "treatment" | "normalisation" | "passages" | "refusal" | "not_found";
+  passages: { document_id: string; text: string; score: number; type: string; date: string | null }[];
+};

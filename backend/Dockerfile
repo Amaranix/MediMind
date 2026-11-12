@@ -22,6 +22,9 @@ RUN pip install -r requirements.txt
 # Poids du modèle d'imagerie intégrés à l'image : la démonstration fonctionne sans accès à internet
 USER medimind
 RUN python -c "import torchxrayvision as xrv; xrv.models.DenseNet(weights='densenet121-res224-all')"
+# Modèle de recherche de l'assistant (F-E4), lui aussi intégré ; ensuite plus aucun accès au Hub
+RUN python -c "from transformers import AutoModel, AutoTokenizer; n='intfloat/multilingual-e5-small'; AutoTokenizer.from_pretrained(n); AutoModel.from_pretrained(n)"
+ENV HF_HUB_OFFLINE=1
 
 COPY --chown=medimind backend/ .
 COPY --chown=medimind referential/ ./referential/

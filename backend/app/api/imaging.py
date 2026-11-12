@@ -3,11 +3,15 @@ vue déclarée et commentaire du médecin, annotations (F-C7), qualification de 
 médecin (F-C6). Les scores sont ceux d'un modèle de recherche : aucun diagnostic, aucun verdict d'évolution."""
 from __future__ import annotations
 
+import io
+import json
 import uuid
+from pathlib import Path
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import Response
+from PIL import Image
 from pydantic import BaseModel, Field
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -16,7 +20,7 @@ from app.api.deps import get_patient_for_doctor, require_doctor
 from app.db.models import Document, DocumentType, Imaging, Patient, RadiographComparison, User, utcnow
 from app.db.session import get_db
 from app.services import imaging as imaging_service
-from app.services import storage
+from app.services import registration, storage
 from app.services.audit import audit
 from app.services.imaging import run_analysis
 
@@ -156,3 +160,41 @@ def save_comparison(body: ComparisonIn, user: User = Depends(require_doctor), db
     audit(db, user.id, "radiograph_comparison", "patient", a.patient_id,
           {"a": str(a.id), "b": str(b.id), "qualification": c.qualification})
     return _cmp_out(c)
+
+
+# ---------------------------------------------------------------- F-C8 : recalage et carte de différence
+def _difference(db: Session, a_id: uuid.UUID, b_id: uuid.UUID, user: User) -> tuple[Path, dict]:
+    """Carte (cliché ancien + différence) et paramètres du recalage, calculés une fois puis mis en cache."""
+    a, b = _owned_doc(db, a_id, user), _owned_doc(db, b_id, user)
+    if a.id == b.id or a.patient_id != b.patient_id:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, "Deux radiographies différentes du même patient.")
+    if (a.exam_date or a.created_at.date()) > (b.exam_date or b.created_at.date()):
+        a, b = b, a
+    png = storage.absolute(a.file_path).with_name(f"{a.id}.diff.{b.id}.png")
+    meta = png.with_suffix(".json")
+    if not (png.exists() and meta.exists()):
+        r = registration.register(storage.absolute(a.file_path), storage.absolute(b.file_path))
+        base = Image.open(storage.absolute(a.file_path)).convert("RGBA")
+        base.thumbnail((1024, 1024))
+        over = Image.open(io.BytesIO(r.png)).resize(base.size)
+        buf = io.BytesIO()
+        Image.alpha_composite(base, over).convert("RGB").save(buf, "PNG")
+        png.write_bytes(buf.getvalue())
+        meta.write_text(json.dumps({"older": str(a.id), "newer": str(b.id), "angle": r.angle, "scale": r.scale,
+                                    "ncc_before": r.ncc_before, "ncc_after": r.ncc_after, "reliable": r.reliable}))
+    return png, json.loads(meta.read_text())
+
+
+@router.get("/documents/{document_id}/difference/{other_id}")
+def difference(document_id: uuid.UUID, other_id: uuid.UUID, user: User = Depends(require_doctor),
+               db: Session = Depends(get_db)) -> dict:
+    _, info = _difference(db, document_id, other_id, user)
+    audit(db, user.id, "imaging_difference", "document", uuid.UUID(info["older"]), {"newer": info["newer"]})
+    return info
+
+
+@router.get("/documents/{document_id}/difference/{other_id}/image")
+def difference_image(document_id: uuid.UUID, other_id: uuid.UUID, user: User = Depends(require_doctor),
+                     db: Session = Depends(get_db)) -> Response:
+    png, _ = _difference(db, document_id, other_id, user)
+    return Response(png.read_bytes(), media_type="image/png", headers={"Cache-Control": "private, max-age=3600"})

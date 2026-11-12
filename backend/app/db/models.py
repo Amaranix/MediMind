@@ -280,6 +280,18 @@ class ConsultationSheet(Base):
     pdf_path: Mapped[str | None] = mapped_column(String(512))
 
 
+class DocumentChunk(Base):
+    """F-E4 : passage d'un document validé et son plongement (multilingual-e5-small), pour la recherche."""
+    __tablename__ = "document_chunks"
+    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    patient_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("patients.id", ondelete="CASCADE"), index=True)
+    document_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("documents.id", ondelete="CASCADE"), index=True)
+    idx: Mapped[int] = mapped_column(Integer)
+    text: Mapped[str] = mapped_column(Text)
+    embedding: Mapped[list] = mapped_column(JsonType)
+    model: Mapped[str] = mapped_column(String(80))
+
+
 class Conversation(Base):
     __tablename__ = "conversations"
     id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)

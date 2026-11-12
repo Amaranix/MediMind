@@ -8,6 +8,7 @@ os.environ.setdefault("JWT_SECRET", "test-secret-test-secret-0123456789")
 os.environ["COOKIE_SECURE"] = "false"           # le client de test parle en http
 os.environ["OLLAMA_URL"] = "http://127.0.0.1:9"  # port fermé : Ollama « injoignable » sans attente
 os.environ["LLM_ENABLED"] = "false"              # le repli LLM n'est jamais appelé pendant les tests
+os.environ["ASSISTANT_SEARCH"] = "false"         # pas de modèle de recherche pendant les tests
 os.environ["IMAGING_PRELOAD"] = "false"          # le modèle d'imagerie n'est pas préchargé pendant les tests
 os.environ["STORAGE_PATH"] = tempfile.mkdtemp(prefix="medimind-test-")
 _WIN_TESSERACT = r"C:\Program Files\Tesseract-OCR\tesseract.exe"   # poste de développement Windows

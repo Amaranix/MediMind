@@ -10,7 +10,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from sqlalchemy import select
 
-from app.api import auth, clinical, documents, imaging, patients, sheets, system, users
+from app.api import assistant, auth, clinical, documents, imaging, patients, sheets, system, users
 from app.core.config import get_settings
 from app.core.logging import setup_logging
 from app.core.security import hash_password
@@ -64,7 +64,7 @@ def create_app(run_bootstrap: bool = True) -> FastAPI:
     app = FastAPI(title="MediMind API", version="0.1.0", lifespan=lifespan if run_bootstrap else None,
                   docs_url="/api/docs", openapi_url="/api/openapi.json", redoc_url=None)
     for r in (auth.router, users.router, patients.router, documents.router, clinical.router, imaging.router, sheets.router,
-              system.router):
+              assistant.router, system.router):
         app.include_router(r, prefix="/api")
 
     @app.exception_handler(RequestValidationError)

@@ -99,8 +99,10 @@ Tests : 133 tests backend verts.
 | 7.3 Variation des scores et qualification du médecin (F-C6) | ✅ | Variation ± marge (déjà en 5.4) ; jugement du médecin (amélioration, stabilité, aggravation, non évaluable + commentaire) par paire de clichés, table `radiograph_comparisons` (migration 0005), repris dans les faits et sur la fiche |
 | 7.4 Annotation de la radio (F-C7) | ✅ | Flèches et textes en coordonnées normalisées (JSON `imaging.annotations`, 50 au plus, validées), éditeur par cliché, affichage dans la visionneuse côte à côte |
 | 7.5 Comparaison de deux périodes (F-B8) | ✅ | `GET /api/patients/{id}/periods` : par paramètre et période, nombre, moyenne, min, max, dernière valeur, tendance ; écart des moyennes qualifié par le mcid et le sens d'amélioration du référentiel. Bloc du tableau de bord (6 derniers mois contre les 6 précédents par défaut) |
-| 7.6 Assistant (F-E4) | ⬜ | |
-| 7.7 Recalage et carte de différence (F-C8) | ⬜ | |
+| 7.6 Assistant (F-E4) | ✅ | Onglet « Assistant » : valeurs à une date, variations entre deux dates, comptes d'événements, traitements (relais, antibiothérapie, antifibrosant, molécule), normalisation de la CRP, lus dans les données validées et cités ; sinon recherche sémantique (multilingual-e5-small) dans le texte des documents validés, passages cités ; refus diagnostic / prescription / hors dossier ; conversation conservée et auditée. Évaluation dev (`run_assistant_eval.py`, sur la vérité terrain) : 50/50 réponses justes, 50/50 citations complètes |
+| 7.7 Recalage et carte de différence (F-C8) | ✅ | Similitude (rotation ± 10°, échelle 0,9 à 1,1, translation) par grille + corrélation de phase (scikit-image) ; rotation de 4° retrouvée exactement sur image test ; A01 : corrélation 0,59 -> 0,88 (R1/R2), 0,61 -> 0,65 (R4/R5, signalé « alignement insuffisant ») ; mode « Carte de différence » de la visionneuse, mis en cache |
+
+Tests : 144 tests backend verts.
 
 ## Phases 8 à 10
 
